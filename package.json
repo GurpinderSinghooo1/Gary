@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint __tests__ --ext .js",
-    "dev": "lite-server --baseDir=./ --port=3000"
+    "dev": "lite-server --baseDir=./ --port=3000",
+    "build": "echo 'Static site - no build step required'",
+    "start": "lite-server --baseDir=./ --port=3000"
   },
   "keywords": [],
   "author": "",
