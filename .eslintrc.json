@@ -1,0 +1,25 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "script"
+  },
+  "globals": {
+    "utils": "readonly",
+    "dataHandler": "readonly",
+    "uiComponents": "readonly",
+    "__perfNow": "readonly",
+    "app": "readonly"
+  },
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "no-prototype-builtins": "off",
+    "no-const-assign": "off"
+  }
+}
