@@ -578,21 +578,23 @@ function cleanOldArchiveData() {
   cutoffDate.setDate(cutoffDate.getDate() - 30);
   const cutoffString = Utilities.formatDate(cutoffDate, 'America/New_York', 'yyyy-MM-dd');
   
-  // Find rows to delete (older than 30 days)
-  const rowsToDelete = [];
-  for (let i = rows.length - 1; i >= 0; i--) {
+  // Determine how many rows from the top are older than the cutoff
+  let rowsToDelete = 0;
+  for (let i = 0; i < rows.length; i++) {
     const rowDate = rows[i][dateCol];
     if (rowDate && rowDate < cutoffString) {
-      rowsToDelete.push(i + 2); // +2 because we have headers and 0-based index
+      rowsToDelete++;
+    } else {
+      break; // Stop once we reach the first row that should be kept
     }
   }
-  
-  // Delete old rows (from bottom to top to maintain indices)
-  rowsToDelete.forEach(rowIndex => {
-    archiveSheet.deleteRow(rowIndex);
-  });
-  
-  console.log(`Cleaned ${rowsToDelete.length} old rows from archive`);
+
+  // Delete all outdated rows in a single operation
+  if (rowsToDelete > 0) {
+    archiveSheet.deleteRows(2, rowsToDelete); // Start after header row
+  }
+
+  console.log(`Cleaned ${rowsToDelete} old rows from archive`);
 }
 
 /**
