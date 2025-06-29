@@ -368,7 +368,8 @@ self.addEventListener('notificationclick', (event) => {
                     }
                 }
                 if (clients.openWindow) {
-                    return clients.openWindow('/');
+                    // Use service worker scope to support subfolder hosting
+                    return clients.openWindow(self.registration.scope);
                 }
             })
         );
