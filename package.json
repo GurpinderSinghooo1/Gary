@@ -4,8 +4,8 @@
   "description": "A real-time stock signal dashboard system that processes and displays AI-generated trading signals with comprehensive technical and fundamental analysis.",
   "main": "sw.js",
   "scripts": {
-    "test": "jest",
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint __tests__ js/**/*.js --ext .js",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint __tests__ --ext .js",
     "dev": "lite-server --baseDir=./ --port=3000"
   },
   "keywords": [],
