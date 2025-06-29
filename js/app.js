@@ -213,6 +213,10 @@ class MarketSignalApp {
      */
     initUI() {
         try {
+            // Check if uiComponents is available
+            if (typeof uiComponents === 'undefined') {
+                throw new Error('uiComponents not loaded');
+            }
             uiComponents.init();
             console.log('UI components initialized');
         } catch (error) {
@@ -226,6 +230,10 @@ class MarketSignalApp {
      */
     initDataHandler() {
         try {
+            // Check if dataHandler is available
+            if (typeof dataHandler === 'undefined') {
+                throw new Error('dataHandler not loaded');
+            }
             // Data handler is already initialized as a global instance
             console.log('Data handler initialized');
         } catch (error) {
@@ -241,13 +249,27 @@ class MarketSignalApp {
         if (this.isLoading) return;
         
         this.isLoading = true;
-        uiComponents.handleDataLoading();
+        
+        // Ensure UI components are ready
+        if (typeof uiComponents !== 'undefined') {
+            uiComponents.handleDataLoading();
+        }
         
         try {
             await dataHandler.fetchData();
             this.handleDataLoaded();
         } catch (error) {
-            this.handleDataError(error);
+            console.warn('Failed to load initial data, will try to use cached data:', error);
+            // Try to load cached data instead of failing completely
+            const cachedData = dataHandler.loadFromCache();
+            if (cachedData && cachedData.length > 0) {
+                dataHandler.data = cachedData;
+                dataHandler.isDataFromCache = true;
+                dataHandler.applyFilters();
+                this.handleDataLoaded();
+            } else {
+                this.handleDataError(error);
+            }
         } finally {
             this.isLoading = false;
         }
@@ -258,7 +280,9 @@ class MarketSignalApp {
      */
     handleDataLoaded() {
         // Pass the cache status to the UI handler
-        uiComponents.handleDataLoaded(dataHandler.isDataFromCache);
+        if (typeof uiComponents !== 'undefined') {
+            uiComponents.handleDataLoaded(dataHandler.isDataFromCache);
+        }
         this.retryCount = 0;
     }
     
@@ -276,7 +300,10 @@ class MarketSignalApp {
                 this.handleRetry();
             }, this.retryDelay * this.retryCount);
         } else {
-            uiComponents.handleDataError(error);
+            // Show UI even if data fails to load
+            if (typeof uiComponents !== 'undefined') {
+                uiComponents.handleDataError(error);
+            }
             console.error('Max retries reached, showing error state');
         }
     }

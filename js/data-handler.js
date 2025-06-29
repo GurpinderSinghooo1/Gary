@@ -119,9 +119,12 @@ class DataHandler {
             
             if (validData.length === 0) {
                 console.warn('No valid signals found in API response');
+                // Return empty array instead of throwing error
+                this.data = [];
+            } else {
+                this.data = validData;
             }
             
-            this.data = validData;
             this.lastUpdated = result.lastUpdated || new Date().toISOString();
             
             // Extract unique sectors
@@ -134,7 +137,10 @@ class DataHandler {
             
         } catch (error) {
             console.error('Failed to fetch data:', error);
-            // The service worker will handle offline caching, so we just re-throw.
+            // Instead of re-throwing immediately, try to provide fallback data
+            this.data = [];
+            this.filteredData = [];
+            this.lastUpdated = null;
             throw error;
         } finally {
             this.isLoading = false;

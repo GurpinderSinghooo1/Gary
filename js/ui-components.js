@@ -33,11 +33,17 @@ class UIComponents {
      * Initialize virtual scrolling for performance
      */
     initVirtualScroll() {
-        // Enable virtual scrolling for datasets larger than 50 items
-        this.virtualScroll.enabled = dataHandler.data.length > 50;
-        
-        if (this.virtualScroll.enabled) {
-            this.setupVirtualScroll();
+        // Check if dataHandler exists and has data
+        if (typeof dataHandler !== 'undefined' && dataHandler.data) {
+            // Enable virtual scrolling for datasets larger than 50 items
+            this.virtualScroll.enabled = dataHandler.data.length > 50;
+            
+            if (this.virtualScroll.enabled) {
+                this.setupVirtualScroll();
+            }
+        } else {
+            // Default to disabled until data is loaded
+            this.virtualScroll.enabled = false;
         }
     }
     
