@@ -3,6 +3,9 @@
  * Manages API calls, data processing, filtering, and state management
  */
 
+const { APPS_SCRIPT_URL, API_FULL_URL } =
+    typeof window !== 'undefined' ? window : global;
+
 class DataHandler {
     constructor() {
         this.data = [];
@@ -93,11 +96,9 @@ class DataHandler {
         try {
             // CORS/Proxy configuration  – set USE_PROXY = true to enable proxy later if needed
             const USE_PROXY   = false;
-            const PROXY_PREFIX = 'https://corsproxy.io/?'; // or switch to another proxy
-            const BASE_API_URL = 'https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec';
-            
-            // Final URL: direct or proxied
-            const url = USE_PROXY ? `${PROXY_PREFIX}${BASE_API_URL}` : BASE_API_URL;
+
+            // Final URL: direct or proxied using shared config
+            const url = USE_PROXY ? API_FULL_URL : APPS_SCRIPT_URL;
             
             // Perform fetch – omit custom headers to keep request "simple" and avoid pre-flight
             const response = await fetch(url, {

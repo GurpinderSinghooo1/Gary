@@ -3,6 +3,8 @@
  * Enhanced PWA functionality with offline support and caching
  */
 
+importScripts('./js/config.js');
+
 const CACHE_NAME = 'market-signal-dashboard-v3.2';
 const STATIC_CACHE = 'market-signal-static-v3.2';
 const DATA_CACHE = 'market-signal-data-v3.2';
@@ -24,7 +26,7 @@ const STATIC_FILES = [
 
 // API endpoints to cache – direct (no proxy). To re-enable proxy, add it here.
 const API_ENDPOINTS = [
-    'https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec'
+    self.APPS_SCRIPT_URL
 ];
 
 // Cache strategies

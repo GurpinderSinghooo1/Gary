@@ -1,5 +1,7 @@
-beforeAll(() => {
-  require('../js/utils.js');
+import { jest } from '@jest/globals';
+
+beforeAll(async () => {
+  await import('../js/utils.js');
 });
 
 test('formatCurrency formats numbers as USD', () => {

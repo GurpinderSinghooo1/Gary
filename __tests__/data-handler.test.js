@@ -1,7 +1,10 @@
-beforeEach(() => {
+import { jest } from '@jest/globals';
+
+beforeEach(async () => {
   jest.resetModules();
-  require('../js/utils.js');
-  require('../js/data-handler.js');
+  await import('../js/config.js');
+  await import('../js/utils.js');
+  await import('../js/data-handler.js');
 });
 
 test('calculateSectorDistribution counts sectors', () => {
@@ -26,4 +29,9 @@ test('getSignalsForDate filters by date', () => {
   ];
   const result = handler.getSignalsForDate('2024-01-01');
   expect(result.length).toBe(2);
+});
+
+test('API_FULL_URL contains no whitespace', async () => {
+  const { API_FULL_URL } = await import('../js/config.js');
+  expect(/\s/.test(API_FULL_URL)).toBe(false);
 });
