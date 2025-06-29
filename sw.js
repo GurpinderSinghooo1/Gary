@@ -11,12 +11,15 @@ const DATA_CACHE = 'market-signal-data-v3.0';
 const STATIC_FILES = [
     './',
     './index.html',
+    './404.html',
     './css/styles.css',
     './js/app.js',
     './js/data-handler.js',
     './js/ui-components.js',
     './js/utils.js',
-    './manifest.json'
+    './manifest.json',
+    './icons/icon-192x192.svg',
+    './icons/icon-72x72.svg'
 ];
 
 // API endpoints to cache
@@ -324,8 +327,8 @@ self.addEventListener('push', (event) => {
             const data = event.data.json();
             const options = {
                 body: data.body || 'New market signals available',
-                icon: './icon-192x192.png',
-                badge: './icon-72x72.png',
+                icon: './icons/icon-192x192.svg',
+                badge: './icons/icon-72x72.svg',
                 tag: 'market-signals',
                 data: data,
                 actions: [

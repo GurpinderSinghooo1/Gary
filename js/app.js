@@ -71,7 +71,13 @@ class MarketSignalApp {
      * Start performance monitoring
      */
     startPerformanceMonitoring() {
-        this.performanceMetrics.startTime = __perfNow();
+        // Guard against missing performance.now in older browsers or test envs
+        if (!performance || typeof performance.now !== 'function') {
+            console.warn('Native performance.now unavailable; using Date.now');
+            this.performanceMetrics.startTime = Date.now();
+        } else {
+            this.performanceMetrics.startTime = __perfNow();
+        }
         
         // Monitor memory usage if available
         if (performance.memory) {

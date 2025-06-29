@@ -47,7 +47,7 @@ function syncData_web() {
     }
     
     // Merge data into enriched rows
-    const enrichedData = mergeSignalData(finalSignals, technicalData, fundamentals, marketSentiment, companyNames);
+    const enrichedData = mergeSignalData(finalSignals, technicalData, fundamentals, marketSentiment, companyNames, dateString);
     
     // Validate enriched data
     if (!validateEnrichedData(enrichedData)) {
@@ -139,7 +139,7 @@ function validateEnrichedData(enrichedData) {
     return false;
   }
   
-  const requiredFields = ['ticker', 'companyName', 'decision', 'sellTarget', 'confidence', 'riskLevel', 'summary', 'currentPrice'];
+  const requiredFields = ['Ticker', 'CompanyName', 'Decision', 'SellTarget', 'Confidence', 'RiskLevel', 'Summary', 'CurrentPrice'];
   const firstRow = enrichedData[0];
   
   for (const field of requiredFields) {
@@ -355,7 +355,7 @@ function getCompanyNameMap() {
 /**
  * Merge all data sources into enriched signal rows
  */
-function mergeSignalData(finalSignals, technicalData, fundamentals, marketSentiment, companyNames) {
+function mergeSignalData(finalSignals, technicalData, fundamentals, marketSentiment, companyNames, dateString) {
   const enrichedData = [];
   
   // Remove duplicates - keep latest signal per ticker
