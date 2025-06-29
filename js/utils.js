@@ -498,9 +498,9 @@ const validation = {
 const perfTracker = {
     // Measure execution time
     measureTime: (name, fn) => {
-        const start = performance.now();
+        const start = window.__perfNow ? __perfNow() : Date.now();
         const result = fn();
-        const end = performance.now();
+        const end = window.__perfNow ? __perfNow() : Date.now();
         console.log(`${name} took ${(end - start).toFixed(2)}ms`);
         return result;
     },

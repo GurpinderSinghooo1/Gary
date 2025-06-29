@@ -3,9 +3,9 @@
  * Enhanced PWA functionality with offline support and caching
  */
 
-const CACHE_NAME = 'market-signal-dashboard-v2.1';
-const STATIC_CACHE = 'market-signal-static-v2.1';
-const DATA_CACHE = 'market-signal-data-v2.1';
+const CACHE_NAME = 'market-signal-dashboard-v3.0';
+const STATIC_CACHE = 'market-signal-static-v3.0';
+const DATA_CACHE = 'market-signal-data-v3.0';
 
 // Files to cache for offline functionality
 const STATIC_FILES = [

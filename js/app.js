@@ -3,6 +3,14 @@
  * Enhanced with error handling, performance monitoring, and better initialization
  */
 
+// Runtime guard for performance API
+if (typeof performance !== 'object' || typeof performance.now !== 'function') {
+    console.warn('Browser performance API unavailable – falling back to Date.now');
+    window.__perfNow = () => Date.now();   // fallback
+} else {
+    window.__perfNow = () => performance.now();
+}
+
 class MarketSignalApp {
     constructor() {
         this.isInitialized = false;
@@ -63,12 +71,7 @@ class MarketSignalApp {
      * Start performance monitoring
      */
     startPerformanceMonitoring() {
-        // Safeguard: Ensure performance.now() is available
-        if (typeof performance.now !== 'function') {
-            throw new Error("Browser performance API unavailable");
-        }
-        
-        this.performanceMetrics.startTime = performance.now();
+        this.performanceMetrics.startTime = __perfNow();
         
         // Monitor memory usage if available
         if (performance.memory) {
@@ -85,7 +88,7 @@ class MarketSignalApp {
      * Report performance metrics
      */
     reportPerformanceMetrics() {
-        const loadTime = performance.now() - this.performanceMetrics.startTime;
+        const loadTime = __perfNow() - this.performanceMetrics.startTime;
         console.log(`App load time: ${loadTime.toFixed(2)}ms`);
         
         // Store metrics for debugging
@@ -503,17 +506,17 @@ class MarketSignalApp {
      */
     debug() {
         const status = this.getStatus();
-        const performance = utils.perfTracker.getMemoryUsage();
+        const memoryInfo = utils.perfTracker.getMemoryUsage();
         
         console.log('=== App Debug Info ===');
         console.log('Status:', status);
-        console.log('Performance:', performance);
+        console.log('Performance:', memoryInfo);
         console.log('User Agent:', navigator.userAgent);
         console.log('Online:', navigator.onLine);
         console.log('Service Worker:', 'serviceWorker' in navigator);
         console.log('=====================');
         
-        return { status, performance };
+        return { status, memoryInfo };
     }
 }
 
