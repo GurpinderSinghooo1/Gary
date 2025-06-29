@@ -495,7 +495,7 @@ const validation = {
 };
 
 // Performance monitoring utilities
-const performance = {
+const perfTracker = {
     // Measure execution time
     measureTime: (name, fn) => {
         const start = performance.now();
@@ -545,6 +545,6 @@ window.utils = {
     isToday,
     getDaysDifference,
     validation,
-    performance,
+    perfTracker,
     handleError
 }; 

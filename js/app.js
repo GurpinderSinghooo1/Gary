@@ -63,6 +63,11 @@ class MarketSignalApp {
      * Start performance monitoring
      */
     startPerformanceMonitoring() {
+        // Safeguard: Ensure performance.now() is available
+        if (typeof performance.now !== 'function') {
+            throw new Error("Browser performance API unavailable");
+        }
+        
         this.performanceMetrics.startTime = performance.now();
         
         // Monitor memory usage if available
@@ -498,7 +503,7 @@ class MarketSignalApp {
      */
     debug() {
         const status = this.getStatus();
-        const performance = utils.performance.getMemoryUsage();
+        const performance = utils.perfTracker.getMemoryUsage();
         
         console.log('=== App Debug Info ===');
         console.log('Status:', status);
