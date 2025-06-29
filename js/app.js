@@ -52,6 +52,9 @@ class MarketSignalApp {
             
             // Set up event listeners
             this.setupEventListeners();
+
+            // Start auto-refresh timer
+            this.autoRefreshInterval = this.setupAutoRefresh();
             
             // Mark as initialized
             this.isInitialized = true;
@@ -339,7 +342,7 @@ class MarketSignalApp {
      */
     setupAutoRefresh() {
         // Refresh data every 5 minutes if data is stale
-        setInterval(() => {
+        return setInterval(() => {
             if (dataHandler.isDataStale()) {
                 console.log('Data is stale, refreshing...');
                 this.refreshData();
