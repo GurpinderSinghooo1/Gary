@@ -91,18 +91,17 @@ class DataHandler {
         this.isDataFromCache = false; // Reset cache flag
         
         try {
-            // CORS proxy configuration - set to empty string to disable proxy
-            const PROXY = 'https://corsproxy.io/?';
+            // CORS/Proxy configuration  – set USE_PROXY = true to enable proxy later if needed
+            const USE_PROXY   = false;
+            const PROXY_PREFIX = 'https://corsproxy.io/?'; // or switch to another proxy
             const BASE_API_URL = 'https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec';
             
-            // Get the Apps Script web app URL with proxy
-            const url = PROXY + BASE_API_URL;
+            // Final URL: direct or proxied
+            const url = USE_PROXY ? `${PROXY_PREFIX}${BASE_API_URL}` : BASE_API_URL;
             
+            // Perform fetch – omit custom headers to keep request "simple" and avoid pre-flight
             const response = await fetch(url, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 mode: 'cors'
             });
             
