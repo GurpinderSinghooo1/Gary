@@ -40,6 +40,17 @@ Website_Market Scanner/
 3. Set source to main branch
 4. The site will be available at `https://[username].github.io/[repo-name]`
 
+## 📦 Local Development
+
+Install dependencies with `npm install` then use:
+
+- `npm run dev` – launch a local server on http://localhost:3000
+- `npm test` – run unit tests with Jest
+- `npm run lint` – check code style with ESLint
+
+The API URL used by the dashboard is defined in `js/data-handler.js` as the
+`BASE_API_URL` constant. Update this value if your backend endpoint changes.
+
 ## 📊 Data Flow
 
 1. **Daily Sync (12:30 PM)**: Apps Script fetches data from Project 1 sheets
