@@ -6,6 +6,7 @@
 const CACHE_NAME = 'market-signal-dashboard-v3.2';
 const STATIC_CACHE = 'market-signal-static-v3.2';
 const DATA_CACHE = 'market-signal-data-v3.2';
+const DATA_CACHE_LIMIT = 30;
 
 // Files to cache for offline functionality
 const STATIC_FILES = [
@@ -99,7 +100,7 @@ self.addEventListener('fetch', (event) => {
     // Handle different types of requests
     if (isStaticFile(url)) {
         event.respondWith(handleStaticFile(request));
-    } else if (isApiRequest(url)) {
+    } else if (isApiCall(url)) {
         event.respondWith(handleApiRequest(request));
     } else if (isImageRequest(url)) {
         event.respondWith(handleImageRequest(request));
@@ -132,7 +133,7 @@ function isStaticFile(url) {
 /**
  * Check if request is for API data
  */
-function isApiRequest(url) {
+function isApiCall(url) {
     return API_ENDPOINTS.some(endpoint => url.href.includes(endpoint)) ||
            url.pathname.includes('/api/') ||
            url.searchParams.has('data');
@@ -189,7 +190,8 @@ async function handleApiRequest(request) {
         // Cache successful responses
         if (networkResponse.ok) {
             const cache = await caches.open(DATA_CACHE);
-            cache.put(request, networkResponse.clone());
+            await cache.put(request, networkResponse.clone());
+            await trimDataCache();
         }
         
         return networkResponse;
@@ -279,6 +281,21 @@ async function handleDefaultRequest(request) {
 }
 
 /**
+ * Trim data cache to DATA_CACHE_LIMIT entries
+ */
+async function trimDataCache() {
+    const cache = await caches.open(DATA_CACHE);
+    const keys = await cache.keys();
+    if (keys.length <= DATA_CACHE_LIMIT) {
+        return;
+    }
+    const excess = keys.length - DATA_CACHE_LIMIT;
+    for (let i = 0; i < excess; i++) {
+        await cache.delete(keys[i]);
+    }
+}
+
+/**
  * Background sync for data updates
  */
 self.addEventListener('sync', (event) => {
@@ -301,6 +318,7 @@ async function performBackgroundSync() {
             // Cache the fresh data
             const cache = await caches.open(DATA_CACHE);
             await cache.put(API_ENDPOINTS[0], response.clone());
+            await trimDataCache();
             
             // Notify clients of data update
             const clients = await self.clients.matchAll();
