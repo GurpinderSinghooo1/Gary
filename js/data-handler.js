@@ -3,6 +3,7 @@
  * Manages API calls, data processing, filtering, and state management
  */
 
+import { API_BASE_URL, CORS_PROXY } from "./config.js";
 class DataHandler {
     constructor() {
         this.data = [];
@@ -91,12 +92,9 @@ class DataHandler {
         this.isDataFromCache = false; // Reset cache flag
         
         try {
-            // CORS proxy configuration - set to empty string to disable proxy
-            const PROXY = 'https://corsproxy.io/?';
-            const BASE_API_URL = 'https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec';
+            // Construct the web app URL (add proxy if defined)
             
-            // Get the Apps Script web app URL with proxy
-            const url = PROXY + BASE_API_URL;
+            const url = `${CORS_PROXY}${API_BASE_URL}`;
             
             const response = await fetch(url, {
                 method: 'GET',

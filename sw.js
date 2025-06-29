@@ -2,6 +2,7 @@
  * Market Signal Dashboard - Service Worker
  * Enhanced PWA functionality with offline support and caching
  */
+import { API_BASE_URL, CORS_PROXY } from './js/config.js';
 
 const CACHE_NAME = 'market-signal-dashboard-v3.1';
 const STATIC_CACHE = 'market-signal-static-v3.1';
@@ -24,8 +25,8 @@ const STATIC_FILES = [
 
 // API endpoints to cache (including CORS proxy)
 const API_ENDPOINTS = [
-    'https://corsproxy.io/?https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec',
-    'https://script.google.com/macros/s/AKfycbxjC5rcbSwKzeXgFG2LU4hgkrVYGcufvyP301v7wat6t_55y2wxyudn6qmiT3j1O48/exec' // Keep original for fallback
+    `${CORS_PROXY}${API_BASE_URL}`,
+    API_BASE_URL // Keep original for fallback
 ];
 
 // Cache strategies
