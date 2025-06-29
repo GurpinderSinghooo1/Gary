@@ -9,5 +9,17 @@
     "ecmaVersion": "latest",
     "sourceType": "script"
   },
-  "rules": {}
+  "globals": {
+    "utils": "readonly",
+    "dataHandler": "readonly",
+    "uiComponents": "readonly",
+    "__perfNow": "readonly",
+    "app": "readonly"
+  },
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "no-prototype-builtins": "off",
+    "no-const-assign": "off"
+  }
 }
