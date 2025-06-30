@@ -304,7 +304,9 @@ class UIComponents {
         
         // Add available dates
         availableDates.forEach(date => {
-            if (date === utils.getTodayDate()) {
+            // Normalise date (remove time component)
+            const baseDate = typeof date === 'string' ? date.split('T')[0] : date;
+            if (baseDate === utils.getTodayDate()) {
                 // Already represented by "Today" option
                 return;
             }
@@ -752,15 +754,18 @@ class UIComponents {
      * Handle data loaded successfully
      */
     handleDataLoaded(isFromCache) {
+        // Hide loading first and yield to browser so overlay repaints before heavy rendering
         this.hideLoading();
-        this.updateHeaderStats();
-        this.updateSentimentBar();
-        this.updateSectorFilter();
-        this.updateDateNavigation();
-        this.renderSignals();
-        if (isFromCache) {
-            utils.showToast('Using cached data. Network unavailable.', 'warning');
-        }
+        requestAnimationFrame(() => {
+            this.updateHeaderStats();
+            this.updateSentimentBar();
+            this.updateSectorFilter();
+            this.updateDateNavigation();
+            this.renderSignals();
+            if (isFromCache) {
+                utils.showToast('Using cached data. Network unavailable.', 'warning');
+            }
+        });
     }
     
     /**
