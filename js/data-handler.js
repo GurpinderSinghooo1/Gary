@@ -199,11 +199,28 @@ class DataHandler {
      * Get signals for a specific date
      */
     getSignalsForDate(date) {
+        // Normalize input date (e.g., "today" or full ISO string) to "YYYY-MM-DD"
         if (!date || date === 'today') {
             date = utils.getTodayDate();
         }
-        
-        return this.data.filter(signal => signal.Date === date);
+
+        // Guard against invalid data array
+        if (!Array.isArray(this.data) || this.data.length === 0) return [];
+
+        return this.data.filter(signal => {
+            if (!signal || !signal.Date) return false;
+
+            // Extract only the date portion if an ISO timestamp is provided (e.g., "2025-06-29T04:00:00.000Z")
+            let signalDate = signal.Date;
+
+            if (typeof signalDate === 'string') {
+                signalDate = signalDate.split('T')[0];
+            } else if (signalDate instanceof Date) {
+                signalDate = signalDate.toISOString().split('T')[0];
+            }
+
+            return signalDate === date;
+        });
     }
     
     /**
