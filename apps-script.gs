@@ -371,25 +371,34 @@ function getMarketSentiment() {
  * Fetch company name mappings
  */
 function getCompanyNameMap() {
+  // Fetch company-name mapping (Ticker → COMPANY_NAME) from dedicated tab
   const sheet = SpreadsheetApp.openById(SOURCE_SHEET_ID).getSheetByName(SOURCE_TABS.COMPANY_NAMES);
   if (!sheet) {
     throw new Error(`Source tab not found: ${SOURCE_TABS.COMPANY_NAMES}`);
   }
-  
+
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
   const rows = data.slice(1);
-  
-  const tickerCol = headers.indexOf('Ticker');
-  const nameCol = headers.indexOf('COMPANY_NAME');
-  
+
+  // Case-insensitive header resolution to avoid future schema drift
+  const upperHeaders = headers.map(h => (h || '').toString().toUpperCase());
+  const tickerCol = upperHeaders.indexOf('TICKER');
+  const nameCol = upperHeaders.indexOf('COMPANY_NAME');
+
+  if (tickerCol === -1 || nameCol === -1) {
+    throw new Error('Ticker or COMPANY_NAME column not found in company name mapping sheet');
+  }
+
   const nameMap = {};
   rows.forEach(row => {
-    if (row[tickerCol] && row[nameCol]) {
-      nameMap[row[tickerCol]] = row[nameCol];
+    const ticker = row[tickerCol];
+    const compName = row[nameCol];
+    if (ticker && compName) {
+      nameMap[ticker] = compName;
     }
   });
-  
+
   return nameMap;
 }
 

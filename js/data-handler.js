@@ -354,6 +354,11 @@ class DataHandler {
      * Change current date
      */
     changeDate(date) {
+        // Strip time component if ISO string provided (e.g., 2025-06-28T00:00:00.000Z)
+        if (typeof date === 'string' && date.includes('T')) {
+            date = date.split('T')[0];
+        }
+
         // Validate date format
         if (date && date !== 'today') {
             const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -362,7 +367,7 @@ class DataHandler {
                 return;
             }
         }
-        
+
         this.currentDate = date;
         this.applyFilters();
     }
@@ -417,7 +422,7 @@ class DataHandler {
         // Get past triggers for this ticker
         const pastTriggers = this.getPastTriggers(signal.Ticker, signal.Date);
         
-        const packet = `BUY SIGNAL REVIEW PACK
+        let packet = `BUY SIGNAL REVIEW PACK
 ======================
 
 TICKER: ${signal.Ticker || '--'}

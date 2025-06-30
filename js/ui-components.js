@@ -498,6 +498,12 @@ class UIComponents {
             const safeCompanyName = utils.escapeHtml(signal.CompanyName || signal.Ticker || '');
             const safeSummary = utils.escapeHtml(signal.Summary || 'No summary available');
             
+            // Build past trigger list (exclude current date)
+            const pastTriggers = dataHandler.getPastTriggers(signal.Ticker, signal.Date, 5);
+            const pastTriggerText = pastTriggers.length > 0
+                ? `Previously triggered on ${pastTriggers.map(t => utils.formatDate(t.Date)).join(', ')}`
+                : '';
+            
             card.innerHTML = `
                 <div class="signal-header">
                     <div class="signal-title">
@@ -516,6 +522,7 @@ class UIComponents {
                 </div>
                 
                 <div class="signal-summary">${safeSummary}</div>
+                ${pastTriggerText ? `<div class="past-triggers">${pastTriggerText}</div>` : ''}
                 
                 <div class="signal-details">
                     <div class="detail-group">
@@ -532,7 +539,7 @@ class UIComponents {
                     </div>
                     <div class="detail-group">
                         <div class="detail-label">RSI</div>
-                        <div class="detail-value">${signal.RSI || '--'}</div>
+                        <div class="detail-value">${utils.formatNumber(signal.RSI, 2)}</div>
                     </div>
                     <div class="detail-group">
                         <div class="detail-label">Volume Spike</div>
@@ -555,7 +562,7 @@ class UIComponents {
                         <div class="expandable-grid">
                             <div class="detail-group">
                                 <div class="detail-label">MACD</div>
-                                <div class="detail-value">${signal.MACD || '--'}</div>
+                                <div class="detail-value">${utils.formatNumber(signal.MACD, 2)}</div>
                             </div>
                             <div class="detail-group">
                                 <div class="detail-label">Gap Status</div>
@@ -575,7 +582,7 @@ class UIComponents {
                             </div>
                             <div class="detail-group">
                                 <div class="detail-label">P/E Ratio</div>
-                                <div class="detail-value">${signal.PERatio || '--'}</div>
+                                <div class="detail-value">${utils.formatNumber(signal.PERatio, 2)}</div>
                             </div>
                             <div class="detail-group">
                                 <div class="detail-label">Revenue Growth</div>
@@ -591,7 +598,7 @@ class UIComponents {
                             </div>
                             <div class="detail-group">
                                 <div class="detail-label">Debt/Equity</div>
-                                <div class="detail-value">${signal.DebtToEquity || '--'}</div>
+                                <div class="detail-value">${utils.formatNumber(signal.DebtToEquity, 2)}</div>
                             </div>
                         </div>
                     </div>
