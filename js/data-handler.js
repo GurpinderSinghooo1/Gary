@@ -395,9 +395,18 @@ class DataHandler {
     getPastTriggers(ticker, currentDate, limit = 3) {
         if (!ticker || !currentDate) return [];
         
+        const normalize = (d) => {
+            if (!d) return '';
+            if (typeof d === 'string') return d.split('T')[0];
+            if (d instanceof Date) return d.toISOString().split('T')[0];
+            return String(d);
+        };
+
+        const currentNorm = normalize(currentDate);
+        
         // Get all signals for this ticker from different dates
         const allSignals = this.data.filter(signal => 
-            signal.Ticker === ticker && signal.Date !== currentDate
+            signal.Ticker === ticker && normalize(signal.Date) !== currentNorm
         );
         
         // Sort by date (newest first) and take the most recent ones

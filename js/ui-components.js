@@ -304,6 +304,10 @@ class UIComponents {
         
         // Add available dates
         availableDates.forEach(date => {
+            if (date === utils.getTodayDate()) {
+                // Already represented by "Today" option
+                return;
+            }
             const option = document.createElement('option');
             option.value = date;
             option.textContent = utils.formatDate(date);
