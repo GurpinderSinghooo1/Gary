@@ -3,6 +3,7 @@ package com.gary.tvhome.access
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.os.SystemClock
+import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import com.gary.tvhome.HomeActivity
@@ -23,6 +24,7 @@ class HomeButtonService : AccessibilityService() {
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
         if (event.keyCode != KeyEvent.KEYCODE_HOME) return false
+        Log.i(TAG, "HOME key caught (action=${event.action})")
         if (event.action == KeyEvent.ACTION_UP && !event.isCanceled) openHome()
         return true // swallow both DOWN and UP so the system never sees HOME
     }
@@ -30,7 +32,7 @@ class HomeButtonService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
         val pkg = event.packageName?.toString() ?: return
-        if (pkg in STOCK_HOMES) openHome()
+        if (pkg in STOCK_HOMES) { Log.i(TAG, "stock home in front ($pkg), bringing TV Home back"); openHome() }
     }
 
     override fun onInterrupt() {}
@@ -53,7 +55,10 @@ class HomeButtonService : AccessibilityService() {
         }
     }
 
+    override fun onServiceConnected() { Log.i(TAG, "connected") }
+
     companion object {
+        private const val TAG = "HomeButtonService"
         val STOCK_HOMES = setOf(
             "com.google.android.apps.tv.launcherx",
             "com.google.android.tvlauncher",
