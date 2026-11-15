@@ -35,7 +35,8 @@ STOCK_PKGS="com.google.android.apps.tv.launcherx com.google.android.leanbacklaun
 # Common vendor extras (TCL, Hisense, Sony, Philips, Xiaomi). Only disabled if present.
 VENDOR="com.tcl.tvweishi com.tcl.esticker com.tcl.gallery com.tcl.ui_mediaCenter com.tcl.partnercustomizer com.tcl.guard
 com.hisense.tv.vidaa.ads com.jamdeo.tv.vod com.sony.dtv.promos com.sony.dtv.sonyselect com.sony.dtv.recommendation
-com.mitv.tvhome.atv com.xiaomi.mitv.upgrade com.netflix.partner.activation"
+com.mitv.tvhome.atv com.xiaomi.mitv.upgrade com.netflix.partner.activation
+com.vidaa.oemtabcontentprovider net.vidaatv.hisense.android.tv com.vt.hishow com.vt.storemode com.vt.tv.mobiledeviceconnectiontips"
 
 installed=$(tvsh pm list packages | tr -d '\r' | sed 's/^package://')
 targets=()
