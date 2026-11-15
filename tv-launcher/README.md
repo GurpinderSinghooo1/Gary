@@ -50,10 +50,13 @@ usage stats) is native Kotlin behind a small JSON bridge.
 | engine | Engine | Athlete dashboard | Strava 6-week load + acute:chronic ratio |
 | datenight | Date Night | Candlelight, picks for two | TMDB picks on your services in Canada, anniversary countdown |
 
-## Washi wallpaper
+## Washi wallpaper and screensaver
 
-Original artwork drawn by code: `python3 tools/make_washi_bg.py` writes `design/washi-bg.svg`, and
-`node tools/render_washi_bg.js` renders it to `app/src/main/assets/web/washi-bg.jpg`. Change colours or move
+Original artwork drawn by code, one per Japanese season (spring sakura, summer green, autumn maple, winter snow),
+switching on the solar terms (Feb 4, May 5, Aug 7, Nov 7). `python3 tools/make_washi_bg.py <season>` writes
+`design/washi-bg-<season>.svg`; `node tools/render_washi_bg.js` renders all four to `app/src/main/assets/web/`.
+Force one with the store key `washi.season`. The screensaver (`dream/TvHomeDream.kt`) shows the same scene with a big
+clock, slow drift and burn-in protection. Change colours or move
 things in the script and re-run both, then `python3 tools/build_web.py`.
 
 ## Remote
@@ -101,4 +104,4 @@ The Android SDK is needed (Android Studio, or GitHub Actions: `.github/workflows
 cd tv-launcher && python3 tools/build_web.py && ./gradlew assembleDebug
 ```
 
-Then follow [SETUP.md](SETUP.md).
+Then follow [TONIGHT.md](TONIGHT.md) (Windows, plain English) or [SETUP.md](SETUP.md) (full detail, Mac/Linux scripts).

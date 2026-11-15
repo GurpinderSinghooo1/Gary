@@ -172,6 +172,13 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
 /* ---------- E. Washi (Japanese, final) ---------- */
 .wa{position:absolute;inset:0;background:#efe8dc url("washi-bg.jpg") center/cover no-repeat;color:#1f3555;font-family:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;overflow:hidden;
   --wa-navy:#1f3555;--wa-ink:#4b5f7a;--wa-red:#b4615a;--wa-paper:rgba(250,247,240,.84)}
+.wa.s-spring{background-image:url("washi-bg-spring.jpg")}
+.wa.s-summer{background-image:url("washi-bg-summer.jpg")}
+.wa.s-autumn{background-image:url("washi-bg-autumn.jpg")}
+.wa.s-winter{background-image:url("washi-bg-winter.jpg")}
+.wa.s-summer .petal{background:radial-gradient(circle at 30% 30%,#c9dcb4,#86ad7c);opacity:.55}
+.wa.s-autumn .petal{background:radial-gradient(circle at 30% 30%,#ecc28f,#c9805e);border-radius:10% 70% 10% 70%}
+.wa.s-winter .petal{background:#fff;border-radius:50%;width:.55cqw;height:.55cqw;opacity:.9;box-shadow:0 0 .4cqw rgba(255,255,255,.8)}
 .wa-tint{position:absolute;inset:0;pointer-events:none;transition:background 2s ease}
 .wa.dawn .wa-tint{background:linear-gradient(180deg,rgba(255,186,160,.16),rgba(255,214,190,.05))}
 .wa.dusk .wa-tint{background:linear-gradient(180deg,rgba(214,120,100,.18),rgba(120,90,140,.10))}
@@ -750,7 +757,7 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
         <div class="wa" id="wa">
           <div class="wa-tint"></div>
           <div id="waPetals"></div>
-          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · 曇 <span data-b="wx.tc">2°C</span> <span data-b="wx.text">Cloudy</span></div>
+          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · <span data-b="wx.kanji">曇</span> <span data-b="wx.tc">2°C</span> <span data-b="wx.text">Cloudy</span></div>
             <div class="fc" id="waFc"><span>Today −3° / 2°</span><span>Sun <b>4°</b></span><span>Mon <b>1°</b></span><span>Tue <b>−3°</b></span></div></div>
           <div class="wa-kou"><span class="hanko" id="waSeal">冬</span><span class="v" id="waKouK">地始凍</span><span class="g" id="waKouG">Chi hajimete kōru<br>Earth begins to freeze</span><span class="n" id="waKouN">第五十六候</span></div>
           <div class="wa-row" id="waRow"></div>
@@ -1137,7 +1144,10 @@ document.getElementById('waRow').innerHTML=APPS.map(a=>`<div class="wa-card" dat
   const r0=KOU.findIndex(x=>x[0]==='02-04');
   document.getElementById('waKouN').textContent='第'+KANJI_NUM(((k-r0+72)%72)+1)+'候';
   // Season seal follows the solar terms: Risshun 02-04, Rikka 05-05, Risshū 08-07, Rittō 11-07.
-  document.getElementById('waSeal').textContent=(md>='11-07'||md<'02-04')?'冬':md<'05-05'?'春':md<'08-07'?'夏':'秋';
+  const season=(md>='11-07'||md<'02-04')?'winter':md<'05-05'?'spring':md<'08-07'?'summer':'autumn';
+  document.getElementById('waSeal').textContent={winter:'冬',spring:'春',summer:'夏',autumn:'秋'}[season];
+  window.waSeason=function(s){const w=document.getElementById('wa');if(!w)return;w.classList.remove('s-spring','s-summer','s-autumn','s-winter');w.classList.add('s-'+s);};
+  window.waSeason(season);
   let p='';for(let i=0;i<11;i++){p+=`<i class="petal" style="left:${55+((i*37)%45)}cqw;animation-duration:${16+(i*7)%13}s;animation-delay:-${(i*5)%19}s;transform:scale(${.7+(i%4)*.15})"></i>`;}
   document.getElementById('waPetals').innerHTML=p;
   const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14),ph=((((Date.now()-ref)/864e5)%syn)+syn)%syn/syn;

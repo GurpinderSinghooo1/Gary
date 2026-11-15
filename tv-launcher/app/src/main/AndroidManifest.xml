@@ -55,6 +55,18 @@
             </intent-filter>
         </activity>
 
+        <!-- Screensaver: the Washi scene with a clock instead of Google's ambient mode. -->
+        <service
+            android:name=".dream.TvHomeDream"
+            android:exported="true"
+            android:label="TV Home · Washi"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
         <!-- adb-only config push (tools/push-config.sh). DUMP is held by the adb shell, not by apps. -->
         <receiver
             android:name=".setup.SetupReceiver"

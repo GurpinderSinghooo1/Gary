@@ -25,3 +25,12 @@ body.bed-dim .tv { filter: brightness(.25); transition: filter 3s ease; }
 #tvMenu .mb { padding: .5vw 1.1vw; border-radius: 2vw; background: rgba(255,255,255,.07); white-space: nowrap; }
 #tvMenu .mb.name { background: transparent; font-weight: 600; min-width: 9vw; text-align: center; }
 #tvMenu .mb.on { background: #9db4ff; color: #0c1230; font-weight: 600; }
+
+/* ---- Screensaver (TvHomeDream): scene + clock only, slow drift, burn-in protection ---- */
+body.dream .wa-row, body.dream .wa-strip, body.dream #tvToast { display: none !important; }
+body.dream .wa { animation: waDrift 120s ease-in-out infinite alternate; background-size: auto 100%; }
+@keyframes waDrift { from { background-size: auto 100%; background-position: 50% 50%; } to { background-size: auto 112%; background-position: 58% 42%; } }
+body.dream .wa-time .t { font-size: 10cqw; }
+body.dream .wa-time, body.dream .wa-kou { transition: transform 6s ease-in-out, color 2s; }
+body.dream .wa-kou { left: 33cqw; }
+@media (prefers-reduced-motion: reduce) { body.dream .wa { animation: none; } }

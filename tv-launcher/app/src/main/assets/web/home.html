@@ -177,6 +177,13 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
 /* ---------- E. Washi (Japanese, final) ---------- */
 .wa{position:absolute;inset:0;background:#efe8dc url("washi-bg.jpg") center/cover no-repeat;color:#1f3555;font-family:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;overflow:hidden;
   --wa-navy:#1f3555;--wa-ink:#4b5f7a;--wa-red:#b4615a;--wa-paper:rgba(250,247,240,.84)}
+.wa.s-spring{background-image:url("washi-bg-spring.jpg")}
+.wa.s-summer{background-image:url("washi-bg-summer.jpg")}
+.wa.s-autumn{background-image:url("washi-bg-autumn.jpg")}
+.wa.s-winter{background-image:url("washi-bg-winter.jpg")}
+.wa.s-summer .petal{background:radial-gradient(circle at 30% 30%,#c9dcb4,#86ad7c);opacity:.55}
+.wa.s-autumn .petal{background:radial-gradient(circle at 30% 30%,#ecc28f,#c9805e);border-radius:10% 70% 10% 70%}
+.wa.s-winter .petal{background:#fff;border-radius:50%;width:.55cqw;height:.55cqw;opacity:.9;box-shadow:0 0 .4cqw rgba(255,255,255,.8)}
 .wa-tint{position:absolute;inset:0;pointer-events:none;transition:background 2s ease}
 .wa.dawn .wa-tint{background:linear-gradient(180deg,rgba(255,186,160,.16),rgba(255,214,190,.05))}
 .wa.dusk .wa-tint{background:linear-gradient(180deg,rgba(214,120,100,.18),rgba(120,90,140,.10))}
@@ -668,6 +675,15 @@ body.bed-dim .tv { filter: brightness(.25); transition: filter 3s ease; }
 #tvMenu .mb { padding: .5vw 1.1vw; border-radius: 2vw; background: rgba(255,255,255,.07); white-space: nowrap; }
 #tvMenu .mb.name { background: transparent; font-weight: 600; min-width: 9vw; text-align: center; }
 #tvMenu .mb.on { background: #9db4ff; color: #0c1230; font-weight: 600; }
+
+/* ---- Screensaver (TvHomeDream): scene + clock only, slow drift, burn-in protection ---- */
+body.dream .wa-row, body.dream .wa-strip, body.dream #tvToast { display: none !important; }
+body.dream .wa { animation: waDrift 120s ease-in-out infinite alternate; background-size: auto 100%; }
+@keyframes waDrift { from { background-size: auto 100%; background-position: 50% 50%; } to { background-size: auto 112%; background-position: 58% 42%; } }
+body.dream .wa-time .t { font-size: 10cqw; }
+body.dream .wa-time, body.dream .wa-kou { transition: transform 6s ease-in-out, color 2s; }
+body.dream .wa-kou { left: 33cqw; }
+@media (prefers-reduced-motion: reduce) { body.dream .wa { animation: none; } }
 </style>
 </head>
 <body>
@@ -754,7 +770,7 @@ body.bed-dim .tv { filter: brightness(.25); transition: filter 3s ease; }
         <div class="wa" id="wa">
           <div class="wa-tint"></div>
           <div id="waPetals"></div>
-          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · 曇 <span data-b="wx.tc">2°C</span> <span data-b="wx.text">Cloudy</span></div>
+          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · <span data-b="wx.kanji">曇</span> <span data-b="wx.tc">2°C</span> <span data-b="wx.text">Cloudy</span></div>
             <div class="fc" id="waFc"><span>Today −3° / 2°</span><span>Sun <b>4°</b></span><span>Mon <b>1°</b></span><span>Tue <b>−3°</b></span></div></div>
           <div class="wa-kou"><span class="hanko" id="waSeal">冬</span><span class="v" id="waKouK">地始凍</span><span class="g" id="waKouG">Chi hajimete kōru<br>Earth begins to freeze</span><span class="n" id="waKouN">第五十六候</span></div>
           <div class="wa-row" id="waRow"></div>
@@ -1213,7 +1229,10 @@ document.getElementById('waRow').innerHTML=APPS.map(a=>`<div class="wa-card" dat
   const r0=KOU.findIndex(x=>x[0]==='02-04');
   document.getElementById('waKouN').textContent='第'+KANJI_NUM(((k-r0+72)%72)+1)+'候';
   // Season seal follows the solar terms: Risshun 02-04, Rikka 05-05, Risshū 08-07, Rittō 11-07.
-  document.getElementById('waSeal').textContent=(md>='11-07'||md<'02-04')?'冬':md<'05-05'?'春':md<'08-07'?'夏':'秋';
+  const season=(md>='11-07'||md<'02-04')?'winter':md<'05-05'?'spring':md<'08-07'?'summer':'autumn';
+  document.getElementById('waSeal').textContent={winter:'冬',spring:'春',summer:'夏',autumn:'秋'}[season];
+  window.waSeason=function(s){const w=document.getElementById('wa');if(!w)return;w.classList.remove('s-spring','s-summer','s-autumn','s-winter');w.classList.add('s-'+s);};
+  window.waSeason(season);
   let p='';for(let i=0;i<11;i++){p+=`<i class="petal" style="left:${55+((i*37)%45)}cqw;animation-duration:${16+(i*7)%13}s;animation-delay:-${(i*5)%19}s;transform:scale(${.7+(i%4)*.15})"></i>`;}
   document.getElementById('waPetals').innerHTML=p;
   const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14),ph=((((Date.now()-ref)/864e5)%syn)+syn)%syn/syn;
@@ -1419,7 +1438,9 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
   var themeIndex = Math.max(0, THEMES.findIndex(function (t) { return t[0] === themeId; }));
   themeId = THEMES[themeIndex][0];
 
-  var D = window.__DATA = { native: TvHome.native };
+  var Q = new URLSearchParams(location.search);
+  var DREAM = Q.get('mode') === 'dream';
+  var D = window.__DATA = { native: TvHome.native && !DREAM, dream: DREAM };
   var T = null; // result of __buildThemes()
 
   /* ---------------- formatting helpers ---------------- */
@@ -1498,6 +1519,8 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
       m['wx.tc'] = deg(w.temp) + 'C';
       m['wx.tcU'] = m['wx.tc'];
       m['wx.text'] = w.text || '';
+      var c = w.code;
+      m['wx.kanji'] = c <= 1 ? '晴' : c <= 3 ? '曇' : c <= 48 ? '霧' : (c >= 71 && c <= 77) || c === 85 || c === 86 ? '雪' : c >= 95 ? '雷' : '雨';
       m['wx.feels'] = deg(w.feelsLike);
       m['wx.wind'] = compass(w.windDir || 0) + ' ' + Math.round(w.windKmh || 0) + ' km/h';
       m['wx.windU'] = m['wx.wind'].toUpperCase();
@@ -1532,8 +1555,38 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
     });
   }
 
+  /* ---------------- screensaver mode: no bridge, weather straight from Open-Meteo ---------------- */
+  function wmo(c) {
+    if (c === 0) return 'Clear'; if (c === 1) return 'Mainly clear'; if (c === 2) return 'Partly cloudy'; if (c === 3) return 'Cloudy';
+    if (c === 45 || c === 48) return 'Fog'; if (c >= 51 && c <= 57) return 'Drizzle'; if (c >= 61 && c <= 67) return 'Rain';
+    if (c >= 71 && c <= 77) return 'Snow'; if (c >= 80 && c <= 82) return 'Showers'; if (c === 85 || c === 86) return 'Snow showers';
+    if (c >= 95) return 'Thunderstorm'; return '';
+  }
+  function loadDream() {
+    D.settings = { homeName: Q.get('city') || 'Ottawa', secondName: Q.get('home') || 'Amritsar', secondTz: Q.get('tz') || 'Asia/Kolkata' };
+    D.store = {}; D.apps = []; D.cw = { items: [] };
+    var lat = Q.get('lat') || '45.4215', lon = Q.get('lon') || '-75.6972';
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+      '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,cloud_cover,is_day' +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=4';
+    return fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      var c = j.current || {}, d = j.daily || {};
+      D.weather = { name: D.settings.homeName,
+        current: { temp: c.temperature_2m, feelsLike: c.apparent_temperature, code: c.weather_code, text: wmo(c.weather_code),
+          windKmh: c.wind_speed_10m, windDir: c.wind_direction_10m, cloud: c.cloud_cover, isDay: !!c.is_day },
+        daily: (d.time || []).map(function (t, i) { return { date: t, max: d.temperature_2m_max[i], min: d.temperature_2m_min[i],
+          sunrise: d.sunrise[i], sunset: d.sunset[i], code: d.weather_code[i], text: wmo(d.weather_code[i]) }; }) };
+    }).catch(function (e) { console.warn('dream weather', e); });
+  }
+  function dreamDrift() {
+    var el = document.querySelector('.wa-time'), k = document.querySelector('.wa-kou');
+    var dx = (Math.random() * 3 - 1.5).toFixed(2) + 'cqw', dy = (Math.random() * 2.4 - 1.2).toFixed(2) + 'cqw';
+    [el, k].forEach(function (x) { if (x) x.style.transform = 'translate(' + dx + ',' + dy + ')'; });
+  }
+
   /* ---------------- loading ---------------- */
   function loadAll() {
+    if (DREAM) return loadDream();
     var S = TvHome.safe;
     return Promise.all([
       S('settings.get', {}, {}), S('apps', {}, []), S('continueWatching', {}, { items: [] }),
@@ -1939,6 +1992,8 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
     },
     washi: function () {
       var s = D.settings || {};
+      var forced = (D.store || {})['washi.season'];
+      if (forced && forced !== 'auto' && window.waSeason) window.waSeason(forced);
       window.__homeName = s.secondName || 'Amritsar';
       window.__homeTz = s.secondTz || 'Asia/Kolkata';
       var w = D.weather;
@@ -1979,15 +2034,18 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
       T = window.__buildThemes();
       T.screens.forEach(function (s, k) { s.hidden = k !== cur; });
       document.body.setAttribute('data-theme-id', themeId);
+      if (DREAM) { document.body.classList.add('dream'); dreamDrift(); setInterval(dreamDrift, 60000); }
       binds();
       try { if (EXTRAS[themeId]) EXTRAS[themeId](); } catch (e) { console.error('extras', e); }
       if (themeId === 'forge') { var f = document.getElementById('fg'); if (f) f.classList.add('boot'); }
       T.render(cur);
       lastCw = JSON.stringify(((D.cw && D.cw.items) || []).map(function (i) { return [i.title, i.progress]; }));
       document.body.classList.add('ready');
+      if (DREAM) return;
       if (D.native && D.cw && D.cw.permission === false) toast('Allow "TV listings" for continue watching (see SETUP.md)');
     });
     // Weather every 20 min, soundbar + system every 2 min.
+    if (DREAM) { setInterval(function () { loadDream().then(binds); }, 20 * 60000); return; }
     setInterval(function () { TvHome.safe('weather', {}, null).then(function (w) { if (w) { D.weather = w; binds(); } }); }, 20 * 60000);
     setInterval(function () {
       Promise.all([TvHome.safe('soundbar.status', {}, D.soundbar), TvHome.safe('system', {}, D.system)]).then(function (r) { D.soundbar = r[0]; D.system = r[1]; binds(); });

@@ -27,6 +27,6 @@ for(const id of ['washi','marquee','control','phulkari','callus','pace','engine'
  await p.keyboard.press('Enter');await p.waitForTimeout(50);
  const last=await p.evaluate(()=>JSON.stringify(window.__calls.filter(c=>c[0].startsWith('launch')).pop()||null));
  console.log(id,'|',info.first,'|',info.binds,'| OK→',last);
- if(['callus','pace','datenight','control'].includes(id)) await p.screenshot({path:`'+require('os').tmpdir()+'/nat-${id}.png`});
+ if(['callus','pace','datenight','control'].includes(id)) await p.screenshot({path:require('path').join(require('os').tmpdir(),`nat-${id}.png`)});
 }
 console.log('errors',errs);await b.close();})();

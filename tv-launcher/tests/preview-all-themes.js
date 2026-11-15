@@ -8,7 +8,7 @@ for(const id of ids){await p.goto(base+id);await p.waitForTimeout(600);
   await p.keyboard.press('ArrowRight');await p.keyboard.press('ArrowDown');await p.keyboard.press('ArrowUp');await p.keyboard.press('Enter');
   const f=await p.evaluate(()=>{const on=document.querySelector('.screen:not([hidden]) [data-tile].on');return on?on.textContent.trim().slice(0,40):null});
   console.log(id,JSON.stringify(r),'focus:',f);
-  if(['phulkari','callus','datenight'].includes(id)) await p.screenshot({path:`'+require('os').tmpdir()+'/tv-${id}.png`});
+  if(['phulkari','callus','datenight'].includes(id)) await p.screenshot({path:require('path').join(require('os').tmpdir(),`tv-${id}.png`)});
 }
 await p.goto(base+'pace');await p.waitForTimeout(500);await p.evaluate(()=>TvHome.emit('menu'));await p.waitForTimeout(200);await p.keyboard.press('ArrowRight');await p.screenshot({path:''+require('os').tmpdir()+'/tv-menu.png'});
 console.log('errors:',errs);await b.close();})();

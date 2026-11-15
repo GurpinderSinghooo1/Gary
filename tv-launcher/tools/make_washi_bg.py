@@ -6,10 +6,10 @@ still lake with reflections, cherry blossoms on the right edge, a small sun and 
 Reds are deliberately muted (no bright vermilion) and the scene leaves the top-left sky and
 the lake clear for the clock and cards.
 
-    python3 tools/make_washi_bg.py            -> design/washi-bg.svg
+    python3 tools/make_washi_bg.py [spring|summer|autumn|winter]   -> design/washi-bg-<season>.svg
 Then tools/render_washi_bg.js turns it into app/src/main/assets/web/washi-bg.jpg.
 """
-import math, pathlib, random
+import math, pathlib, random, sys
 
 random.seed(7)
 W, H = 1920, 1080
@@ -19,8 +19,16 @@ RED = "#b4615a"       # muted lacquer red
 RED_D = "#8f4a46"
 SLATE = "#2f3d48"      # roof tiles
 NAVY = "#22344d"
+SEASON = sys.argv[1] if len(sys.argv) > 1 else "spring"
+SEASONS = {
+    # foliage on the right-edge branches, sky gradient, water tint
+    "spring": dict(leaf=["#e7b8ae", "#dea198", "#f0cdc5", "#d18e86", "#e9c2b9"], sky=("#f2ece2", "#eee4d8", "#e9ddd0"), water=("#b7cdc7", "#cbdad4", "#dfe6df")),
+    "summer": dict(leaf=["#9cbf8f", "#86ad7c", "#b4cf9f", "#7aa274", "#a9c79a"], sky=("#f2efe4", "#eeeadc", "#e7e4d4"), water=("#a9c8c3", "#c2d8d2", "#dce7e0")),
+    "autumn": dict(leaf=["#d79a6e", "#c9805e", "#e0b07d", "#b9705a", "#dca487"], sky=("#f3eadc", "#efe2cf", "#eadac4"), water=("#bccbc2", "#cfd9cf", "#e2e5dc")),
+    "winter": dict(leaf=["#f7f5f0", "#eef0ef", "#e6ebea", "#fbfaf7", "#dfe6e5"], sky=("#eef0ef", "#e9ecea", "#e2e7e6"), water=("#b9cbcb", "#ccd8d8", "#e1e7e6")),
+}[SEASON]
 PINE = ["#2f4b49", "#3b5a56", "#466b65"]
-BLOSSOM = ["#e7b8ae", "#dea198", "#f0cdc5", "#d18e86", "#e9c2b9"]
+BLOSSOM = SEASONS["leaf"]
 
 out = []
 def add(s): out.append(s)
@@ -36,7 +44,14 @@ def pine(x, base, h, color):
         ww = w * (0.35 + 0.65 * (i + 1) / tiers)
         pts.append(f'<polygon points="{x:.0f},{y_top:.0f} {x-ww/2:.0f},{y_top+h*0.30:.0f} {x+ww/2:.0f},{y_top+h*0.30:.0f}"/>')
     trunk = f'<rect x="{x-2:.0f}" y="{base-h*0.12:.0f}" width="4" height="{h*0.12:.0f}"/>'
-    return f'<g fill="{color}">{"".join(pts)}{trunk}</g>'
+    snow = ""
+    if SEASON == "winter":  # snow resting on each tier
+        for i in range(tiers):
+            t = i / tiers
+            y_top = base - h + t * h * 0.82
+            ww = w * (0.35 + 0.65 * (i + 1) / tiers)
+            snow += f'<polygon points="{x:.0f},{y_top:.0f} {x-ww*0.32:.0f},{y_top+h*0.13:.0f} {x+ww*0.28:.0f},{y_top+h*0.12:.0f}" fill="#f4f6f4"/>'
+    return f'<g fill="{color}">{"".join(pts)}{trunk}{snow}</g>'
 
 def pines(x0, x1, base, hmin, hmax, n, layer=0):
     s = []
@@ -58,7 +73,7 @@ def blossom_cluster(cx, cy, r, n):
 add(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">
 <defs>
   <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#f2ece2"/><stop offset=".55" stop-color="#eee4d8"/><stop offset="1" stop-color="#e9ddd0"/>
+    <stop offset="0" stop-color="{SEASONS['sky'][0]}"/><stop offset=".55" stop-color="{SEASONS['sky'][1]}"/><stop offset="1" stop-color="{SEASONS['sky'][2]}"/>
   </linearGradient>
   <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#5f8c8b"/><stop offset=".55" stop-color="#86aaa6"/><stop offset="1" stop-color="#b9cfca"/>
@@ -67,7 +82,7 @@ add(f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox
     <stop offset="0" stop-color="#2f5554" stop-opacity="0"/><stop offset="1" stop-color="#2f5554" stop-opacity=".35"/>
   </linearGradient>
   <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#b7cdc7"/><stop offset=".5" stop-color="#cbdad4"/><stop offset="1" stop-color="#dfe6df"/>
+    <stop offset="0" stop-color="{SEASONS['water'][0]}"/><stop offset=".5" stop-color="{SEASONS['water'][1]}"/><stop offset="1" stop-color="{SEASONS['water'][2]}"/>
   </linearGradient>
   <filter id="wc" x="-10%" y="-10%" width="120%" height="120%">
     <feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="3" result="n"/>
@@ -211,10 +226,15 @@ for _ in range(14):
 cb.append('</g>')
 add("".join(cb))
 
+# ---------------------------------------------------------------- winter snowfall
+if SEASON == "winter":
+    flakes = "".join(f'<circle cx="{random.uniform(0, W):.0f}" cy="{random.uniform(0, H):.0f}" r="{random.uniform(1.5, 4):.1f}" fill="#ffffff" opacity="{random.uniform(.5, .9):.2f}"/>' for _ in range(160))
+    add(f'<g>{flakes}</g>')
+
 # ---------------------------------------------------------------- paper grain
 add(f'<rect width="{W}" height="{H}" filter="url(#grain)"/>')
 add('</svg>')
 
-dest = pathlib.Path(__file__).resolve().parent.parent / "design/washi-bg.svg"
+dest = pathlib.Path(__file__).resolve().parent.parent / f"design/washi-bg-{SEASON}.svg"
 dest.write_text("".join(out), encoding="utf-8")
 print("wrote", dest, f"{dest.stat().st_size//1024} KB")

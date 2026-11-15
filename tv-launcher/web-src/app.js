@@ -22,7 +22,9 @@
   var themeIndex = Math.max(0, THEMES.findIndex(function (t) { return t[0] === themeId; }));
   themeId = THEMES[themeIndex][0];
 
-  var D = window.__DATA = { native: TvHome.native };
+  var Q = new URLSearchParams(location.search);
+  var DREAM = Q.get('mode') === 'dream';
+  var D = window.__DATA = { native: TvHome.native && !DREAM, dream: DREAM };
   var T = null; // result of __buildThemes()
 
   /* ---------------- formatting helpers ---------------- */
@@ -101,6 +103,8 @@
       m['wx.tc'] = deg(w.temp) + 'C';
       m['wx.tcU'] = m['wx.tc'];
       m['wx.text'] = w.text || '';
+      var c = w.code;
+      m['wx.kanji'] = c <= 1 ? '晴' : c <= 3 ? '曇' : c <= 48 ? '霧' : (c >= 71 && c <= 77) || c === 85 || c === 86 ? '雪' : c >= 95 ? '雷' : '雨';
       m['wx.feels'] = deg(w.feelsLike);
       m['wx.wind'] = compass(w.windDir || 0) + ' ' + Math.round(w.windKmh || 0) + ' km/h';
       m['wx.windU'] = m['wx.wind'].toUpperCase();
@@ -135,8 +139,38 @@
     });
   }
 
+  /* ---------------- screensaver mode: no bridge, weather straight from Open-Meteo ---------------- */
+  function wmo(c) {
+    if (c === 0) return 'Clear'; if (c === 1) return 'Mainly clear'; if (c === 2) return 'Partly cloudy'; if (c === 3) return 'Cloudy';
+    if (c === 45 || c === 48) return 'Fog'; if (c >= 51 && c <= 57) return 'Drizzle'; if (c >= 61 && c <= 67) return 'Rain';
+    if (c >= 71 && c <= 77) return 'Snow'; if (c >= 80 && c <= 82) return 'Showers'; if (c === 85 || c === 86) return 'Snow showers';
+    if (c >= 95) return 'Thunderstorm'; return '';
+  }
+  function loadDream() {
+    D.settings = { homeName: Q.get('city') || 'Ottawa', secondName: Q.get('home') || 'Amritsar', secondTz: Q.get('tz') || 'Asia/Kolkata' };
+    D.store = {}; D.apps = []; D.cw = { items: [] };
+    var lat = Q.get('lat') || '45.4215', lon = Q.get('lon') || '-75.6972';
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon +
+      '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,cloud_cover,is_day' +
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=4';
+    return fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+      var c = j.current || {}, d = j.daily || {};
+      D.weather = { name: D.settings.homeName,
+        current: { temp: c.temperature_2m, feelsLike: c.apparent_temperature, code: c.weather_code, text: wmo(c.weather_code),
+          windKmh: c.wind_speed_10m, windDir: c.wind_direction_10m, cloud: c.cloud_cover, isDay: !!c.is_day },
+        daily: (d.time || []).map(function (t, i) { return { date: t, max: d.temperature_2m_max[i], min: d.temperature_2m_min[i],
+          sunrise: d.sunrise[i], sunset: d.sunset[i], code: d.weather_code[i], text: wmo(d.weather_code[i]) }; }) };
+    }).catch(function (e) { console.warn('dream weather', e); });
+  }
+  function dreamDrift() {
+    var el = document.querySelector('.wa-time'), k = document.querySelector('.wa-kou');
+    var dx = (Math.random() * 3 - 1.5).toFixed(2) + 'cqw', dy = (Math.random() * 2.4 - 1.2).toFixed(2) + 'cqw';
+    [el, k].forEach(function (x) { if (x) x.style.transform = 'translate(' + dx + ',' + dy + ')'; });
+  }
+
   /* ---------------- loading ---------------- */
   function loadAll() {
+    if (DREAM) return loadDream();
     var S = TvHome.safe;
     return Promise.all([
       S('settings.get', {}, {}), S('apps', {}, []), S('continueWatching', {}, { items: [] }),
@@ -542,6 +576,8 @@
     },
     washi: function () {
       var s = D.settings || {};
+      var forced = (D.store || {})['washi.season'];
+      if (forced && forced !== 'auto' && window.waSeason) window.waSeason(forced);
       window.__homeName = s.secondName || 'Amritsar';
       window.__homeTz = s.secondTz || 'Asia/Kolkata';
       var w = D.weather;
@@ -582,15 +618,18 @@
       T = window.__buildThemes();
       T.screens.forEach(function (s, k) { s.hidden = k !== cur; });
       document.body.setAttribute('data-theme-id', themeId);
+      if (DREAM) { document.body.classList.add('dream'); dreamDrift(); setInterval(dreamDrift, 60000); }
       binds();
       try { if (EXTRAS[themeId]) EXTRAS[themeId](); } catch (e) { console.error('extras', e); }
       if (themeId === 'forge') { var f = document.getElementById('fg'); if (f) f.classList.add('boot'); }
       T.render(cur);
       lastCw = JSON.stringify(((D.cw && D.cw.items) || []).map(function (i) { return [i.title, i.progress]; }));
       document.body.classList.add('ready');
+      if (DREAM) return;
       if (D.native && D.cw && D.cw.permission === false) toast('Allow "TV listings" for continue watching (see SETUP.md)');
     });
     // Weather every 20 min, soundbar + system every 2 min.
+    if (DREAM) { setInterval(function () { loadDream().then(binds); }, 20 * 60000); return; }
     setInterval(function () { TvHome.safe('weather', {}, null).then(function (w) { if (w) { D.weather = w; binds(); } }); }, 20 * 60000);
     setInterval(function () {
       Promise.all([TvHome.safe('soundbar.status', {}, D.soundbar), TvHome.safe('system', {}, D.system)]).then(function (r) { D.soundbar = r[0]; D.system = r[1]; binds(); });

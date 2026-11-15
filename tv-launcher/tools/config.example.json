@@ -26,6 +26,7 @@
     "pace.plan": [["REST","Recovery"],["8K","Tempo"],["6K","Easy"],["10K","Intervals"],["REST","Mobility"],["5K","Shakeout"],["24K","Long run"]],
     "datenight.anniversary": "2020-12-25",
     "datenight.mood": "romantic",
+    "washi.season": "auto",
     "playlists": { "punjabi": "punjabi hits playlist", "dinner": "dinner jazz playlist" }
   }
 }

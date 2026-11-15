@@ -26,5 +26,8 @@ for p in com.netflix.ninja com.google.android.youtube.tv com.disney.disneyplus c
   if tvsh pm list packages "$p" | tr -d '\r' | grep -qx "package:$p"; then echo "   found  $p"; fi
 done
 
+echo "== Screensaver: Washi scene instead of Google's ambient mode"
+tvsh settings put secure screensaver_components $PKG/.dream.TvHomeDream && tvsh settings put secure screensaver_enabled 1 && echo "   ok"
+
 tvsh am start -n $PKG/.HomeActivity >/dev/null
 echo "Done. Press HOME on the remote."
