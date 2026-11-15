@@ -1824,7 +1824,8 @@ return { screens: screens, state: state, hooks: hooks, render: render, APPS: APP
         var lr = st.lastRun;
         if (lr) {
           var pace = lr.paceSPerKm, mm = Math.floor(pace / 60), ss = String(pace % 60).padStart(2, '0');
-          var dur = Math.floor(lr.movingS / 60) + ':' + String(lr.movingS % 60).padStart(2, '0');
+          var hh = Math.floor(lr.movingS / 3600), mi = Math.floor(lr.movingS % 3600 / 60), se = lr.movingS % 60;
+          var dur = (hh ? hh + ':' + String(mi).padStart(2, '0') : mi) + ':' + String(se).padStart(2, '0');
           var when = new Date(lr.date.replace('Z', '')).toLocaleDateString([], { weekday: 'long' }).toUpperCase();
           var txt = document.querySelector('.pa-splits .txt');
           txt.innerHTML = '<div class="lb">LAST RUN · ' + when + '</div><b>' + lr.km + ' km · ' + dur + '</b><div class="lb" style="margin-top:.2cqw">' + mm + ':' + ss + ' /KM AVG</div>';
