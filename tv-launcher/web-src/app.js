@@ -125,7 +125,8 @@
         m['sb.stateU'] = on ? 'ONLINE' : 'STANDBY';
         if (sb.volume !== undefined) m['sb.vol'] = String(sb.volume);
       } else {
-        m['sb.state'] = 'via HDMI'; m['sb.stateCap'] = 'HDMI-CEC'; m['sb.stateU'] = 'CEC LINK'; m['sb.vol'] = '–';
+        // HW-J355 (no HDMI, no Wi-Fi): it wakes itself via Auto Power Link (optical) or Bluetooth Power On.
+        m['sb.state'] = 'auto-on'; m['sb.stateCap'] = 'Auto-on'; m['sb.stateU'] = 'AUTO LINK'; m['sb.vol'] = 'soundbar remote';
       }
     }
     var sys = D.system;
@@ -312,7 +313,7 @@
     var sbOn = D.soundbar && D.soundbar.configured;
     return [
       { key: 'theme', label: 'Theme', items: ['◀', THEMES[themePick][1], '▶', 'Apply'] },
-      { key: 'sound', label: 'Soundbar', items: sbOn ? ['On', 'Off', 'Vol −', 'Vol +', 'Night', 'Movie'] : ['Set up SmartThings to control it'] },
+      { key: 'sound', label: 'Soundbar', items: sbOn ? ['On', 'Off', 'Vol −', 'Vol +', 'Night', 'Movie'] : ['Turns on with the TV (Auto Power Link)'] },
       { key: 'bed', label: 'Bedtime', items: ['30 min', '60 min', '90 min', 'Cancel'] },
       { key: 'sys', label: 'TV', items: ['Refresh', 'Android settings', 'Close'] }
     ];
@@ -357,7 +358,7 @@
       drawMenu(); return;
     }
     if (key === 'sound') {
-      if (!(D.soundbar && D.soundbar.configured)) { toast('See SETUP.md: SmartThings token + device'); return; }
+      if (!(D.soundbar && D.soundbar.configured)) { toast('Your soundbar wakes by itself when the TV sends sound. Volume: soundbar remote.'); return; }
       var v = (D.soundbar && D.soundbar.volume) || 15;
       var p = label === 'On' ? TvHome.call('soundbar.power', { on: true })
         : label === 'Off' ? TvHome.call('soundbar.power', { on: false })

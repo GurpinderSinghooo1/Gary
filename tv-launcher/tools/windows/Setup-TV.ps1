@@ -30,7 +30,7 @@ function TvSh { param([Parameter(ValueFromRemainingArguments = $true)] $a) (& $A
 
 # ---------- connect ----------
 $ipFile = Join-Path $Here 'tv-ip.txt'
-$saved = ''
+$saved = '192.168.2.19'
 if (Test-Path $ipFile) { $saved = (Get-Content $ipFile -Raw).Trim() }
 Title 'Connect to the TV'
 Say 'TV: Settings > System > About > press Build 7 times; then Developer options > USB debugging ON.'
@@ -141,20 +141,23 @@ function Undo-Debloat {
   Remove-Item $undo
 }
 
-function Cec {
-  Title 'Soundbar follows the TV (HDMI-CEC)'
-  foreach ($k in 'hdmi_control_enabled','hdmi_control_auto_wakeup_enabled','hdmi_control_auto_device_off_enabled','hdmi_system_audio_control_enabled') {
-    TvSh settings put global $k 1 | Out-Null; Say "   $k = 1" 'Green'
-  }
-  $help = TvSh cmd hdmi_control help
-  if ($help -match 'cec_setting') {
-    $have = TvSh cmd hdmi_control cec_setting list
-    $want = @{ 'hdmi_cec_enabled' = '1'; 'power_control_mode' = 'to_tv_and_audio_system'; 'tv_send_standby_on_sleep' = '1'; 'tv_wake_on_one_touch_play' = '1'; 'system_audio_control' = '1' }
-    foreach ($k in $want.Keys) { if ($have -match $k) { TvSh cmd hdmi_control cec_setting set $k $want[$k] | Out-Null; Say "   $k = $($want[$k])" 'Green' } }
-    TvSh cmd hdmi_control setsam on | Out-Null
-  }
-  Say 'On the soundbar: HDMI cable in the ARC/eARC ports, input D.IN / TV ARC, Anynet+ ON.'
-  Say 'Test: TV off, wait 10 s, TV on with the TV remote.'
+function Soundbar {
+  Title 'Soundbar turns on with the TV (Samsung HW-J355)'
+  Say 'This soundbar has no HDMI or Wi-Fi. It wakes itself in one of two ways, depending on the cable:'
+  Say ''
+  Say 'A) OPTICAL cable (thin cable, red light in the plug) - Auto Power Link:' 'Cyan'
+  Say '   1. Soundbar remote: press SOURCE until the display says D.IN.'
+  Say '   2. Press AUTO POWER (or hold LEFT on the round pad for 5 s) until it says ON-POWER LINK.'
+  Say '   3. TV: Settings > Display & Sound > Audio output: choose Optical/SPDIF, format PCM (Hisense menu names vary a little).'
+  Say '   Test: soundbar off, TV off, wait 10 s, TV on. The soundbar should wake within a few seconds.'
+  Say ''
+  Say 'B) BLUETOOTH - Bluetooth Power On:' 'Cyan'
+  Say '   1. Soundbar on, press the BT POWER button on the soundbar remote until it says ON-BLUETOOTH POWER.'
+  Say '   2. TV: Settings > Remotes & Accessories > pair "[Samsung] Soundbar J-Series" if not already paired.'
+  Say '   The TV reconnects when it wakes, and that wakes the soundbar. The TV remote then controls volume too.'
+  Say ''
+  Say 'Current audio devices the TV can see:'
+  ((TvSh dumpsys audio) -split "`n" | Where-Object { $_ -match 'Devices:|spdif|bt_a2dp|BLUETOOTH_A2DP|SPDIF|hdmi' } | Select-Object -First 8) | ForEach-Object { '   ' + $_.Trim() } | Out-Host
 }
 
 function Push-Config {
@@ -182,14 +185,14 @@ while ($true) {
   Say '  1  Install TV Home (app, permissions, home screen, screensaver)'
   Say '  2  Remove ads and junk apps'
   Say '  3  Also switch off the old Google home screen (only after TV Home works)'
-  Say '  4  Soundbar: turn on HDMI-CEC'
+  Say '  4  Soundbar: steps so it turns on with the TV'
   Say '  5  Show TV info (model, apps, soundbar name) and save it to a file'
   Say '  6  Send my settings (config.json)'
   Say '  7  Undo: switch the removed apps back on'
   Say '  8  Go back to the original home screen'
   Say '  Q  Quit'
   switch ((Read-Host 'Choose').ToUpper()) {
-    '1' { Install-App } '2' { Debloat $false } '3' { Debloat $true } '4' { Cec } '5' { Show-Info }
+    '1' { Install-App } '2' { Debloat $false } '3' { Debloat $true } '4' { Soundbar } '5' { Show-Info }
     '6' { Push-Config } '7' { Undo-Debloat } '8' { Restore-Google } 'Q' { exit 0 } default { Say 'Pick 1-8 or Q' }
   }
 }
