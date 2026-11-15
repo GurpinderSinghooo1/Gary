@@ -53,3 +53,29 @@ Not built locally (no Android SDK in the sandbox); written to compile in CI with
 - SmartThings sound-mode via `execute` is model-dependent.
 - WebView JS uses a TvHome object that the HTML must define (emit/resolve).
 - adsBlocked is a pref placeholder (always 0). Prefs `askedTvListings` stores first-run state.
+
+---
+
+## Additions after the first pass
+
+**New request() methods**
+- `store.get` {key?} → value for key (any JSON) or, without key, all stored values as an object.
+- `store.set` {key, value} → true. Keys: `[A-Za-z0-9_.-]{1,64}`. `null` deletes.
+- `strava.summary` {force?} → `{configured:false}` or `{configured:true, today:{minutes}, week:{runKm,runs,minutes,startDate},
+  weeks:[{start,km,minutes}×6 oldest first], lastRun:{name,date,km,movingS,paceSPerKm,splits:[s/km]}|null, streakDays, fetchedAt}`. Cached 10 min.
+- `tmdb.picks` {mood: romantic|funny|thriller|cozy|action, count 1-6, fresh?} → `[{id,title,overview,year,rating,runtimeMin,genres,posterUrl,backdropUrl,provider,appId}]`,
+  limited to Netflix / Prime Video / Disney+ / Paramount+ in `region` (default CA). Cached 6 h.
+- `smartthings.scenes` → `[{sceneId,name}]`; `smartthings.runScene` {sceneId} → true.
+- `soundbar.devices` now needs only SmartThings auth (no device id yet), so setup can list devices.
+
+**SmartThings auth**: `soundbar/SmartThingsAuth.kt`. OAuth (client id/secret + rotating single-use refresh token, saved with
+`commit()` before use) is preferred; a personal access token still works but expires after 24 h for tokens made since Dec 2024.
+
+**Wake logic**: `ensureOn()` is debounced 30 s and retries at 0/4/12/30 s because Wi-Fi reconnects slowly after standby.
+Screen-on respects the `autoSoundbar` pref.
+
+**adb config push**: `setup/SetupReceiver.kt`, guarded by `android.permission.DUMP` (only shell/system hold it).
+`tools/push-config.sh` sends `{settings:{...}, store:{...}}` as base64.
+
+**Verified locally**: all Kotlin compiles (kotlinc 2.1.21) against the real Android 15 framework (Robolectric android-all)
+with hand-written stubs for the three androidx libraries. Not verified: the real androidx signatures (stubs) and the Gradle/AGP build.

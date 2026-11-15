@@ -55,6 +55,16 @@
             </intent-filter>
         </activity>
 
+        <!-- adb-only config push (tools/push-config.sh). DUMP is held by the adb shell, not by apps. -->
+        <receiver
+            android:name=".setup.SetupReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP">
+            <intent-filter>
+                <action android:name="com.gary.tvhome.SETUP" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".boot.BootReceiver"
             android:exported="true">

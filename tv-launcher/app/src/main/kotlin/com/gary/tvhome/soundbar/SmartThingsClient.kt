@@ -9,7 +9,7 @@ import java.net.URL
  * Minimal blocking SmartThings REST client. Call only from a background thread.
  * Needs a SmartThings personal access token (devices read/execute scope) set in settings.
  */
-class SmartThingsClient(private val token: String, private val deviceId: String) {
+class SmartThingsClient(private val tokenProvider: () -> String, private val deviceId: String) {
 
     private fun call(method: String, path: String, body: String? = null): String {
         val conn = URL(BASE + path).openConnection() as HttpURLConnection
@@ -17,7 +17,7 @@ class SmartThingsClient(private val token: String, private val deviceId: String)
             conn.connectTimeout = 8000
             conn.readTimeout = 8000
             conn.requestMethod = method
-            conn.setRequestProperty("Authorization", "Bearer $token")
+            conn.setRequestProperty("Authorization", "Bearer ${tokenProvider()}")
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("Accept", "application/json")
             if (body != null) {

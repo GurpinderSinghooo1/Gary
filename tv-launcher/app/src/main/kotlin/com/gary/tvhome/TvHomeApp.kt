@@ -54,7 +54,7 @@ class TvHomeApp : Application() {
 
     private val screenReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            soundbarManager.ensureOn("screen_on")
+            if (prefs.autoSoundbar) soundbarManager.ensureOn("screen_on")
             HomeActivity.current()?.emit("screenOn")
         }
     }
@@ -77,5 +77,6 @@ class TvHomeApp : Application() {
             addAction(Intent.ACTION_DREAMING_STOPPED)
         }
         ContextCompat.registerReceiver(this, screenReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        soundbarManager.keepAlive()
     }
 }

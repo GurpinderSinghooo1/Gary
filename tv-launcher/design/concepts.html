@@ -1,0 +1,1385 @@
+<title>TV Home Concepts</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@200;300;400;600;700;800&family=Shippori+Mincho:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@400;700;800&family=Barlow+Condensed:wght@300;400;600&family=Chakra+Petch:wght@400;600;700&family=Manrope:wght@400;600;700;800&family=Mukta+Mahee:wght@400;600;700&family=Anton&family=Permanent+Marker&family=Rajdhani:wght@500;600;700&family=Archivo:wght@400;600;800;900&family=Archivo+Black&family=Red+Hat+Display:wght@400;500;700;900&family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Jost:wght@400;500;600&display=swap">
+<style>
+/* Layout: one TV frame on a dark "living room" page, tabs above it switch the four concepts, a spec sheet below each. Single dark look on purpose (it's a TV). */
+:root{
+  --bg:#0c0e13; --panel:#141821; --panel-2:#1a1f2b; --line:#262c3a;
+  --fg:#e8ebf2; --muted:#8d95a8; --accent:#9db4ff; --accent-ink:#0c1230;
+  --good:#6fd3a0;
+  --f-display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Inter", system-ui, -apple-system, sans-serif;
+  --f-tv:"Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--f-display);font-weight:600;font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
+.tabs{display:flex;flex-direction:column;gap:10px}
+.tabgroup{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.glabel{font-family:var(--f-display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);width:44px;flex:none}
+.tab .sw{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.2)}
+.tab{font:inherit;font-family:var(--f-display);font-size:14px;background:var(--panel);color:var(--fg);border:1px solid var(--line);
+  padding:10px 16px;border-radius:999px;cursor:pointer;display:flex;gap:10px;align-items:center}
+.tab small{color:var(--muted);font-family:var(--f-body);font-size:12px}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tab[aria-selected="true"] small{color:var(--accent-ink);opacity:.75}
+.tab:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* TV frame */
+.tvstage{display:flex;flex-direction:column;align-items:center;gap:10px}
+.bezel{width:100%;max-width:100%;padding:clamp(4px,.8vw,10px);background:#050608;border-radius:clamp(6px,1vw,14px);
+  box-shadow:0 0 0 1px #20242e,0 40px 80px -30px rgba(120,140,255,.18)}
+.tv{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:4px;container-type:inline-size;
+  font-family:var(--f-tv);color:#fff;background:#000;user-select:none}
+.stand{width:22%;height:10px;background:linear-gradient(#1a1d24,#0b0c10);border-radius:0 0 8px 8px}
+.hint{color:var(--muted);font-size:13px;text-align:center}
+.hint kbd{font-family:var(--f-body);background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px}
+.screen{position:absolute;inset:0}
+
+/* ---------- App tiles (shared) ---------- */
+.tile{position:relative;border-radius:1.1cqw;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:transform .25s ease,box-shadow .25s ease;font-weight:800;letter-spacing:-.02em;overflow:hidden}
+.w-netflix{background:#0b0b0b;color:#e50914;font-family:"Sora",sans-serif;font-weight:700;letter-spacing:.04em}
+.w-youtube{background:#0f0f0f;color:#fff;gap:.5em}
+.w-youtube .yt{width:1.5em;height:1.05em;background:#ff0033;border-radius:.3em;position:relative;flex:none}
+.w-youtube .yt::after{content:"";position:absolute;left:.55em;top:.27em;border-left:.5em solid #fff;border-top:.26em solid transparent;border-bottom:.26em solid transparent}
+.w-disney{background:linear-gradient(135deg,#071647,#123a8c 60%,#1e6fc0);color:#fff;font-weight:600;font-style:italic}
+.w-prime{background:linear-gradient(135deg,#0f171e,#14324d);color:#fff;font-weight:700}
+.w-prime b{color:#1ea7ff}
+.w-paramount{background:linear-gradient(160deg,#0064ff,#0033a8);color:#fff;font-weight:700}
+.w-settings{background:#20242c;color:#cfd5e2;font-weight:600}
+.w-sound{background:#1b2420;color:#bfe9d2;font-weight:600}
+
+/* ---------- 1. Marquee ---------- */
+.mq-bg{position:absolute;inset:0;transition:background 0.8s ease}
+.mq-bg::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,0) 70%),
+  linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,0) 45%)}
+.mq-art{position:absolute;right:0;top:0;width:65%;height:78%;opacity:.95;transition:opacity .5s}
+.mq-top{position:absolute;top:3.2cqw;left:4cqw;right:4cqw;display:flex;justify-content:space-between;align-items:center;font-size:1.3cqw;color:rgba(255,255,255,.8);z-index:2}
+.mq-top .right{display:flex;gap:2cqw;align-items:center}
+.mq-top .clock{font-size:1.9cqw;font-weight:600;color:#fff}
+.mq-hero{position:absolute;left:4cqw;top:12cqw;width:46cqw;z-index:2}
+.mq-hero .from{font-size:1.15cqw;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:600}
+.mq-hero h2{font-size:4.6cqw;line-height:1;margin:.9cqw 0 1cqw;font-weight:800;letter-spacing:-.03em}
+.mq-hero .meta{font-size:1.35cqw;color:rgba(255,255,255,.75)}
+.mq-prog{height:.35cqw;width:22cqw;background:rgba(255,255,255,.2);border-radius:1cqw;margin:1.4cqw 0;overflow:hidden}
+.mq-prog i{display:block;height:100%;background:#fff;transition:width .5s}
+.mq-btns{display:flex;gap:1cqw}
+.mq-btns span{font-size:1.25cqw;padding:.8cqw 1.8cqw;border-radius:.7cqw;background:rgba(255,255,255,.14);font-weight:600}
+.mq-btns span:first-child{background:#fff;color:#000}
+.mq-row{position:absolute;left:4cqw;right:4cqw;bottom:4cqw;display:flex;gap:1.6cqw;z-index:2;align-items:flex-end}
+.mq-row .label{position:absolute;top:-3cqw;left:0;font-size:1.2cqw;color:rgba(255,255,255,.65);font-weight:600}
+.mq-row .tile{width:13.4cqw;height:7.5cqw;font-size:1.7cqw;box-shadow:0 .6cqw 1.6cqw rgba(0,0,0,.5)}
+.mq-row .tile.small{width:7.5cqw;font-size:1.05cqw}
+.mq-row .tile.on{transform:scale(1.12) translateY(-.4cqw);box-shadow:0 0 0 .25cqw #fff,0 1.4cqw 3cqw rgba(0,0,0,.7)}
+
+/* ---------- 2. Still ---------- */
+.st-bg{position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 50% 120%,#f2a46a 0%,#c4607a 28%,#4b3a7e 55%,#121a3a 85%);}
+.st-bg .grain{position:absolute;inset:0;opacity:.18;mix-blend-mode:overlay}
+.st-hill{position:absolute;left:-10%;right:-10%;bottom:-18%;height:45%;background:#0d1024;border-radius:50% 50% 0 0/100% 100% 0 0;opacity:.9}
+.st-hill.b{bottom:-24%;height:42%;left:20%;right:-30%;background:#070916;opacity:1}
+.st-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:8cqw}
+.st-clock{font-size:13cqw;font-weight:200;letter-spacing:-.04em;line-height:1;text-shadow:0 .4cqw 3cqw rgba(0,0,0,.25)}
+.st-date{font-size:1.7cqw;font-weight:400;opacity:.85;margin-top:.8cqw;letter-spacing:.02em}
+.st-row{position:absolute;bottom:7cqw;left:0;right:0;display:flex;justify-content:center;gap:2.6cqw}
+.st-row .item{display:flex;flex-direction:column;align-items:center;gap:1cqw;width:8cqw}
+.st-row .tile{width:6.4cqw;height:6.4cqw;border-radius:1.8cqw;font-size:.95cqw;opacity:.72;box-shadow:0 .8cqw 2cqw rgba(0,0,0,.35)}
+.st-row .name{font-size:1.1cqw;opacity:0;transition:opacity .25s;white-space:nowrap}
+.st-row .item.on .tile{opacity:1;transform:scale(1.18);box-shadow:0 0 0 .2cqw rgba(255,255,255,.9),0 1.2cqw 3cqw rgba(0,0,0,.5)}
+.st-row .item.on .name{opacity:1}
+.st-status{position:absolute;bottom:2.4cqw;left:0;right:0;display:flex;justify-content:center;gap:2.4cqw;font-size:1.05cqw;opacity:.7}
+.st-status span{display:flex;align-items:center;gap:.5cqw}
+.dot{width:.6cqw;height:.6cqw;border-radius:50%;background:#7df0b0;display:inline-block}
+
+/* ---------- 3. Control Room ---------- */
+.cr{position:absolute;inset:0;background:radial-gradient(80% 60% at 70% 0%,#1b2340 0%,#0b0e18 60%);display:grid;grid-template-columns:5.5cqw 1fr;font-size:1cqw}
+.cr-nav{display:flex;flex-direction:column;align-items:center;gap:2.2cqw;padding-top:3cqw;border-right:1px solid rgba(255,255,255,.06)}
+.cr-nav i{width:2.2cqw;height:2.2cqw;border-radius:.6cqw;background:rgba(255,255,255,.08);display:block}
+.cr-nav i.on{background:#9db4ff}
+.cr-main{padding:2.4cqw 3cqw;display:grid;grid-template-columns:1fr 24cqw;grid-template-rows:auto auto 1fr;gap:1.6cqw 2cqw;min-height:0}
+.cr-head{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end}
+.cr-head h3{margin:0;font-size:2.4cqw;font-weight:700;letter-spacing:-.02em}
+.cr-head .sub{font-size:1.1cqw;color:#9aa3bd;margin-top:.3cqw}
+.cr-head .clock{font-size:3cqw;font-weight:300;text-align:right;line-height:1}
+.cr-head .clock small{display:block;font-size:1.05cqw;color:#9aa3bd;margin-top:.4cqw}
+.cr-sec{font-size:1cqw;letter-spacing:.14em;text-transform:uppercase;color:#8a93ad;font-weight:600;margin-bottom:.8cqw}
+.cr-cw{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1cqw}
+.cr-card{border-radius:.9cqw;overflow:hidden;background:#151a28;cursor:pointer;transition:transform .2s, box-shadow .2s}
+.cr-card .art{height:7.4cqw;position:relative}
+.cr-card .art em{position:absolute;left:.7cqw;top:.7cqw;font-style:normal;font-size:.8cqw;font-weight:700;padding:.25cqw .6cqw;border-radius:.4cqw;background:rgba(0,0,0,.6)}
+.cr-card .bar{height:.3cqw;background:rgba(255,255,255,.15)}
+.cr-card .bar i{display:block;height:100%;background:#9db4ff}
+.cr-card .txt{padding:.7cqw .8cqw .9cqw}
+.cr-card .txt b{display:block;font-size:1.1cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cr-card .txt span{font-size:.9cqw;color:#9aa3bd}
+.cr-card.on{transform:scale(1.06);box-shadow:0 0 0 .2cqw #fff}
+.cr-apps{display:grid;grid-template-columns:repeat(7,1fr);gap:.9cqw}
+.cr-apps .tile{height:4.6cqw;font-size:1.05cqw;border-radius:.8cqw}
+.cr-apps .tile.on{transform:scale(1.08);box-shadow:0 0 0 .2cqw #fff}
+.cr-side{grid-column:2;grid-row:2/4;display:flex;flex-direction:column;gap:1.1cqw;min-height:0}
+.wid{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:1cqw;padding:1.1cqw 1.2cqw}
+.wid h4{margin:0 0 .6cqw;font-size:.95cqw;letter-spacing:.12em;text-transform:uppercase;color:#8a93ad;font-weight:600;display:flex;justify-content:space-between}
+.sb-top{display:flex;align-items:center;justify-content:space-between}
+.sb-top b{font-size:1.3cqw}
+.pill{font-size:.85cqw;font-weight:700;padding:.25cqw .7cqw;border-radius:2cqw;background:rgba(111,211,160,.18);color:#7df0b0}
+.vol{display:flex;align-items:center;gap:.8cqw;margin:.9cqw 0 .7cqw;font-size:.95cqw;color:#c2c9db}
+.vol .track{flex:1;height:.4cqw;background:rgba(255,255,255,.12);border-radius:1cqw;overflow:hidden}
+.vol .track i{display:block;height:100%;width:36%;background:linear-gradient(90deg,#7df0b0,#9db4ff)}
+.chips{display:flex;gap:.5cqw;flex-wrap:wrap}
+.chips span{font-size:.85cqw;padding:.3cqw .7cqw;border-radius:2cqw;background:rgba(255,255,255,.08);color:#d7dcea}
+.chips span.act{background:#9db4ff;color:#0c1230;font-weight:700}
+.wx{display:flex;justify-content:space-between;text-align:center;font-size:.9cqw;color:#c2c9db}
+.wx b{display:block;font-size:1.2cqw;color:#fff;margin-top:.2cqw}
+.wx .now{font-size:2.4cqw;font-weight:300;color:#fff;text-align:left;line-height:1}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:.6cqw .8cqw;font-size:.9cqw;color:#a8b0c5}
+.stats b{display:block;color:#fff;font-size:1.25cqw}
+.upnext{display:flex;flex-direction:column;gap:.55cqw;font-size:.95cqw}
+.upnext div{display:flex;justify-content:space-between;gap:1cqw}
+.upnext span{color:#9aa3bd;white-space:nowrap}
+
+/* ---------- 4. Aurora ---------- */
+.au{position:absolute;inset:0;background:#05060d;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(6cqw);opacity:.75;transition:background 1s ease}
+.b1{width:60cqw;height:40cqw;left:-10cqw;top:-12cqw;animation:drift1 18s ease-in-out infinite alternate}
+.b2{width:55cqw;height:38cqw;right:-12cqw;top:5cqw;animation:drift2 22s ease-in-out infinite alternate}
+.b3{width:50cqw;height:30cqw;left:25cqw;bottom:-18cqw;animation:drift1 26s ease-in-out infinite alternate-reverse}
+@keyframes drift1{to{transform:translate(8cqw,5cqw) scale(1.15)}}
+@keyframes drift2{to{transform:translate(-10cqw,4cqw) scale(.9)}}
+.au-top{position:absolute;top:3cqw;left:0;right:0;text-align:center;z-index:2}
+.au-top .clock{font-size:3.6cqw;font-weight:300;letter-spacing:-.02em}
+.au-top .sub{font-size:1.15cqw;opacity:.7;margin-top:.2cqw}
+.au-stage{position:absolute;left:0;right:0;top:15cqw;height:24cqw;perspective:90cqw;z-index:2}
+.au-card{position:absolute;left:50%;top:0;width:26cqw;height:22cqw;margin-left:-13cqw;border-radius:2cqw;cursor:pointer;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(2cqw);-webkit-backdrop-filter:blur(2cqw);
+  transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .55s,box-shadow .55s;display:flex;flex-direction:column;overflow:hidden}
+.au-card .tile{height:11cqw;border-radius:0;font-size:2.4cqw;cursor:inherit}
+.au-card .body{padding:1.3cqw 1.6cqw;display:flex;flex-direction:column;gap:.4cqw}
+.au-card .body small{font-size:.95cqw;letter-spacing:.14em;text-transform:uppercase;opacity:.6;font-weight:600}
+.au-card .body b{font-size:1.6cqw;font-weight:700;letter-spacing:-.01em}
+.au-card .body span{font-size:1.05cqw;opacity:.7}
+.au-card.on{box-shadow:0 0 0 .2cqw rgba(255,255,255,.85),0 3cqw 6cqw rgba(0,0,0,.5)}
+.au-dock{position:absolute;bottom:3cqw;left:50%;transform:translateX(-50%);display:flex;gap:1.6cqw;z-index:2;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(1.5cqw);-webkit-backdrop-filter:blur(1.5cqw);padding:.9cqw 2cqw;border-radius:3cqw;font-size:1.1cqw;align-items:center}
+.au-dock span{opacity:.75;display:flex;gap:.5cqw;align-items:center}
+
+/* ---------- E. Washi (Japanese desk mat) ---------- */
+.wa{position:absolute;inset:0;background:#f2ece0;color:#1d1a16;font-family:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;overflow:hidden}
+.wa-fiber{position:absolute;inset:0;opacity:.6;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .43 0 0 0 0 .33 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wa-sun{position:absolute;right:15cqw;top:5cqw;width:16cqw;height:16cqw;border-radius:50%;background:#c8402f}
+.wa-mist{position:absolute;right:0;bottom:6.5cqw;width:58cqw}
+.wa-pagoda{position:absolute;right:5cqw;bottom:6.8cqw;width:21cqw}
+.wa-birds{position:absolute;right:34cqw;top:7cqw;width:9cqw}
+.wa-wave{position:absolute;left:0;right:0;bottom:0;height:7cqw;background-color:#2b4566;background-size:4cqw 2cqw;
+  background-image:radial-gradient(circle at 100% 150%,#2b4566 24%,#f2ece0 24%,#f2ece0 28%,#2b4566 28%,#2b4566 36%,#f2ece0 36%,#f2ece0 40%,transparent 40%),
+  radial-gradient(circle at 0 150%,#2b4566 24%,#f2ece0 24%,#f2ece0 28%,#2b4566 28%,#2b4566 36%,#f2ece0 36%,#f2ece0 40%,transparent 40%),
+  radial-gradient(circle at 50% 100%,#f2ece0 10%,#2b4566 10%,#2b4566 23%,#f2ece0 23%,#f2ece0 30%,#2b4566 30%,#2b4566 43%,#f2ece0 43%,#f2ece0 50%,#2b4566 50%,#2b4566 63%,#f2ece0 63%,#f2ece0 71%,transparent 71%),
+  radial-gradient(circle at 100% 50%,#f2ece0 5%,#2b4566 5%,#2b4566 15%,#f2ece0 15%,#f2ece0 20%,#2b4566 20%,#2b4566 29%,#f2ece0 29%,#f2ece0 34%,#2b4566 34%,#2b4566 44%,#f2ece0 44%,#f2ece0 49%,transparent 49%),
+  radial-gradient(circle at 0 50%,#f2ece0 5%,#2b4566 5%,#2b4566 15%,#f2ece0 15%,#f2ece0 20%,#2b4566 20%,#2b4566 29%,#f2ece0 29%,#f2ece0 34%,#2b4566 34%,#2b4566 44%,#f2ece0 44%,#f2ece0 49%,transparent 49%)}
+.wa-time{position:absolute;left:4cqw;top:3.2cqw}
+.wa-time .t{font-size:7cqw;font-weight:500;line-height:1;letter-spacing:-.02em}
+.wa-time .d{font-size:1.3cqw;margin-top:.7cqw;color:#5d564c}
+.hanko{background:#c8402f;color:#f7efe2;display:inline-grid;place-items:center;border-radius:.3cqw;font-weight:700;font-family:"Shippori Mincho",serif}
+.wa-kou{position:absolute;right:3cqw;top:3.4cqw;display:flex;flex-direction:row-reverse;gap:.7cqw;align-items:flex-start}
+.wa-kou .v{writing-mode:vertical-rl;font-size:2.5cqw;font-weight:600;letter-spacing:.25em}
+.wa-kou .g{writing-mode:vertical-rl;font-size:.95cqw;color:#5d564c;letter-spacing:.05em;line-height:1.5}
+.wa-kou .hanko{width:2.4cqw;height:2.4cqw;font-size:1.4cqw}
+.wa-row{position:absolute;left:4cqw;top:17.5cqw;display:flex;gap:1.2cqw}
+.wa-card{width:9.6cqw;height:14cqw;background:#fbf8f1;border:1px solid rgba(29,26,22,.22);border-radius:.3cqw;padding:1cqw;display:flex;flex-direction:column;justify-content:space-between;position:relative;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s}
+.wa-card .app{font-family:"Plus Jakarta Sans",sans-serif;font-size:.8cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.wa-card .ttl{font-size:1.3cqw;font-weight:600;line-height:1.25}
+.wa-card .mt{font-size:.8cqw;color:#6b6358;margin-top:.4cqw}
+.wa-card .ink{height:.22cqw;background:rgba(29,26,22,.12)}
+.wa-card .ink i{display:block;height:100%;background:#1d1a16}
+.wa-card.k{width:5.6cqw;align-items:center;justify-content:center;gap:.6cqw}
+.wa-card .kj{font-size:2.6cqw;font-weight:600}
+.wa-card .st{position:absolute;right:-.9cqw;top:-.9cqw;width:2.7cqw;height:2.7cqw;font-size:1.5cqw;transform:rotate(-10deg) scale(1.7);opacity:0;transition:.25s}
+.wa-card.on{transform:translateY(-.6cqw);border-color:#1d1a16;box-shadow:0 1cqw 2cqw rgba(60,40,20,.16)}
+.wa-card.on .st{opacity:1;transform:rotate(-10deg) scale(1)}
+.wa-strip{position:absolute;left:4cqw;top:36.5cqw;display:flex;gap:3cqw;font-size:1.15cqw}
+.wa-strip div{display:flex;gap:.7cqw;align-items:center}
+.wa-strip .k{font-size:1.8cqw;color:#c8402f;font-weight:700}
+.wa-strip small{display:block;color:#6b6358;font-size:.85cqw}
+
+/* ---------- F. Sora (anime sky) ---------- */
+.so{position:absolute;inset:0;overflow:hidden;font-family:"M PLUS Rounded 1c","Plus Jakarta Sans",sans-serif;color:#17325c;background:linear-gradient(180deg,#2a7fe0 0%,#57a6ef 36%,#a6d6fa 68%,#e9f6ff 100%)}
+.so-glow{position:absolute;right:-8cqw;top:-12cqw;width:42cqw;height:42cqw;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,255,255,.55) 16%,rgba(255,255,255,0) 60%)}
+.so-flare{position:absolute;border-radius:50%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3)}
+.so-cloud{position:absolute;animation:soDrift 70s ease-in-out infinite alternate}
+.so-cloud i{position:absolute;border-radius:50%;background:#fff;box-shadow:inset -.5cqw -1.1cqw 0 rgba(140,178,222,.45)}
+@keyframes soDrift{to{transform:translateX(-7cqw)}}
+.so-wires{position:absolute;inset:0;width:100%;height:100%}
+.so-time{position:absolute;left:4cqw;top:2.6cqw;color:#fff;text-shadow:0 .3cqw 1.5cqw rgba(20,60,120,.35)}
+.so-time .t{font-size:7.5cqw;font-weight:800;line-height:1;letter-spacing:-.02em}
+.so-time .d{font-size:1.4cqw;font-weight:700;margin-top:.5cqw}
+.so-bubble{position:absolute;left:4cqw;top:15.8cqw;max-width:30cqw;background:#fff;border-radius:1.6cqw;padding:1cqw 1.6cqw;font-size:1.2cqw;font-weight:700;box-shadow:0 .6cqw 1.6cqw rgba(30,80,150,.18)}
+.so-bubble::before{content:"";position:absolute;left:2.4cqw;top:-1cqw;border:.6cqw solid transparent;border-bottom:.6cqw solid #fff;border-left-width:.2cqw;border-right-width:.9cqw}
+.so-bubble small{display:block;font-size:.9cqw;color:#5b75a3;font-weight:700}
+.so-side{position:absolute;right:15cqw;top:3.6cqw;width:22cqw;display:flex;flex-direction:column;gap:1cqw}
+.so-w{background:rgba(255,255,255,.9);border-radius:1.6cqw;padding:1cqw 1.4cqw;box-shadow:0 .6cqw 1.6cqw rgba(30,80,150,.15)}
+.so-w .lb{font-size:.85cqw;font-weight:800;letter-spacing:.1em;color:#ff6f91}
+.so-w b{display:block;font-size:1.2cqw;font-weight:800;margin-top:.2cqw}
+.so-cd{font-size:2.3cqw;font-weight:800;font-variant-numeric:tabular-nums;color:#2a7fe0;line-height:1.1;margin-top:.2cqw}
+.so-dots{display:flex;gap:.5cqw;margin-top:.5cqw}
+.so-dots span{width:2.2cqw;height:2.2cqw;border-radius:50%;display:grid;place-items:center;font-size:.8cqw;font-weight:800;background:#ffd2de;color:#c2486a}
+.so-dots span.f{background:linear-gradient(135deg,#ff8fb1,#ffb86b);color:#fff}
+.so-dots span.t{background:#fff;border:.15cqw dashed #ff8fb1}
+.so-row{position:absolute;left:4cqw;right:4cqw;bottom:3.4cqw;display:flex;gap:1.4cqw}
+.so-card{flex:1;position:relative;background:rgba(255,255,255,.92);border-radius:1.6cqw;cursor:pointer;transition:transform .35s cubic-bezier(.3,1.6,.5,1),box-shadow .3s;min-width:0}
+.so-card .tile{height:4.6cqw;border-radius:1.6cqw 1.6cqw 0 0;font-size:1.4cqw}
+.so-card .tx{padding:.9cqw 1.1cqw 1.1cqw}
+.so-card b{display:block;font-size:1.15cqw;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.so-card span{font-size:.9cqw;color:#4a6390;font-weight:700}
+.so-card .pb{height:.6cqw;border-radius:1cqw;background:#dbe9fb;margin-top:.7cqw;overflow:hidden}
+.so-card .pb i{display:block;height:100%;background:linear-gradient(90deg,#ff8fb1,#ffb86b);border-radius:1cqw}
+.so-card.on{transform:translateY(-1.2cqw) scale(1.05);box-shadow:0 0 0 .3cqw #fff,0 1.4cqw 3cqw rgba(30,80,150,.35)}
+.so-card.on::after{content:"✦";position:absolute;top:-2.4cqw;right:.4cqw;font-size:2cqw;color:#fff;text-shadow:0 0 1cqw rgba(255,255,255,.9)}
+
+/* ---------- G. Summit (mountaineering) ---------- */
+.su{position:absolute;inset:0;background:#edf1ef;color:#1f2a2e;font-family:"Barlow Condensed","Plus Jakarta Sans",sans-serif;overflow:hidden}
+.su-topo{position:absolute;inset:0;width:100%;height:100%}
+.su-ridge{position:absolute;left:0;bottom:0;width:100%;height:17cqw}
+.su-head{position:absolute;top:2.4cqw;left:4cqw;right:4cqw;display:grid;grid-template-columns:1fr auto 1fr;align-items:start}
+.su-head .lbl{font-size:.95cqw;letter-spacing:.18em;text-transform:uppercase;color:#5d6b70}
+.su-head .val{font-size:1.7cqw;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.su-head .val i{font-style:normal;color:#ff5a1f}
+.su-head .clk{font-size:6cqw;font-weight:300;line-height:.9;text-align:center;font-variant-numeric:tabular-nums}
+.su-head .r{text-align:right}
+.su-row{position:absolute;left:4cqw;right:4cqw;top:12.5cqw;display:grid;grid-template-columns:repeat(5,1fr);gap:1.2cqw}
+.su-card{background:rgba(255,255,255,.85);border:1px solid #c9d3d0;border-radius:.6cqw;padding:1cqw 1.1cqw;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;min-width:0}
+.su-card .top{display:flex;justify-content:space-between;font-size:.9cqw;letter-spacing:.12em;text-transform:uppercase;color:#5d6b70;font-weight:600}
+.su-card .ttl{font-size:1.65cqw;font-weight:600;margin:.2cqw 0 .3cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.su-card .pf{position:relative;height:5cqw}
+.su-card .pf svg{width:100%;height:100%;display:block}
+.su-card .pf .dot{position:absolute;width:.9cqw;height:.9cqw;margin:-.45cqw 0 0 -.45cqw;border-radius:50%;background:#ff5a1f;box-shadow:0 0 0 .3cqw rgba(255,90,31,.25)}
+.su-card .ft{display:flex;justify-content:space-between;font-size:1cqw;color:#5d6b70;margin-top:.4cqw;font-variant-numeric:tabular-nums}
+.su-card.on{border-color:#ff5a1f;box-shadow:0 0 0 .15cqw #ff5a1f,0 1cqw 2.4cqw rgba(30,50,60,.18);transform:translateY(-.5cqw)}
+.su-wid{position:absolute;left:4cqw;right:4cqw;top:29cqw;display:grid;grid-template-columns:1.25fr 1.25fr 1fr 1fr;gap:1.2cqw}
+.su-w{background:rgba(255,255,255,.82);border:1px solid #c9d3d0;border-radius:.6cqw;padding:1cqw 1.2cqw;display:flex;gap:1.2cqw;align-items:center;min-width:0}
+.su-w .lbl{font-size:.85cqw;letter-spacing:.18em;text-transform:uppercase;color:#5d6b70;font-weight:600}
+.su-w .big{font-size:2.2cqw;font-weight:600;line-height:1}
+.su-w .sm{font-size:1cqw;color:#41504f;line-height:1.35}
+.su-w svg{width:5.4cqw;height:5.4cqw;flex:none}
+.su-w .on{color:#ff5a1f;font-weight:600}
+
+/* ---------- H. Loadout (light gaming HUD) ---------- */
+.hu{position:absolute;inset:0;background:#e9e7e1;color:#141414;font-family:"Chakra Petch","Plus Jakarta Sans",sans-serif;overflow:hidden}
+.hu::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(20,20,20,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(20,20,20,.05) 1px,transparent 1px);background-size:2cqw 2cqw}
+.hu-hazard{position:absolute;right:0;bottom:0;width:14cqw;height:2cqw;background:repeating-linear-gradient(-45deg,#141414 0 .8cqw,#ff4f00 .8cqw 1.6cqw)}
+.hu-bar{position:absolute;top:1.6cqw;left:3cqw;right:3cqw;display:flex;justify-content:space-between;align-items:center;font-size:1cqw;letter-spacing:.14em;border-bottom:1px solid #141414;padding-bottom:.7cqw}
+.hu-bar .clk{font-size:2.2cqw;font-weight:600;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.acc{color:#ff4f00}
+.hp{position:absolute;background:#f6f5f1;border:1px solid #141414;clip-path:polygon(0 0,calc(100% - 1.4cqw) 0,100% 1.4cqw,100% 100%,1.4cqw 100%,0 calc(100% - 1.4cqw));padding:1.1cqw 1.3cqw}
+.hp h5{margin:0 0 .8cqw;font-size:.85cqw;letter-spacing:.22em;display:flex;justify-content:space-between;font-weight:600}
+.segs{display:flex;gap:.25cqw}
+.segs i{flex:1;height:.9cqw;background:rgba(20,20,20,.12);transform:skewX(-20deg)}
+.segs i.f{background:#ff4f00}
+.segs.k i.f{background:#141414}
+.hu-lv{display:flex;align-items:flex-end;gap:1cqw;margin-bottom:.8cqw}
+.hu-lv b{font-size:5cqw;line-height:.85;font-weight:700}
+.hu-lv span{font-size:.9cqw;letter-spacing:.18em;line-height:1.4}
+.hu-stats{display:grid;grid-template-columns:1fr 1fr;gap:.7cqw;margin:1cqw 0;font-size:.85cqw;letter-spacing:.1em}
+.hu-stats b{display:block;font-size:1.5cqw;letter-spacing:0}
+.hu-ach{display:flex;flex-direction:column;gap:.6cqw}
+.hu-ach div{display:flex;gap:.8cqw;align-items:center;font-size:.85cqw;line-height:1.25}
+.hu-ach div::before{content:"";width:1.8cqw;height:1.8cqw;flex:none;background:#141414;box-shadow:inset 0 0 0 .45cqw #141414,inset 0 0 0 1.2cqw #ff4f00;transform:rotate(45deg) scale(.8)}
+.hu-ach b{display:block;font-size:1cqw}
+.hu-mis .t{font-size:2cqw;font-weight:700;line-height:1.1}
+.hu-mis .s{font-size:1cqw;color:#55534e;margin:.3cqw 0 .8cqw}
+.hu-lab{position:absolute;font-size:.85cqw;letter-spacing:.22em;font-weight:600}
+.hu-slots{position:absolute;left:29.5cqw;width:41cqw;top:24cqw;height:13cqw;display:grid;grid-template-columns:repeat(5,1fr);gap:1cqw}
+.hs{position:relative;border:1px solid #141414;background:#f6f5f1;transform:skewX(-8deg);cursor:pointer;transition:background .2s,color .2s,transform .2s}
+.hs > div{transform:skewX(8deg);position:absolute;inset:.8cqw .7cqw;display:flex;flex-direction:column;justify-content:space-between}
+.hs .n{font-size:.85cqw;letter-spacing:.15em;display:flex;justify-content:space-between;align-items:center}
+.hs .n i{width:1cqw;height:1cqw;display:block}
+.hs .nm{font-size:1.05cqw;font-weight:700;line-height:1.1;letter-spacing:-.01em;display:block}
+.hs .eq{display:block;font-size:.7cqw;letter-spacing:.14em;color:#ff4f00;opacity:0;margin-bottom:.2cqw}
+.hs.on{background:#141414;color:#f6f5f1;transform:skewX(-8deg) translateY(-.5cqw);box-shadow:-.4cqw 0 0 #ff4f00}
+.hs.on .eq{opacity:1}
+.hu-acts{position:absolute;left:29.5cqw;width:41cqw;top:40.5cqw;display:grid;grid-template-columns:repeat(4,1fr);gap:1cqw}
+.hu-acts span{border:1px solid #141414;padding:.9cqw .8cqw;font-size:.85cqw;letter-spacing:.14em;font-weight:600;display:flex;flex-direction:column;gap:.3cqw}
+.hu-acts span small{font-size:.75cqw;color:#ff4f00;letter-spacing:.1em}
+.hu-radar{position:relative;width:12cqw;height:12cqw;margin:0 auto;border-radius:50%;border:1px solid #141414;overflow:hidden;
+  background:repeating-radial-gradient(circle,transparent 0 1.9cqw,rgba(20,20,20,.25) 1.9cqw 2cqw),linear-gradient(rgba(20,20,20,.25),rgba(20,20,20,.25)) center/100% 1px no-repeat,linear-gradient(90deg,rgba(20,20,20,.25),rgba(20,20,20,.25)) center/1px 100% no-repeat}
+.hu-radar::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,79,0,.45),rgba(255,79,0,0) 22%);animation:spin 4s linear infinite}
+.hu-radar i{position:absolute;width:.6cqw;height:.6cqw;background:#ff4f00;border-radius:50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hu-kv{display:flex;justify-content:space-between;font-size:.9cqw;letter-spacing:.1em;margin-top:.6cqw}
+.hu-kv b{font-weight:700}
+
+/* ---------- I. Studio (clean) ---------- */
+.sd{position:absolute;inset:0;background:#e3e1dc;color:#2a2a28;font-family:"Manrope","Plus Jakarta Sans",sans-serif;padding:2.6cqw 3cqw;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:19cqw 10cqw 16cqw;gap:1.3cqw}
+.md{background:#f4f3ef;border-radius:1.4cqw;box-shadow:0 .15cqw 0 rgba(0,0,0,.04),0 .8cqw 2cqw rgba(60,55,45,.08);padding:1.3cqw 1.5cqw;position:relative;min-width:0;min-height:0;overflow:hidden}
+.md .lb{font-size:.85cqw;letter-spacing:.14em;text-transform:uppercase;color:#8b8983;font-weight:700}
+.sd-clock{grid-column:span 3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4cqw}
+.sd-clock svg{height:14.5cqw;width:14.5cqw}
+.sd-hero{grid-column:span 6;display:flex;flex-direction:column;justify-content:space-between}
+.sd-hero h3{margin:.4cqw 0 0;font-size:3cqw;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.sd-hero .m{font-size:1.15cqw;color:#6c6a64;margin-top:.4cqw}
+.sd-line{height:.25cqw;background:#dddbd5;border-radius:1cqw;position:relative;margin:1cqw 0}
+.sd-line i{position:absolute;left:0;top:0;bottom:0;background:#2a2a28;border-radius:1cqw}
+.sd-line b{position:absolute;top:50%;width:1cqw;height:1cqw;margin:-.5cqw 0 0 -.5cqw;border-radius:50%;background:#f05a1a}
+.sd-btns{display:flex;gap:.8cqw}
+.sd-btns span{font-size:1.05cqw;font-weight:700;padding:.7cqw 1.6cqw;border-radius:3cqw;background:#e6e4de}
+.sd-btns span:first-child{background:#2a2a28;color:#f4f3ef}
+.sd-wx{grid-column:span 3}
+.sd-wx .big{font-size:5cqw;font-weight:300;letter-spacing:-.04em;line-height:1;margin-top:.6cqw}
+.sd-wx .m{font-size:1cqw;color:#6c6a64}
+.sd-fc{display:flex;justify-content:space-between;margin-top:1.1cqw;font-size:.9cqw;color:#8b8983;text-align:center}
+.sd-fc b{display:block;color:#2a2a28;font-size:1.1cqw}
+.sd-keys{grid-column:1/-1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.3cqw}
+.key{cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,background .2s,box-shadow .2s}
+.key .led{position:absolute;right:1.2cqw;top:1.2cqw;width:.7cqw;height:.7cqw;border-radius:50%;background:#cfcdc7}
+.key .sq{width:1.6cqw;height:1.6cqw;border-radius:.4cqw}
+.key .nm{font-size:1.25cqw;font-weight:800;letter-spacing:-.01em}
+.key.on{background:#fff;transform:translateY(-.3cqw);box-shadow:0 0 0 .15cqw #2a2a28,0 1cqw 2cqw rgba(60,55,45,.15)}
+.key.on .led{background:#f05a1a;box-shadow:0 0 .8cqw #f05a1a}
+.sd-knob{grid-column:span 3;display:flex;gap:1cqw;align-items:center}
+.sd-knob svg{width:12cqw;height:12cqw;flex:none}
+.sd-knob .v{font-size:2.6cqw;font-weight:300;line-height:1}
+.sd-knob .s{font-size:.95cqw;color:#6c6a64;line-height:1.5}
+.sd-cal{grid-column:span 3}
+.sd-cal .g{display:grid;grid-template-columns:repeat(7,1fr);font-size:.8cqw;text-align:center;row-gap:.15cqw;margin-top:.5cqw;font-variant-numeric:tabular-nums}
+.sd-cal .g span{line-height:1.6cqw;height:1.6cqw}
+.sd-cal .g .h{color:#8b8983;font-weight:700}
+.sd-cal .g .td{background:#f05a1a;color:#fff;border-radius:50%;width:1.6cqw;margin:0 auto;font-weight:700}
+.sd-up{grid-column:span 4}
+.sd-up .r{display:flex;justify-content:space-between;align-items:center;padding:.75cqw 0;border-bottom:1px solid #e3e1dc;font-size:1.05cqw}
+.sd-up .r:last-child{border-bottom:0}
+.sd-up .r span{color:#8b8983;font-size:.9cqw}
+.sd-up .r em{font-style:normal;font-size:.8cqw;font-weight:700;padding:.2cqw .6cqw;border-radius:2cqw;background:#2a2a28;color:#f4f3ef}
+.sd-sys{grid-column:span 2;display:flex;flex-direction:column;justify-content:space-between}
+.sd-sys div{font-size:.85cqw;color:#8b8983}
+.sd-sys b{display:block;font-size:1.3cqw;color:#2a2a28}
+
+/* ---------- J. Phulkari (Punjab) ---------- */
+.pk{position:absolute;inset:0;background:linear-gradient(180deg,#fcf8f0 0%,#f6ecd9 75%);color:#3a1d1f;font-family:"Mukta Mahee","Plus Jakarta Sans",sans-serif;overflow:hidden}
+.pk-strip{position:absolute;top:0;left:0;right:0;height:2.4cqw;background-size:4.8cqw 2.4cqw;background-repeat:repeat-x}
+.pk-strip,.pk-card .edge{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Crect width='40' height='20' fill='%238c1c2b'/%3E%3Cpath d='M10 2L18 10L10 18L2 10Z' fill='%23f2b234'/%3E%3Cpath d='M10 6L14 10L10 14L6 10Z' fill='%238c1c2b'/%3E%3Cpath d='M10 8.4L11.6 10L10 11.6L8.4 10Z' fill='%23f07a28'/%3E%3Cpath d='M30 4L36 10L30 16L24 10Z' fill='%23d6336c'/%3E%3Cpath d='M30 7L33 10L30 13L27 10Z' fill='%23f2b234'/%3E%3C/svg%3E")}
+.pk-sun{position:absolute;right:15cqw;bottom:7cqw;width:13cqw;height:13cqw;border-radius:50%;background:radial-gradient(circle,#ffd98a,#f5a845);opacity:.75}
+.pk-trees{position:absolute;left:0;right:0;bottom:12.4cqw;width:100%;height:2.6cqw}
+.pk-field{position:absolute;left:0;right:0;bottom:0;height:13cqw;
+  background:radial-gradient(ellipse at 50% 50%,#fff07a 0 .3cqw,transparent .45cqw) 0 0/2.3cqw 1.5cqw,
+  radial-gradient(ellipse at 50% 50%,#ffd21f 0 .26cqw,transparent .4cqw) 1.1cqw .7cqw/2.3cqw 1.5cqw,
+  radial-gradient(ellipse at 50% 50%,#ffe866 0 .2cqw,transparent .32cqw) .5cqw 1.1cqw/3.1cqw 1.9cqw,
+  repeating-linear-gradient(90deg,rgba(80,115,40,.28) 0 .12cqw,transparent .12cqw 1.1cqw),
+  linear-gradient(180deg,#eccb3f 0%,#d9a91c 45%,#7b9a33 100%)}
+.pk-field::before{content:"";position:absolute;left:0;right:0;top:-.1cqw;height:2cqw;background:linear-gradient(180deg,#f6ecd9,rgba(246,236,217,0))}
+.pk-greet{position:absolute;left:4cqw;top:4.6cqw}
+.pk-greet .g{font-size:5cqw;font-weight:700;color:#8c1c2b;line-height:1.15}
+.pk-greet .s{font-size:1.3cqw;color:#7a5a4a}
+.pk-greet .nd{margin-top:.7cqw;font-size:1.25cqw;display:flex;gap:.8cqw;align-items:center}
+.pk-greet .nd b{background:#8c1c2b;color:#fff3dc;padding:.15cqw .8cqw;border-radius:.4cqw;font-weight:600}
+.pk-clocks{position:absolute;right:4cqw;top:4.6cqw;display:flex;gap:1.2cqw}
+.pc{background:#fff;border:1px solid #ecdcc4;border-radius:1cqw;padding:.9cqw 1.4cqw;min-width:13.5cqw}
+.pc small{font-size:.85cqw;letter-spacing:.14em;text-transform:uppercase;color:#9a7b62;font-weight:600}
+.pc .t{font-size:2.8cqw;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.pc .x{font-size:.95cqw;color:#7a5a4a}
+.pk-call{position:absolute;right:4cqw;top:15.4cqw;font-size:1.1cqw;color:#2f6b3a;display:flex;gap:.5cqw;align-items:center;font-weight:600}
+.pk-row{position:absolute;left:4cqw;right:4cqw;top:19.5cqw;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1.2cqw}
+.pk-card{background:#fff;border-radius:1cqw;overflow:hidden;border:1px solid #efe2cd;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.pk-card .tile{height:5cqw;border-radius:0;font-size:1.3cqw}
+.pk-card .edge{height:.7cqw;background-size:1.4cqw .7cqw}
+.pk-card .tx{padding:.7cqw 1cqw .9cqw}
+.pk-card b{display:block;font-size:1.15cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk-card span{font-size:.9cqw;color:#7a5a4a}
+.pk-card.on{transform:translateY(-.6cqw);box-shadow:0 0 0 .22cqw #e0a526,0 1.2cqw 2.4cqw rgba(140,28,43,.2)}
+.w-punjabi{background:linear-gradient(135deg,#8c1c2b,#d6336c);color:#fff3dc;font-family:"Mukta Mahee",sans-serif;font-weight:700;font-style:normal}
+.pk-wid{position:absolute;left:4cqw;right:4cqw;top:32.6cqw;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.2cqw}
+.pw{background:rgba(255,255,255,.88);border:1px solid #efe2cd;border-radius:1cqw;padding:.8cqw 1.2cqw;font-size:1cqw;line-height:1.35}
+.pw small{display:block;font-size:.8cqw;letter-spacing:.14em;text-transform:uppercase;color:#9a7b62;font-weight:600}
+.pw b{font-size:1.35cqw;color:#8c1c2b}
+
+/* ---------- K. Callus (discipline) ---------- */
+.cl{position:absolute;inset:0;background:#1b1b19;color:#ece8df;font-family:"Barlow Condensed",sans-serif;overflow:hidden}
+.cl-tex{position:absolute;inset:0;opacity:.9;mix-blend-mode:screen;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .58 0 0 0 0 .54 0 0 0 .13 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cl-vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 25% 15%,rgba(255,255,255,.06),rgba(0,0,0,.6))}
+.cl-clock{position:absolute;left:4cqw;top:2.2cqw;font-family:"Anton",Impact,sans-serif;font-size:10.5cqw;line-height:1;letter-spacing:.01em}
+.cl-sub{position:absolute;left:4cqw;top:14cqw;font-size:1.3cqw;letter-spacing:.2em;text-transform:uppercase;color:#a9a497}
+.cl-sub b{color:#ff5e1a;font-weight:600}
+.cl-earn{position:absolute;left:4cqw;top:18.2cqw;width:43cqw}
+.cl-earn .row{display:flex;justify-content:space-between;font-size:1.05cqw;letter-spacing:.16em;text-transform:uppercase;color:#a9a497}
+.cl-earn .row b{color:#ece8df;font-weight:600}
+.cl-bar{position:relative;height:1.5cqw;background:#2c2c29;margin:.7cqw 0;overflow:hidden}
+.cl-bar i{position:absolute;left:0;top:0;bottom:0;background:#ece8df}
+.cl-bar s{position:absolute;top:0;bottom:0;width:.25cqw;background:#ff5e1a}
+.cl-earn .note{font-size:1.25cqw;color:#ece8df}
+.cl-earn .note b{color:#ff5e1a;font-weight:600}
+.cl-wx{position:absolute;left:4cqw;top:27cqw;font-size:1.15cqw;letter-spacing:.16em;color:#cfc9bb;text-transform:uppercase}
+.cl-mirror{position:absolute;right:4cqw;top:3cqw;width:42cqw;height:26cqw;border-radius:.8cqw;background:linear-gradient(135deg,#7e8487,#c3c8ca 35%,#767c7f 62%,#aeb3b5);box-shadow:inset 0 0 0 .55cqw #2a2a28,inset 0 0 4cqw rgba(0,0,0,.45);overflow:hidden}
+.cl-mirror::after{content:"";position:absolute;left:-30%;top:-40%;width:30%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:rotate(25deg)}
+.cl-mirror .cap{position:absolute;left:0;right:0;bottom:1cqw;text-align:center;font-size:.95cqw;letter-spacing:.3em;color:rgba(20,20,20,.6);font-weight:600}
+.note2{position:absolute;width:12cqw;height:10cqw;padding:1cqw;color:#1b1b19;font-family:"Permanent Marker",cursive;font-size:1.25cqw;line-height:1.2;box-shadow:0 .6cqw 1.2cqw rgba(0,0,0,.35);z-index:1}
+.note2 em{position:absolute;right:.6cqw;bottom:.5cqw;font-style:normal;font-size:1cqw;color:#d23a12;transform:rotate(-8deg);border:.15cqw solid #d23a12;padding:0 .4cqw}
+.cl-row{position:absolute;left:4cqw;right:4cqw;top:33cqw;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.2cqw}
+.cl-tile{position:relative;height:10.5cqw;background:#0f0f0e;border:1px solid #33322e;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;padding:1cqw;transition:transform .2s,border-color .2s,box-shadow .2s;min-width:0}
+.cl-tile .tape{position:absolute;left:.7cqw;top:-1cqw;background:#d9cfb8;color:#1b1b19;font-family:"Permanent Marker",cursive;font-size:1.05cqw;padding:.3cqw 1cqw;transform:rotate(-3deg);box-shadow:0 .2cqw .5cqw rgba(0,0,0,.45);clip-path:polygon(3% 0,97% 4%,100% 50%,97% 96%,3% 100%,0 50%);white-space:nowrap}
+.cl-tile .br{position:absolute;right:0;top:0;bottom:0;width:.45cqw}
+.cl-tile b{font-size:1.25cqw;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-tile span{font-size:.95cqw;color:#8f8a7e}
+.cl-tile .pr{height:.25cqw;background:#2c2c29;margin-top:.6cqw}
+.cl-tile .pr i{display:block;height:100%;background:#ff5e1a}
+.cl-tile.on{border-color:#ff5e1a;box-shadow:0 0 0 .2cqw #ff5e1a;transform:translateY(-.4cqw)}
+.cl-jar{position:absolute;left:4cqw;right:4cqw;top:47cqw;display:flex;gap:1.6cqw;align-items:center;border-top:1px solid #33322e;padding-top:1.3cqw;font-size:1.2cqw;color:#cfc9bb;white-space:nowrap;overflow:hidden}
+.cl-jar .lb{font-family:"Anton",Impact,sans-serif;color:#ff5e1a;font-size:1.6cqw;letter-spacing:.06em}
+.cl-jar i{font-style:normal;color:#55524a}
+
+/* ---------- L. Forge (armour workshop HUD) ---------- */
+.fg{position:absolute;inset:0;background:radial-gradient(70% 80% at 50% 38%,#0e1d38,#03060d 72%);color:#d9f6ff;font-family:"Rajdhani",sans-serif;overflow:hidden}
+.fg-hex{position:absolute;inset:0;opacity:.13;background-size:4cqw 7cqw;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill='%235fe3ff' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/svg%3E")}
+.fg-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(95,227,255,.035) 0 .15cqw,transparent .15cqw .45cqw);pointer-events:none}
+.fg-top{position:absolute;left:3cqw;right:3cqw;top:2.2cqw;display:flex;justify-content:space-between;align-items:flex-start}
+.fg-top .clk{font-size:3.6cqw;font-weight:600;line-height:1;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.fg-top .clk small{display:block;font-size:1cqw;letter-spacing:.3em;color:#7fc8dc;margin-top:.4cqw;font-weight:500}
+.fg-say{font-size:1.25cqw;letter-spacing:.28em;text-transform:uppercase;color:#f5c044;white-space:nowrap;overflow:hidden;border-right:.15cqw solid #f5c044;width:0;animation:fgType 2.6s steps(48) .4s forwards,fgCaret .8s step-end infinite}
+@keyframes fgType{to{width:47ch}}
+@keyframes fgCaret{50%{border-color:transparent}}
+.fg-top .r{text-align:right;font-size:1cqw;letter-spacing:.24em;color:#7fc8dc;line-height:1.6}
+.fg-top .r b{color:#d9f6ff;font-weight:600}
+.fg-core{position:absolute;left:50%;top:21cqw;width:21cqw;height:21cqw;margin:-10.5cqw 0 0 -10.5cqw}
+.fg-core > i{position:absolute;border-radius:50%;display:block}
+.fg-core .r1{inset:0;border:.18cqw solid rgba(95,227,255,.55);box-shadow:0 0 2cqw rgba(95,227,255,.25),inset 0 0 2cqw rgba(95,227,255,.2)}
+.fg-core .r2{inset:1.2cqw;background:repeating-conic-gradient(rgba(95,227,255,.75) 0 2deg,transparent 2deg 10deg);-webkit-mask:radial-gradient(circle,transparent 62%,#000 63% 70%,transparent 71%);mask:radial-gradient(circle,transparent 62%,#000 63% 70%,transparent 71%);animation:spin 24s linear infinite}
+.fg-core .r3{inset:2.8cqw;border:.5cqw solid transparent;border-top-color:#f5c044;border-bottom-color:#c8202f;animation:spin 7s linear infinite reverse}
+.fg-core .r4{inset:4.4cqw;border:.15cqw dashed rgba(95,227,255,.6);animation:spin 14s linear infinite}
+.fg-core .c{inset:6.3cqw;background:radial-gradient(circle,#fff 0%,#c9f6ff 25%,#5fe3ff 55%,rgba(95,227,255,.15) 75%);box-shadow:0 0 5cqw rgba(95,227,255,.75),0 0 1.5cqw #fff;animation:fgPulse 3s ease-in-out infinite}
+@keyframes fgPulse{50%{box-shadow:0 0 7cqw rgba(95,227,255,.9),0 0 2cqw #fff}}
+.fg-core .t{position:absolute;left:0;right:0;top:calc(100% + .6cqw);text-align:center;font-size:1cqw;letter-spacing:.3em;color:#7fc8dc}
+.fg-core .t b{color:#fff;font-size:1.3cqw}
+.fg.boot .fg-core{animation:fgBoot 1.3s cubic-bezier(.2,.8,.2,1)}
+.fg.boot .fg-pan{animation:fgSlide 1s .3s both}
+@keyframes fgBoot{from{transform:scale(.2) rotate(-90deg);opacity:0}}
+@keyframes fgSlide{from{opacity:0;transform:translateY(1cqw)}}
+.fg-pan{position:absolute;top:9.5cqw;width:26cqw;height:26cqw;padding:1.3cqw 1.5cqw;background:rgba(10,30,55,.5);border:1px solid rgba(95,227,255,.35);clip-path:polygon(0 0,calc(100% - 1.5cqw) 0,100% 1.5cqw,100% 100%,1.5cqw 100%,0 calc(100% - 1.5cqw))}
+.fg-pan h6{margin:0 0 1cqw;font-size:.95cqw;letter-spacing:.3em;color:#f5c044;font-weight:600;display:flex;justify-content:space-between}
+.fg-dg{display:flex;flex-direction:column;gap:.85cqw}
+.fg-dg div{font-size:1cqw;letter-spacing:.14em;color:#9fdcec}
+.fg-dg div span{display:flex;justify-content:space-between}
+.fg-dg div b{color:#fff;font-weight:600}
+.fg-dg em{display:block;height:.35cqw;background:rgba(95,227,255,.15);margin-top:.3cqw}
+.fg-dg em i{display:block;height:100%;background:linear-gradient(90deg,#5fe3ff,#c9f6ff);box-shadow:0 0 .8cqw #5fe3ff}
+.fg-ms .t{font-size:2cqw;font-weight:700;color:#fff;line-height:1.1}
+.fg-ms .s{font-size:1.05cqw;color:#9fdcec;margin:.3cqw 0 .8cqw;letter-spacing:.06em}
+.fg-ms .bar{height:.5cqw;background:rgba(245,192,68,.18)}
+.fg-ms .bar i{display:block;height:100%;background:#f5c044;box-shadow:0 0 1cqw #f5c044}
+.fg-ms .kv{display:flex;justify-content:space-between;font-size:1cqw;letter-spacing:.14em;color:#9fdcec;margin-top:.7cqw}
+.fg-ms .kv b{color:#fff}
+.fg-row{position:absolute;left:3cqw;right:3cqw;top:39.5cqw;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.3cqw}
+.fg-w{position:relative;cursor:pointer;transition:transform .25s,filter .25s}
+.fg-plate{height:9.5cqw;background:linear-gradient(160deg,#6c1620,#2a070c);clip-path:polygon(1.3cqw 0,100% 0,100% calc(100% - 1.3cqw),calc(100% - 1.3cqw) 100%,0 100%,0 1.3cqw);box-shadow:inset 0 0 0 .14cqw rgba(245,192,68,.55);display:flex;flex-direction:column;justify-content:space-between;padding:1cqw 1.2cqw}
+.fg-plate small{font-size:.85cqw;letter-spacing:.24em;color:#f5c044}
+.fg-plate b{font-size:1.35cqw;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#ffe7b0;line-height:1.05}
+.fg-w.on{transform:translateY(-.6cqw);filter:drop-shadow(0 0 1.2cqw rgba(245,192,68,.75))}
+.fg-w.on .fg-plate{background:linear-gradient(160deg,#c8202f,#5a0d16);box-shadow:inset 0 0 0 .2cqw #f5c044}
+.fg-w::before,.fg-w::after{content:"";position:absolute;width:1.4cqw;height:1.4cqw;border:.2cqw solid #5fe3ff;opacity:0;transition:opacity .2s,transform .3s}
+.fg-w::before{left:-.8cqw;top:-.8cqw;border-right:0;border-bottom:0;transform:translate(-.6cqw,-.6cqw)}
+.fg-w::after{right:-.8cqw;bottom:-.8cqw;border-left:0;border-top:0;transform:translate(.6cqw,.6cqw)}
+.fg-w.on::before,.fg-w.on::after{opacity:1;transform:none}
+.fg-foot{position:absolute;left:3cqw;right:3cqw;bottom:1.6cqw;display:flex;justify-content:space-between;font-size:.95cqw;letter-spacing:.24em;color:#5f9fb2}
+
+/* ---------- M. Pace (marathon) ---------- */
+.pa{position:absolute;inset:0;background:#f2f3f5;color:#111318;font-family:"Archivo",sans-serif;overflow:hidden}
+.pa-bib{position:absolute;left:4cqw;top:3.6cqw;width:34cqw;height:25cqw;background:#fff;border-radius:.6cqw;box-shadow:0 1cqw 2.4cqw rgba(17,19,24,.08);overflow:hidden}
+.pa-bib .band{background:#ff3d57;color:#fff;padding:.8cqw 1.6cqw;font-weight:800;letter-spacing:.12em;font-size:1cqw;display:flex;justify-content:space-between}
+.pa-bib .num{font-family:"Archivo Black","Archivo",sans-serif;font-size:9.5cqw;letter-spacing:-.03em;text-align:center;line-height:1.05;margin-top:.4cqw}
+.pa-bib .meta{text-align:center;font-size:1.05cqw;font-weight:600;letter-spacing:.12em;color:#5b606b}
+.pa-bib .tear{position:absolute;left:0;right:0;bottom:0;height:5.2cqw;border-top:.15cqw dashed #c9ccd3;display:flex;align-items:center;justify-content:space-between;padding:0 1.6cqw}
+.pa-bib .tear b{font-family:"Archivo Black","Archivo",sans-serif;font-size:2.6cqw;color:#ff3d57;letter-spacing:-.02em}
+.pa-bib .tear span{font-size:.9cqw;letter-spacing:.14em;color:#5b606b;text-align:right;font-weight:600}
+.pin{position:absolute;width:1cqw;height:1cqw;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#b8bcc4 60%,#7d828c);box-shadow:0 .1cqw .2cqw rgba(0,0,0,.3)}
+.pa-week{position:absolute;left:41cqw;right:4cqw;top:3.6cqw;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.8cqw}
+.pa-week .d{background:#fff;border-radius:.6cqw;padding:.8cqw .9cqw;height:11.5cqw;display:flex;flex-direction:column;justify-content:space-between;border-top:.35cqw solid transparent}
+.pa-week .d small{font-size:.85cqw;font-weight:800;letter-spacing:.14em;color:#8a8f99}
+.pa-week .d b{font-family:"Archivo Black","Archivo",sans-serif;font-size:2cqw;letter-spacing:-.02em;line-height:1}
+.pa-week .d span{font-size:.85cqw;font-weight:600;color:#5b606b;text-transform:uppercase;letter-spacing:.08em}
+.pa-week .d.done{opacity:.55}
+.pa-week .d.done b::after{content:" ✓";color:#12a37f;font-size:1.3cqw}
+.pa-week .d.td{background:#111318;color:#fff;border-top-color:#ff3d57}
+.pa-week .d.td span,.pa-week .d.td small{color:#c9ccd3}
+.pa-box{position:absolute;top:16.8cqw;height:11.8cqw;background:#fff;border-radius:.6cqw;padding:1.1cqw 1.5cqw;display:flex;align-items:center;gap:1.4cqw}
+.pa-box .lb{font-size:.85cqw;font-weight:800;letter-spacing:.14em;color:#8a8f99}
+.pa-box .v{font-family:"Archivo Black","Archivo",sans-serif;font-size:2.4cqw;letter-spacing:-.02em;line-height:1.1}
+.pa-box .s{font-size:1cqw;color:#5b606b;font-weight:600}
+.pa-box svg{width:9cqw;height:9cqw;flex:none}
+.pa-row{position:absolute;left:4cqw;right:4cqw;top:31.6cqw;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.2cqw}
+.pa-card{background:#fff;border-radius:.6cqw;padding:1cqw 1.2cqw;cursor:pointer;border:.18cqw solid transparent;transition:transform .2s,box-shadow .2s,border-color .2s;min-width:0}
+.pa-card .top{display:flex;justify-content:space-between;font-size:.85cqw;font-weight:800;letter-spacing:.12em}
+.pa-card .top span{color:#8a8f99}
+.pa-card b{display:block;font-size:1.45cqw;font-weight:800;margin:.35cqw 0 .8cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.trk{position:relative;height:1.4cqw}
+.trk::before{content:"";position:absolute;left:0;right:0;top:.55cqw;height:.3cqw;background:repeating-linear-gradient(90deg,#d9dce2 0 calc(11.85% - .15cqw),#9aa0aa calc(11.85% - .15cqw) 11.85%)}
+.trk i{position:absolute;left:0;top:.55cqw;height:.3cqw;background:#ff3d57}
+.trk s{position:absolute;top:.15cqw;width:1.1cqw;height:1.1cqw;margin-left:-.55cqw;border-radius:50%;background:#ff3d57;box-shadow:0 0 0 .25cqw rgba(255,61,87,.2)}
+.pa-card .ft{display:flex;justify-content:space-between;font-size:.9cqw;color:#5b606b;margin-top:.4cqw;font-weight:600}
+.pa-card.on{border-color:#111318;transform:translateY(-.4cqw);box-shadow:0 1cqw 2cqw rgba(17,19,24,.12)}
+.pa-splits{position:absolute;left:4cqw;right:4cqw;top:44cqw;height:5.6cqw;display:flex;align-items:flex-end;gap:2.4cqw}
+.pa-splits .txt .lb{font-size:.85cqw;font-weight:800;letter-spacing:.14em;color:#8a8f99}
+.pa-splits .txt b{display:block;font-size:1.6cqw;font-weight:800;letter-spacing:-.01em}
+.pa-splits .bars{flex:1;display:flex;align-items:flex-end;gap:1.4cqw;height:100%;padding:0 2cqw}
+.pa-splits .bars i{flex:1;max-width:3cqw;background:#111318;border-radius:.2cqw .2cqw 0 0;position:relative}
+.pa-splits .bars i.best{background:#ff3d57}
+.pa-track{position:absolute;left:0;right:0;bottom:0;height:4.2cqw;background:repeating-linear-gradient(180deg,#c8553d 0 .95cqw,#f4ded7 .95cqw 1.05cqw)}
+
+/* ---------- N. Engine (athlete) ---------- */
+.en{position:absolute;inset:0;background:#f4f5f1;color:#14201b;font-family:"Red Hat Display",sans-serif;padding:2.8cqw 3.2cqw;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:17cqw 16.5cqw 11cqw;gap:1.2cqw}
+.ec{background:#fff;border-radius:1.2cqw;padding:1.2cqw 1.5cqw;border:1px solid #e2e6de;min-width:0;min-height:0;overflow:hidden;position:relative}
+.ec .lb{font-size:.8cqw;letter-spacing:.16em;text-transform:uppercase;color:#6d7a73;font-weight:700}
+.en-rings{grid-column:span 7;display:grid;grid-template-columns:repeat(3,1fr);gap:1cqw;align-items:center}
+.en-ring{display:flex;flex-direction:column;align-items:center;gap:.4cqw}
+.en-ring svg{width:10.5cqw;height:10.5cqw}
+.en-ring .lb{text-align:center}
+.en-ring .x{font-size:.95cqw;color:#6d7a73;font-weight:500}
+.en-verdict{grid-column:span 5;background:#0f3d32;color:#eafff6;border-color:#0f3d32;display:flex;flex-direction:column;justify-content:space-between}
+.en-verdict .lb{color:#8fd8bf}
+.en-verdict h4{margin:.3cqw 0 0;font-size:2.6cqw;font-weight:900;letter-spacing:-.02em;line-height:1}
+.en-verdict p{margin:.5cqw 0 0;font-size:1.15cqw;line-height:1.45;color:#cdeee2}
+.en-verdict .plan{display:flex;gap:.6cqw;flex-wrap:wrap}
+.en-verdict .plan span{font-size:.9cqw;font-weight:700;padding:.35cqw .8cqw;border-radius:2cqw;background:rgba(255,255,255,.1)}
+.en-verdict .plan span:first-child{background:#3ee0a6;color:#0f3d32}
+.en-load{grid-column:span 7;display:flex;flex-direction:column}
+.en-load .hd{display:flex;justify-content:space-between;align-items:center}
+.en-load .pill{font-size:.85cqw;font-weight:700;padding:.25cqw .8cqw;border-radius:2cqw;background:#e2f6ee;color:#0f6b52}
+.en-load svg{flex:1;width:100%;margin-top:.6cqw}
+.en-zones{grid-column:span 5}
+.en-zones .z{display:grid;grid-template-columns:2.4cqw 1fr 4cqw;gap:.6cqw;align-items:center;font-size:.85cqw;margin-top:.35cqw;font-weight:500}
+.en-zones .z i{display:block;height:.8cqw;border-radius:1cqw}
+.en-zones .z span:last-child{text-align:right;color:#6d7a73;font-variant-numeric:tabular-nums}
+.en-zones .vit{display:flex;gap:1.6cqw;margin-top:.7cqw;font-size:.9cqw;color:#6d7a73}
+.en-zones .vit b{display:block;font-size:1.5cqw;color:#14201b;font-weight:900}
+.en-apps{grid-column:1/-1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1.2cqw}
+.en-app{background:#fff;border:1px solid #e2e6de;border-radius:1.2cqw;padding:1.1cqw 1.3cqw;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .2s,box-shadow .2s;min-width:0}
+.en-app i{width:1.3cqw;height:1.3cqw;border-radius:50%;display:block}
+.en-app b{font-size:1.3cqw;font-weight:900;letter-spacing:-.01em}
+.en-app span{font-size:.85cqw;color:#6d7a73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.en-app.on{transform:translateY(-.4cqw);box-shadow:0 0 0 .22cqw #12a37f,0 1cqw 2cqw rgba(15,61,50,.12)}
+
+/* ---------- O. Date Night ---------- */
+.dn{position:absolute;inset:0;background:linear-gradient(160deg,#1e0b1d 0%,#4a1832 45%,#9c4a4a 85%,#d98a5f 100%);color:#fff3ea;font-family:"Jost",sans-serif;overflow:hidden}
+.bk{position:absolute;border-radius:50%;filter:blur(.5cqw);animation:bkFloat 14s ease-in-out infinite alternate}
+@keyframes bkFloat{to{transform:translateY(-3cqw) scale(1.12)}}
+.dn-candle{position:absolute;left:-10cqw;bottom:-20cqw;width:50cqw;height:40cqw;border-radius:50%;background:radial-gradient(circle,rgba(255,190,120,.35),rgba(255,190,120,0) 65%);animation:flick 3.2s ease-in-out infinite}
+@keyframes flick{30%{opacity:.75}55%{opacity:1}70%{opacity:.85}}
+.dn-title{position:absolute;left:4cqw;top:2.8cqw}
+.dn-title .h{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:6.8cqw;line-height:1}
+.dn-title .s{font-size:1.15cqw;letter-spacing:.22em;text-transform:uppercase;opacity:.78;margin-top:.7cqw}
+.dn-scene{position:absolute;right:4cqw;top:3.2cqw;display:flex;flex-direction:column;gap:.7cqw;align-items:flex-end}
+.ch{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(1cqw);-webkit-backdrop-filter:blur(1cqw);border-radius:3cqw;padding:.5cqw 1.3cqw;font-size:1.05cqw;display:flex;gap:.6cqw;align-items:center}
+.ch i{width:.6cqw;height:.6cqw;border-radius:50%;background:#ffc58a;box-shadow:0 0 .8cqw #ffc58a;display:block}
+.dn-picks{position:absolute;left:4cqw;top:15.5cqw;display:flex;gap:1.6cqw;align-items:flex-end;height:22cqw}
+.pick{width:13cqw;height:19.5cqw;border-radius:1cqw;position:relative;overflow:hidden;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.35);transform-origin:bottom center;flex:none}
+.pick::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.65),rgba(0,0,0,0) 55%)}
+.pick .pt{position:absolute;left:1.1cqw;right:1.1cqw;bottom:2.8cqw;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:2.1cqw;line-height:1;z-index:1}
+.pick .pm{position:absolute;left:1.1cqw;right:1.1cqw;bottom:1.1cqw;font-size:.85cqw;letter-spacing:.06em;opacity:.85;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick .ap{position:absolute;left:1.1cqw;top:1.1cqw;z-index:1;font-size:.8cqw;letter-spacing:.12em;text-transform:uppercase;padding:.25cqw .7cqw;border-radius:2cqw;background:rgba(0,0,0,.35)}
+.pick .sun{position:absolute;right:-2cqw;top:2cqw;width:9cqw;height:9cqw;border-radius:50%;opacity:.8}
+.pick.sp{background:rgba(255,255,255,.06);border:.15cqw dashed rgba(255,243,234,.45);box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6cqw;text-align:center}
+.pick.sp::after{display:none}
+.pick.sp b{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:2.2cqw;font-weight:500}
+.pick.sp span{font-size:.9cqw;opacity:.8}
+.pick.sp em{font-style:normal;font-size:2.6cqw;color:#ffc58a}
+.pick.on{transform:scale(1.08);box-shadow:0 0 0 .2cqw #ffd9b0,0 0 4cqw rgba(255,190,120,.45),0 1.6cqw 3cqw rgba(0,0,0,.4)}
+.dn-side{position:absolute;left:65cqw;right:4cqw;top:16cqw;display:flex;flex-direction:column;gap:1.1cqw}
+.dn-side .lb{font-size:.85cqw;letter-spacing:.22em;text-transform:uppercase;opacity:.7}
+.dn-mood{display:flex;gap:.6cqw;flex-wrap:wrap}
+.dn-mood span{font-size:1cqw;padding:.4cqw 1cqw;border-radius:2cqw;border:1px solid rgba(255,243,234,.3)}
+.dn-mood span.a{background:#fff3ea;color:#4a1832;border-color:#fff3ea;font-weight:600}
+.dn-why{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.65cqw;line-height:1.3}
+.dn-ann{display:flex;align-items:center;gap:.8cqw;font-size:1.1cqw}
+.dn-ann b{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:2.4cqw;font-weight:600;color:#ffc58a}
+.dn-apps{position:absolute;left:4cqw;right:4cqw;bottom:2.8cqw;display:flex;gap:1cqw;align-items:center}
+.dn-apps .lb{font-size:.85cqw;letter-spacing:.22em;text-transform:uppercase;opacity:.7;margin-right:.6cqw}
+.dnp{font-size:1.05cqw;padding:.6cqw 1.3cqw;border-radius:3cqw;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:flex;gap:.6cqw;align-items:center;cursor:pointer;transition:background .2s,color .2s,transform .2s;white-space:nowrap}
+.dnp i{width:.8cqw;height:.8cqw;border-radius:50%;display:block}
+.dnp.on{background:#fff3ea;color:#4a1832;transform:translateY(-.3cqw)}
+
+/* ---------- Spec sheet ---------- */
+.spec{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px}
+.spec h2{font-family:var(--f-display);font-size:24px;margin:0;letter-spacing:-.01em}
+.spec .tag{color:var(--accent);font-family:var(--f-display);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.spec p{margin:8px 0 0;color:#c4cad8}
+.spec h3{font-family:var(--f-display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;font-weight:600}
+.spec ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.spec li::marker{color:var(--accent)}
+.meter{display:flex;flex-direction:column;gap:12px}
+.meter div{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.meter .bars{display:flex;gap:4px}
+.meter .bars i{height:8px;flex:1;border-radius:2px;background:var(--line)}
+.meter .bars i.f{background:var(--accent)}
+.build{margin-top:18px;padding:14px 16px;border-radius:10px;background:var(--panel-2);font-size:14px;color:#c4cad8}
+.build b{color:var(--fg)}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.box h2{font-family:var(--f-display);font-size:20px;margin:0 0 4px}
+.box > p{color:var(--muted);margin:0 0 14px;font-size:14px}
+.feat{display:grid;grid-template-columns:1fr;gap:12px}
+.feat div b{display:block;font-family:var(--f-display);font-weight:600;font-size:15px}
+.feat div span{color:#b7bed0;font-size:14px}
+.box ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;color:#c4cad8;font-size:14px}
+.sources{color:var(--muted);font-size:13px}
+.sources a{color:var(--accent)}
+@media (max-width:760px){.spec{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Fifteen home screens for the TV</h1>
+    <p>Each one is a live mock-up. Pick a concept, then click the tiles or use the arrow keys to move focus like a remote would. Clocks, dates, moon phase and countdowns are live; shows, weather and soundbar numbers are sample data.</p>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <div class="tabgroup"><span class="glabel">Dark</span>
+      <button class="tab" role="tab" data-i="0" aria-selected="true">A · Marquee <small>cinematic</small></button>
+      <button class="tab" role="tab" data-i="1" aria-selected="false">B · Still <small>minimal</small></button>
+      <button class="tab" role="tab" data-i="2" aria-selected="false">C · Control Room <small>advanced</small></button>
+      <button class="tab" role="tab" data-i="3" aria-selected="false">D · Aurora <small>aesthetic</small></button>
+    </div>
+    <div class="tabgroup"><span class="glabel">Light</span>
+      <button class="tab" role="tab" data-i="4" aria-selected="false"><i class="sw" style="background:#c8402f"></i>E · Washi <small>Japanese desk mat</small></button>
+      <button class="tab" role="tab" data-i="5" aria-selected="false"><i class="sw" style="background:#57a6ef"></i>F · Sora <small>anime sky</small></button>
+      <button class="tab" role="tab" data-i="6" aria-selected="false"><i class="sw" style="background:#ff5a1f"></i>G · Summit <small>mountaineering</small></button>
+      <button class="tab" role="tab" data-i="7" aria-selected="false"><i class="sw" style="background:#e9e7e1"></i>H · Loadout <small>gaming</small></button>
+      <button class="tab" role="tab" data-i="8" aria-selected="false"><i class="sw" style="background:#f05a1a"></i>I · Studio <small>clean</small></button>
+      <button class="tab" role="tab" data-i="9" aria-selected="false"><i class="sw" style="background:#e8c43a"></i>J · Phulkari <small>Punjab</small></button>
+    </div>
+    <div class="tabgroup"><span class="glabel">Drive</span>
+      <button class="tab" role="tab" data-i="10" aria-selected="false"><i class="sw" style="background:#ff5e1a"></i>K · Callus <small>discipline</small></button>
+      <button class="tab" role="tab" data-i="11" aria-selected="false"><i class="sw" style="background:#c8202f"></i>L · Forge <small>armour HUD</small></button>
+      <button class="tab" role="tab" data-i="12" aria-selected="false"><i class="sw" style="background:#ff3d57"></i>M · Pace <small>marathon</small></button>
+      <button class="tab" role="tab" data-i="13" aria-selected="false"><i class="sw" style="background:#12a37f"></i>N · Engine <small>athlete</small></button>
+      <button class="tab" role="tab" data-i="14" aria-selected="false"><i class="sw" style="background:#d98a5f"></i>O · Date Night <small>for two</small></button>
+    </div>
+  </div>
+
+  <div class="tvstage">
+    <div class="bezel"><div class="tv" id="tv">
+
+      <!-- A. Marquee -->
+      <section class="screen" data-screen="0">
+        <div class="mq-bg" id="mqBg"></div>
+        <div class="mq-top"><span>Good evening</span><div class="right"><span>☁ <span data-b="wx.tc">2°C</span> <span data-b="wx.city">Ottawa</span></span><span class="clock js-clock">8:42</span></div></div>
+        <div class="mq-hero">
+          <div class="from" id="mqFrom">Continue on Netflix</div>
+          <h2 id="mqTitle">Harbor Lights</h2>
+          <div class="meta" id="mqMeta">S2 · E5 · 32 min left</div>
+          <div class="mq-prog"><i id="mqProg" style="width:64%"></i></div>
+          <div class="mq-btns"><span>▶ Resume</span><span>Details</span></div>
+        </div>
+        <div class="mq-row" id="mqRow"><span class="label">Your apps</span></div>
+      </section>
+
+      <!-- B. Still -->
+      <section class="screen" data-screen="1" hidden>
+        <div class="st-bg"><div class="st-hill"></div><div class="st-hill b"></div></div>
+        <div class="st-center">
+          <div class="st-clock js-clock">8:42</div>
+          <div class="st-date"><span class="js-date">Saturday, November 14</span> · ☁ <span data-b="wx.tc">2°C</span></div>
+        </div>
+        <div class="st-row" id="stRow"></div>
+        <div class="st-status"><span><i class="dot"></i>Soundbar <span data-b="sb.state">on</span></span><span>Wi-Fi <span data-b="sys.wifiWord">strong</span></span><span>No ads</span></div>
+      </section>
+
+      <!-- C. Control Room -->
+      <section class="screen" data-screen="2" hidden>
+        <div class="cr">
+          <nav class="cr-nav"><i class="on"></i><i></i><i></i><i></i><i></i></nav>
+          <div class="cr-main">
+            <div class="cr-head">
+              <div><h3>Good evening</h3><div class="sub">3 new episodes since yesterday · nothing scheduled tonight</div></div>
+              <div class="clock"><span class="js-clock">8:42</span><small class="js-date">Saturday, November 14</small></div>
+            </div>
+            <div>
+              <div class="cr-sec">Continue watching · all apps</div>
+              <div class="cr-cw" id="crCw"></div>
+            </div>
+            <div>
+              <div class="cr-sec">Apps</div>
+              <div class="cr-apps" id="crApps"></div>
+            </div>
+            <aside class="cr-side">
+              <div class="wid">
+                <h4>Soundbar <span>HDMI eARC</span></h4>
+                <div class="sb-top"><b>Samsung</b><span class="pill">● ON</span></div>
+                <div class="vol"><span>Vol</span><div class="track"><i></i></div><span data-b="sb.vol">18</span></div>
+                <div class="chips"><span class="act">Adaptive</span><span>Night</span><span>Voice boost</span><span>Bass +2</span></div>
+              </div>
+              <div class="wid">
+                <h4><span data-b="wx.city">Ottawa</span></h4>
+                <div class="wx"><div class="now"><span data-b="wx.t">2°</span></div><div>Sun<b>4°</b></div><div>Mon<b>1°</b></div><div>Tue<b>-3°</b></div><div>Wed<b>0°</b></div></div>
+              </div>
+              <div class="wid">
+                <h4>New tonight</h4>
+                <div class="upnext"><div><b>Fifth Precinct</b><span>Paramount+</span></div><div><b>Starfall: Outer Rim</b><span>Disney+</span></div><div><b>Workshop Weekly</b><span>YouTube</span></div></div>
+              </div>
+              <div class="wid">
+                <h4>System</h4>
+                <div class="stats"><div>Ads blocked<b>1,284</b></div><div>Wi-Fi<b><span data-b="sys.mbps">412</span> Mbps</b></div><div>Storage free<b>5.1 GB</b></div><div>Sleep timer<b>Off</b></div></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- D. Aurora -->
+      <section class="screen" data-screen="3" hidden>
+        <div class="au">
+          <div class="blob b1" id="auB1"></div><div class="blob b2" id="auB2"></div><div class="blob b3" id="auB3"></div>
+          <div class="au-top"><div class="clock js-clock">8:42</div><div class="sub"><span class="js-date">Saturday, November 14</span> · ☁ <span data-b="wx.tc">2°C</span></div></div>
+          <div class="au-stage" id="auStage"></div>
+          <div class="au-dock"><span>⌕ Search</span><span><i class="dot"></i>Soundbar</span><span>⚙ Settings</span><span>☾ Sleep</span></div>
+        </div>
+      </section>
+
+      <!-- E. Washi -->
+      <section class="screen" data-screen="4" hidden>
+        <div class="wa">
+          <div class="wa-fiber"></div>
+          <div class="wa-sun"></div>
+          <svg class="wa-birds" viewBox="0 0 90 30" aria-hidden="true"><g fill="none" stroke="#1d1a16" stroke-width="1.4" stroke-linecap="round"><path d="M5 18q5-6 10 0q5-6 10 0"/><path d="M38 8q4-5 8 0q4-5 8 0"/><path d="M64 22q3-4 6 0q3-4 6 0"/></g></svg>
+          <svg class="wa-mist" viewBox="0 0 400 120" aria-hidden="true"><path d="M0 120L0 78Q60 38 115 68T225 46Q285 14 335 58T400 50L400 120Z" fill="#1d1a16" opacity=".07"/><path d="M0 120L0 98Q70 70 140 92T270 80Q330 62 400 86L400 120Z" fill="#1d1a16" opacity=".1"/></svg>
+          <svg class="wa-pagoda" viewBox="0 0 200 210" aria-hidden="true"><g fill="#1d1a16">
+            <rect x="98" y="6" width="4" height="44"/><circle cx="100" cy="14" r="3"/><circle cx="100" cy="24" r="3"/><circle cx="100" cy="34" r="3"/>
+            <path d="M50 62Q80 56 100 46Q120 56 150 62L144 66Q100 58 56 66Z"/><rect x="72" y="66" width="56" height="26"/>
+            <path d="M34 104Q70 98 100 88Q130 98 166 104L158 109Q100 100 42 109Z"/><rect x="64" y="109" width="72" height="30"/>
+            <path d="M18 152Q60 146 100 135Q140 146 182 152L172 158Q100 148 28 158Z"/><rect x="56" y="158" width="88" height="36"/>
+            <rect x="40" y="194" width="120" height="8"/><rect x="30" y="202" width="140" height="6"/></g>
+            <g fill="#f2ece0"><rect x="84" y="72" width="6" height="14"/><rect x="110" y="72" width="6" height="14"/><rect x="78" y="116" width="7" height="16"/><rect x="96.5" y="116" width="7" height="16"/><rect x="115" y="116" width="7" height="16"/><rect x="92" y="168" width="16" height="26"/></g></svg>
+          <div class="wa-wave"></div>
+          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · 曇 <span data-b="wx.tc">2°C</span></div></div>
+          <div class="wa-kou"><span class="hanko">冬</span><span class="v">地始凍</span><span class="g">Chi hajimete kōru<br>Land starts to freeze</span></div>
+          <div class="wa-row" id="waRow"></div>
+          <div class="wa-strip">
+            <div><span class="k">今夜</span><span>Fifth Precinct<small>New episode tonight</small></span></div>
+            <div><span class="k">天気</span><span><span data-b="wx.text">Cloudy</span>, <span data-b="wx.tc">2°C</span><small><span data-b="wx.city">Ottawa</span> · low <span data-b="wx.min">−3°</span></small></span></div>
+            <div><span class="k">音</span><span>Soundbar <span data-b="sb.state">on</span><small>Volume <span data-b="sb.vol">18</span> · Adaptive</small></span></div>
+            <div><span class="k">眠</span><span>Bedtime 11:30<small>Night sound, screen dims</small></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- F. Sora -->
+      <section class="screen" data-screen="5" hidden>
+        <div class="so">
+          <div class="so-glow"></div>
+          <div class="so-flare" style="right:22cqw;top:12cqw;width:3cqw;height:3cqw"></div>
+          <div class="so-flare" style="right:30cqw;top:19cqw;width:1.6cqw;height:1.6cqw"></div>
+          <div class="so-flare" style="right:41cqw;top:29cqw;width:5cqw;height:5cqw;opacity:.6"></div>
+          <div id="soClouds"></div>
+          <svg class="so-wires" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true">
+            <g fill="none" stroke="#1c2a44" stroke-width=".22"><path d="M136 14.4Q70 26 -2 11"/><path d="M148 14.4Q80 29 -2 19"/><path d="M137.5 19.4Q70 31 -2 27"/><path d="M146.5 19.4Q90 33 40 -2"/></g>
+            <g fill="#1c2a44"><rect x="141" y="7" width="1.7" height="85"/><rect x="134.5" y="13.6" width="15" height=".9"/><rect x="136.5" y="18.6" width="11" height=".8"/><rect x="138.6" y="24" width="6" height="7" rx=".8"/><rect x="135.6" y="12.6" width=".7" height="1.2"/><rect x="147.6" y="12.6" width=".7" height="1.2"/></g>
+            <g fill="none" stroke="#1c2a44" stroke-width=".3" stroke-linecap="round"><path d="M96 34q1.2-1 2.4 0q1.2-1 2.4 0"/><path d="M104 30q.9-.8 1.8 0q.9-.8 1.8 0"/></g>
+          </svg>
+          <div class="so-time"><div class="t js-clock">8:42</div><div class="d js-date">Saturday, November 14</div></div>
+          <div class="so-bubble" id="soBubble"><small>Tonight's pick</small>Harbor Lights · 32 min to finish S2 E5!</div>
+          <div class="so-side">
+            <div class="so-w"><div class="lb">NEXT EPISODE</div><b>Starfall: Outer Rim · Ep 4</b><div class="so-cd" id="soCd">2d 06:14:33</div></div>
+            <div class="so-w"><div class="lb">WATCH STREAK</div><b>6 days · watch tonight for 7</b><div class="so-dots" id="soDots"></div></div>
+          </div>
+          <div class="so-row" id="soRow"></div>
+        </div>
+      </section>
+
+      <!-- G. Summit -->
+      <section class="screen" data-screen="6" hidden>
+        <div class="su">
+          <svg class="su-topo" id="suTopo" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+          <svg class="su-ridge" id="suRidge" viewBox="0 0 160 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div class="su-head">
+            <div><div class="lbl">Base camp</div><div class="val">Ottawa · <i>70 m</i></div></div>
+            <div class="clk js-clock24">20:42</div>
+            <div class="r"><div class="lbl">Sunrise / Sunset</div><div class="val"><span data-b="wx.sunrise">06:59</span> <i>/</i> <span data-b="wx.sunset">16:33</span></div></div>
+          </div>
+          <div class="su-row" id="suRow"></div>
+          <div class="su-wid">
+            <div class="su-w"><svg viewBox="-12 -12 24 24" aria-hidden="true"><circle r="10.5" fill="none" stroke="#1f2a2e" stroke-width=".5"/><g stroke="#1f2a2e" stroke-width=".5"><path d="M0-10.5v2M0 10.5v-2M10.5 0h-2M-10.5 0h2"/></g><text y="-6" text-anchor="middle" font-size="3.2" fill="#1f2a2e" font-family="Barlow Condensed">N</text><g transform="rotate(-45)"><path d="M0-7L1.8 2H-1.8Z" fill="#ff5a1f"/><path d="M0 7L1.8 2H-1.8Z" fill="#9fb0ad"/></g></svg>
+              <div><div class="lbl">Conditions</div><div class="big"><span data-b="wx.tc">2°C</span></div><div class="sm">Feels <span data-b="wx.feels">−3°</span> · Wind <span data-b="wx.wind">NW 18 km/h</span><br>Cloud <span data-b="wx.cloud">80</span>% · <span data-b="wx.text">Cloudy</span></div></div></div>
+            <div class="su-w"><svg viewBox="-12 -12 24 24" aria-hidden="true"><circle r="10" fill="#2c3a40"/><path id="suMoon" fill="#f3efe2"/></svg>
+              <div><div class="lbl">Moon &amp; light</div><div class="big" id="suMoonName" style="font-size:1.7cqw">Waxing crescent</div><div class="sm"><span id="suMoonPct">20</span>% lit · Golden hour 15:58</div></div></div>
+            <div class="su-w"><div><div class="lbl">Base station</div><div class="big">Vol <span data-b="sb.vol">18</span></div><div class="sm">Soundbar <span class="on">● <span data-b="sb.state">on</span></span><br>Night mode at 23:00</div></div></div>
+            <div class="su-w"><div><div class="lbl">Logbook · this week</div><div class="big">9 h 20 m</div><div class="sm">2 summits (shows finished)<br>Highest: Prime Video</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- H. Loadout -->
+      <section class="screen" data-screen="7" hidden>
+        <div class="hu">
+          <div class="hu-hazard"></div>
+          <div class="hu-bar"><span>◢ HOME <span class="acc">/</span> SYSTEM ONLINE <span class="acc">/</span> NO ADS</span><span class="clk js-clock-s">20:42:07</span><span>NET <span data-b="sys.mbps">412</span> MBPS · <span data-b="wx.tcU">2°C</span> OUTSIDE</span></div>
+
+          <div class="hp" style="left:3cqw;top:7cqw;width:24.5cqw;height:46cqw">
+            <h5><span>PLAYER 01</span><span class="acc">◢◤</span></h5>
+            <div class="hu-lv"><b>42</b><span>LEVEL<br>BINGE CLASS</span></div>
+            <div class="segs" id="huXp"></div>
+            <div class="hu-kv"><span>XP · HOURS WATCHED 2026</span><b>312 / 480</b></div>
+            <div class="hu-stats"><div>SEASONS CLEARED<b>14</b></div><div>LONGEST RUN<b>6 h 10 m</b></div><div>TOP APP<b>Netflix</b></div><div>ADS DODGED<b class="acc">1,284</b></div></div>
+            <h5 style="margin-top:1.2cqw"><span>ACHIEVEMENTS</span><span>3 / 20</span></h5>
+            <div class="hu-ach"><div><span><b>Weekend Warrior</b>Finished a season in 2 days</span></div><div><span><b>Night Owl</b>Watched past 2 a.m.</span></div><div><span><b>Explorer</b>Used all 5 apps this week</span></div></div>
+          </div>
+
+          <div class="hp hu-mis" style="left:29.5cqw;top:7cqw;width:41cqw;height:13.5cqw">
+            <h5><span>CURRENT MISSION</span><span class="acc" id="huApp">NETFLIX</span></h5>
+            <div class="t" id="huT">Finish Harbor Lights · Season 2</div>
+            <div class="s" id="huS">S2 · E5 · 32 min left</div>
+            <div class="segs k" id="huProg"></div>
+          </div>
+          <div class="hu-lab" style="left:29.5cqw;top:21.8cqw">LOADOUT · SELECT APP <span class="acc">◀ ▶</span></div>
+          <div class="hu-slots" id="huSlots"></div>
+          <div class="hu-acts"><span>NIGHT MODE<small>SOUNDBAR</small></span><span>SLEEP 90<small>TIMER</small></span><span>BEDTIME<small>ALL-IN-ONE</small></span><span>SCREEN OFF<small>AUDIO ONLY</small></span></div>
+
+          <div class="hp" style="left:72.5cqw;top:7cqw;width:24.5cqw;height:22.5cqw">
+            <h5><span>SIGNAL</span><span class="acc">LIVE</span></h5>
+            <div class="hu-radar"><i style="left:30%;top:28%"></i><i style="left:66%;top:58%"></i><i style="left:42%;top:72%"></i></div>
+            <div class="hu-kv"><span>WI-FI</span><b><span data-b="sys.mbps">412</span> MBPS</b></div>
+          </div>
+          <div class="hp" style="left:72.5cqw;top:31cqw;width:24.5cqw;height:22cqw">
+            <h5><span>AUDIO LINK</span><span class="acc">● ONLINE</span></h5>
+            <div style="font-size:1.5cqw;font-weight:700">Samsung soundbar</div>
+            <div style="font-size:.85cqw;letter-spacing:.12em;margin:.3cqw 0 .9cqw">HDMI eARC · CEC LINKED</div>
+            <div class="segs" id="huVol"></div>
+            <div class="hu-kv"><span>VOLUME</span><b><span data-b="sb.vol">18</span></b></div>
+            <div class="hu-kv"><span>MODE</span><b>ADAPTIVE</b></div>
+            <div class="hu-kv"><span>BASS</span><b>+2</b></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- I. Studio -->
+      <section class="screen" data-screen="8" hidden>
+        <div class="sd">
+          <div class="md sd-clock"><svg viewBox="-50 -50 100 100" id="sdClock" aria-hidden="true"></svg><div class="lb">Ottawa</div></div>
+          <div class="md sd-hero">
+            <div><div class="lb" id="sdFrom">Continue · Netflix</div><h3 id="sdTitle">Harbor Lights</h3><div class="m" id="sdMeta">S2 · E5 · 32 min left</div></div>
+            <div><div class="sd-line"><i id="sdBar" style="width:64%"></i><b id="sdDot" style="left:64%"></b></div><div class="sd-btns"><span>Resume</span><span>Episodes</span><span>Start over</span></div></div>
+          </div>
+          <div class="md sd-wx"><div class="lb">Weather</div><div class="big"><span data-b="wx.t">2°</span></div><div class="m"><span data-b="wx.text">Cloudy</span> · feels <span data-b="wx.feels">−3°</span></div>
+            <div class="sd-fc"><div>Sun<b>4°</b></div><div>Mon<b>1°</b></div><div>Tue<b>−3°</b></div><div>Wed<b>0°</b></div></div></div>
+          <div class="sd-keys" id="sdKeys"></div>
+          <div class="md sd-knob"><svg viewBox="-50 -50 100 100" id="sdKnob" aria-hidden="true"></svg><div><div class="lb">Soundbar</div><div class="v"><span data-b="sb.vol">18</span></div><div class="s">Adaptive<br><span style="color:#f05a1a">●</span> On</div></div></div>
+          <div class="md sd-cal"><div class="lb" id="sdCalT">November 2026</div><div class="g" id="sdCal"></div></div>
+          <div class="md sd-up"><div class="lb">Up next</div>
+            <div class="r"><div>Fifth Precinct <span>· Paramount+</span></div><em>New</em></div>
+            <div class="r"><div>Starfall: Outer Rim <span>· Disney+</span></div><span>Tue</span></div>
+            <div class="r"><div>Workshop Weekly <span>· YouTube</span></div><span>Daily</span></div></div>
+          <div class="md sd-sys"><div class="lb">System</div><div>Ads<b>None</b></div><div>Wi-Fi<b><span data-b="sys.mbps">412</span> Mb/s</b></div></div>
+        </div>
+      </section>
+
+      <!-- J. Phulkari -->
+      <section class="screen" data-screen="9" hidden>
+        <div class="pk">
+          <div class="pk-strip"></div>
+          <div class="pk-sun"></div>
+          <svg class="pk-trees" viewBox="0 0 160 3" preserveAspectRatio="none" aria-hidden="true"><path d="M0 3V2.2Q4 1.2 8 2.1T18 1.6Q22 .6 26 1.8T40 2.2Q46 1 52 2T70 2.3Q76 .9 82 1.9T100 2.1Q108 .7 114 1.8T132 2.2Q140 1.1 146 2T160 1.8V3Z" fill="#7d8f5a" opacity=".55"/></svg>
+          <div class="pk-field"></div>
+          <div class="pk-greet">
+            <div class="g">ਸਤ ਸ੍ਰੀ ਅਕਾਲ</div>
+            <div class="s">Sat Sri Akal · <span class="js-date">Saturday, November 14</span></div>
+            <div class="nd"><b id="pkNsG">੧ ਮੱਘਰ ੫੫੮</b><span id="pkNs">1 Maghar 558 · Nanakshahi</span></div>
+          </div>
+          <div class="pk-clocks">
+            <div class="pc"><small>Ottawa</small><div class="t" id="pkOtt">8:42</div><div class="x"><span data-b="wx.text">Cloudy</span> <span data-b="wx.tc">2°C</span></div></div>
+            <div class="pc"><small>Amritsar</small><div class="t" id="pkAmr">7:12</div><div class="x"><span data-b="w2.text">Clear</span> <span data-b="w2.tc">11°C</span></div></div>
+          </div>
+          <div class="pk-call" id="pkCall"><i class="dot" style="background:#3c9a4e"></i>Good time to call home</div>
+          <div class="pk-row" id="pkRow"></div>
+          <div class="pk-wid">
+            <div class="pw"><small>Lohri · ਲੋਹੜੀ</small><b id="pkLohri">60</b> days to go · Jan 13</div>
+            <div class="pw"><small>Punjabi word of the day</small><b id="pkWord">ਸਰ੍ਹੋਂ</b> <span id="pkWordE">sarhon · mustard</span></div>
+            <div class="pw"><small>Soundbar</small><b><span data-b="sb.stateCap">On</span></b> · Volume <span data-b="sb.vol">18</span> · Adaptive</div>
+            <div class="pw"><small>Tonight</small><b>Fifth Precinct</b> · new on Paramount+</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- K. Callus -->
+      <section class="screen" data-screen="10" hidden>
+        <div class="cl">
+          <div class="cl-tex"></div><div class="cl-vig"></div>
+          <div class="cl-clock js-clock24">20:42</div>
+          <div class="cl-sub">Day <b>212</b> of showing up · Alarm <b>4:30 AM</b> · You're at 40%. Keep going.</div>
+          <div class="cl-earn">
+            <div class="row"><span>Earned screen time</span><span><b>45 min</b> trained → <b>90 min</b> earned</span></div>
+            <div class="cl-bar"><i style="width:69%"></i><s style="left:69%"></s></div>
+            <div class="note">62 min used. <b>28 min left</b>, then lights out.</div>
+          </div>
+          <div class="cl-wx"><span data-b="wx.tc">−3°C</span> · Wind <span data-b="wx.wind">NW 18 km/h</span> · Run at 5:00 AM. Bring gloves, not excuses.</div>
+          <div class="cl-mirror">
+            <div class="note2" style="left:3cqw;top:2.5cqw;background:#ffe36e;transform:rotate(-4deg)">RUN 6 KM BEFORE WORK<em>DONE</em></div>
+            <div class="note2" style="left:15.5cqw;top:6cqw;background:#ffb35c;transform:rotate(3deg)">NO PHONE IN BED</div>
+            <div class="note2" style="left:27.5cqw;top:2cqw;background:#f4f0e6;transform:rotate(-2deg)">FINISH WHAT YOU START</div>
+            <div class="cap">ACCOUNTABILITY MIRROR</div>
+          </div>
+          <div class="cl-row" id="clRow"></div>
+          <div class="cl-jar"><span class="lb">COOKIE JAR</span><span>Half marathon in the rain · May 2025</span><i>/</i><span>60 days, no sugar</span><i>/</i><span>First 5 AM run at −20°C</span><i>/</i><span>212 days straight</span></div>
+        </div>
+      </section>
+
+      <!-- L. Forge -->
+      <section class="screen" data-screen="11" hidden>
+        <div class="fg" id="fg">
+          <div class="fg-hex"></div><div class="fg-scan"></div>
+          <div class="fg-top">
+            <div class="clk"><span class="js-clock24">20:42</span><small class="js-date">Saturday, November 14</small></div>
+            <div class="fg-say">Good evening. All systems nominal. Zero ads detected.</div>
+            <div class="r">FORGE OS <b>v4.2</b><br>DISPLAY <b>4K HDR</b><br>VOICE <b>READY</b></div>
+          </div>
+          <div class="fg-pan" style="left:3cqw">
+            <h6><span>DIAGNOSTICS</span><span>◢◤</span></h6>
+            <div class="fg-dg">
+              <div><span>NETWORK<b><span data-b="sys.mbps">412</span> MBPS</b></span><em><i style="width:82%"></i></em></div>
+              <div><span>STORAGE FREE<b>61%</b></span><em><i style="width:61%"></i></em></div>
+              <div><span>AUDIO ARRAY · SOUNDBAR<b><span data-b="sb.stateU">ONLINE</span> · <span data-b="sb.vol">18</span></b></span><em><i style="width:45%"></i></em></div>
+              <div><span>ADS INTERCEPTED<b>1,284</b></span><em><i style="width:100%"></i></em></div>
+              <div><span>UPTIME<b>3 D 04 H</b></span><em><i style="width:30%"></i></em></div>
+            </div>
+          </div>
+          <div class="fg-core"><i class="r1"></i><i class="r2"></i><i class="r3"></i><i class="r4"></i><i class="c"></i><div class="t">CORE OUTPUT <b>100%</b></div></div>
+          <div class="fg-pan fg-ms" style="right:3cqw">
+            <h6><span>ACTIVE MISSION</span><span id="fgApp">NETFLIX</span></h6>
+            <div class="t" id="fgT">Harbor Lights</div>
+            <div class="s" id="fgS">S2 · E5 · 32 min left</div>
+            <div class="bar"><i id="fgP" style="width:64%"></i></div>
+            <h6 style="margin-top:1.6cqw"><span>ATMOSPHERICS</span><span>OTTAWA</span></h6>
+            <div class="kv"><span>TEMP</span><b><span data-b="wx.tc">−3°C</span> · FEELS <span data-b="wx.feels">−8°</span></b></div>
+            <div class="kv"><span>WIND</span><b><span data-b="wx.windU">NW 18 KM/H</span></b></div>
+            <div class="kv"><span>FLIGHT CONDITIONS</span><b>MARGINAL</b></div>
+          </div>
+          <div class="fg-row" id="fgRow"></div>
+          <div class="fg-foot"><span>SAY “OPEN NETFLIX” OR PRESS OK</span><span>THREAT LEVEL: ZERO</span><span>MK-VII HOME INTERFACE</span></div>
+        </div>
+      </section>
+
+      <!-- M. Pace -->
+      <section class="screen" data-screen="12" hidden>
+        <div class="pa">
+          <div class="pa-track"></div>
+          <div class="pa-bib">
+            <span class="pin" style="left:.8cqw;top:3.4cqw"></span><span class="pin" style="right:.8cqw;top:3.4cqw"></span>
+            <span class="pin" style="left:.8cqw;bottom:6cqw"></span><span class="pin" style="right:.8cqw;bottom:6cqw"></span>
+            <div class="band"><span>OTTAWA RACE WEEKEND</span><span>MARATHON</span></div>
+            <div class="num">1414</div>
+            <div class="meta">42.2 KM · CORRAL B · GOAL 3:45:00</div>
+            <div class="tear"><b id="paDays">197 DAYS</b><span>TO RACE DAY<br>SUN, MAY 30, 2027</span></div>
+          </div>
+          <div class="pa-week" id="paWeek"></div>
+          <div class="pa-box" style="left:41cqw;width:25.5cqw">
+            <svg viewBox="-12 -12 24 24" aria-hidden="true"><circle r="10" fill="none" stroke="#eceef1" stroke-width="2.6"/><circle r="10" fill="none" stroke="#ff3d57" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="34.8 62.8" transform="rotate(-90)"/><text y="1.2" text-anchor="middle" font-size="4.4" font-weight="900" fill="#111318" font-family="Archivo">56%</text></svg>
+            <div><div class="lb">THIS WEEK</div><div class="v">34 / 61 km</div><div class="s">Long run Sunday · 24 km</div></div>
+          </div>
+          <div class="pa-box" style="left:68cqw;right:4cqw">
+            <div><div class="lb">BEST WINDOW TO RUN</div><div class="v">Tomorrow 7–9 AM</div><div class="s">−2°C · wind 9 km/h · dry roads · sunrise 07:01</div></div>
+          </div>
+          <div class="pa-row" id="paRow"></div>
+          <div class="pa-splits">
+            <div class="txt"><div class="lb">LAST RUN · THURSDAY</div><b>10.2 km · 53:04</b><div class="lb" style="margin-top:.2cqw">5:12 /KM AVG · NEGATIVE SPLIT</div></div>
+            <div class="bars" id="paBars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- N. Engine -->
+      <section class="screen" data-screen="13" hidden>
+        <div class="en">
+          <div class="ec en-rings" id="enRings"></div>
+          <div class="ec en-verdict">
+            <div><div class="lb">Today's call</div><h4>Green day. Go hard.</h4>
+            <p>Recovery is high and sleep was solid. Do the threshold ride now, eat, then one episode of Harbor Lights as the reward.</p></div>
+            <div class="plan"><span>60 min threshold ride</span><span>Mobility 15 min</span><span>Bed by 22:30</span></div>
+          </div>
+          <div class="ec en-load">
+            <div class="hd"><div class="lb">Training load · 6 weeks</div><span class="pill">Acute : chronic 1.1 · sweet spot</span></div>
+            <svg id="enLoad" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <div class="ec en-zones">
+            <div class="lb">Heart-rate zones · this week</div>
+            <div id="enZones"></div>
+            <div class="vit"><div>Resting HR<b>52 bpm</b></div><div>HRV<b>64 ms ▲</b></div><div>VO₂ max<b>51</b></div></div>
+          </div>
+          <div class="en-apps" id="enApps"></div>
+        </div>
+      </section>
+
+      <!-- O. Date Night -->
+      <section class="screen" data-screen="14" hidden>
+        <div class="dn">
+          <div class="dn-candle"></div>
+          <div id="dnBokeh"></div>
+          <div class="dn-title"><div class="h">Date night</div><div class="s"><span class="js-date">Saturday, November 14</span> · phones down, lights low</div></div>
+          <div class="dn-scene">
+            <div class="ch"><i></i>Lights 20% · warm white</div>
+            <div class="ch"><i></i>Soundbar · night mode</div>
+            <div class="ch"><i></i>Notifications off</div>
+            <div class="ch" id="dnEnds"><i></i>Start now, ends 10:58 PM</div>
+          </div>
+          <div class="dn-picks" id="dnPicks"></div>
+          <div class="dn-side">
+            <div class="lb">Mood</div>
+            <div class="dn-mood"><span class="a">Romantic</span><span>Funny</span><span>Thriller</span><span>Cozy</span></div>
+            <div class="lb" style="margin-top:.4cqw">Why this one</div>
+            <div class="dn-why" id="dnWhy">Two strangers keep missing each other across one summer in Lisbon. Light, warm, ends happy.</div>
+            <div class="dn-ann"><b id="dnAnn">41</b><span>days to your anniversary ♡</span></div>
+          </div>
+          <div class="dn-apps" id="dnApps"><span class="lb">Or open</span></div>
+        </div>
+      </section>
+
+    </div></div>
+    <div class="stand"></div>
+    <div class="hint">Click a tile, or use <kbd>←</kbd> <kbd>→</kbd> to move focus</div>
+  </div>
+
+  <article class="spec" id="spec"></article>
+
+  <div class="cols">
+    <section class="box">
+      <h2>Feature ideas we can add to any of them</h2>
+      <p>Pick the ones you want and I'll fold them into the chosen design.</p>
+      <div class="feat">
+        <div><b>One "Continue watching" row across all five apps</b><span>Pulls the resume cards that Netflix, Disney+, Prime, Paramount+ and YouTube already publish to Android TV, with no ad rows.</span></div>
+        <div><b>Background that matches the time of day</b><span>Dawn, daytime, dusk and night palettes, dimmer after 11 pm so the room isn't lit up.</span></div>
+        <div><b>Soundbar status and controls on the home screen</b><span>Power, volume and sound mode right on the TV. Depends on phase 2.</span></div>
+        <div><b>Bedtime mode</b><span>One button: sleep timer, Night sound mode on the soundbar, screen dims.</span></div>
+        <div><b>Hold-to-launch shortcuts</b><span>Long-press a remote button to open Netflix or YouTube straight away.</span></div>
+        <div><b>Screensaver with clock and weather</b><span>Slow art or photo slideshow instead of Google's ad-filled ambient mode.</span></div>
+      </div>
+    </section>
+    <section class="box">
+      <h2>How the project would run</h2>
+      <p>Nothing gets built until you pick a design and say go.</p>
+      <ol>
+        <li><b>Debloat.</b> Turn on Developer Options and network debugging, then I connect over ADB and disable the stock launcher, ad rows, and preinstalled junk. Everything is disabled, not deleted, so it can be undone.</li>
+        <li><b>Install the home screen.</b> A and B can be built with Projectivy Launcher plus custom wallpapers and icons. C and D need a small custom launcher app that I'd write and install for you.</li>
+        <li><b>Phase 2: soundbar.</b> First try the free fix: HDMI-CEC (Anynet+) on the soundbar, cable in the TV's ARC/eARC port, and the TV's "power on connected devices" setting. If the soundbar is on Wi-Fi, Samsung SmartThings can also switch it on from the TV. Breaking into the soundbar should not be needed.</li>
+      </ol>
+    </section>
+  </div>
+
+  <p class="sources">Based on what people run on r/AndroidTV and in reviews:
+    <a href="https://www.androidauthority.com/projectivy-launcher-android-tv-3684205/" target="_blank" rel="noopener">Projectivy Launcher (Android Authority)</a> ·
+    <a href="https://www.notebookcheck.net/The-Google-TV-launcher-is-mess-of-adverts-but-this-replacement-is-a-clean-beautiful-ad-free-alternative.1018849.0.html" target="_blank" rel="noopener">Ad-free launcher review (Notebookcheck)</a> ·
+    <a href="https://www.xda-developers.com/flauncher-android-tv/" target="_blank" rel="noopener">FLauncher (XDA)</a> ·
+    <a href="https://www.androidauthority.com/google-tv-ads-projectivy-launcher-3573626" target="_blank" rel="noopener">Removing Google TV ads (Android Authority)</a>
+  </p>
+</div>
+
+<script>
+const APPS=[
+  {id:'netflix',name:'Netflix',cls:'w-netflix',word:'NETFLIX',show:'Harbor Lights',meta:'S2 · E5 · 32 min left',prog:64,brand:'#b20710',sum:1840,c:['#5a0c12','#e0603a','#1d0507']},
+  {id:'youtube',name:'YouTube',cls:'w-youtube',word:'<span class="yt"></span>YouTube',show:'Building a Cabin in 30 Days',meta:'Workshop Weekly · 18 min left',prog:40,brand:'#d40000',sum:960,c:['#3d1a10','#d98a3d','#140805']},
+  {id:'disney',name:'Disney+',cls:'w-disney',word:'Disney+',show:'Starfall: Outer Rim',meta:'Episode 3 · 41 min left',prog:22,brand:'#123a8c',sum:2210,c:['#0b1c5c','#4ab3ff','#040a24']},
+  {id:'prime',name:'Prime Video',cls:'w-prime',word:'prime <b>video</b>',show:'The Northern Route',meta:'Movie · 1 h 12 min left',prog:35,brand:'#0f79c2',sum:3120,c:['#0d2a33','#3fc1c9','#04121a']},
+  {id:'paramount',name:'Paramount+',cls:'w-paramount',word:'Paramount+',show:'Fifth Precinct',meta:'S1 · E8 · New episode',prog:0,brand:'#0050d6',sum:1500,c:['#0a2a7a','#7aa7ff','#030b26']},
+];
+const EXTRA=[{id:'sound',name:'Soundbar',cls:'w-sound',word:'Sound'},{id:'settings',name:'Settings',cls:'w-settings',word:'Settings'}];
+const tile=(a,extra='')=>`<div class="tile ${a.cls} ${extra}" data-tile>${a.word}</div>`;
+
+/* clock */
+function tick(){const d=new Date();
+  const t=d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M/i,'');
+  const ds=d.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'});
+  document.querySelectorAll('.js-clock').forEach(e=>e.textContent=t);
+  document.querySelectorAll('.js-date').forEach(e=>e.textContent=ds);}
+tick();setInterval(tick,15000);
+
+/* A */
+const mqRow=document.getElementById('mqRow');
+mqRow.insertAdjacentHTML('beforeend',APPS.map(a=>tile(a)).join('')+EXTRA.map(a=>tile(a,'small')).join(''));
+function mqFocus(i){const a=APPS[i]; if(!a) return;
+  document.getElementById('mqBg').style.background=`radial-gradient(60% 70% at 72% 32%, ${a.c[1]} 0%, ${a.c[0]} 45%, ${a.c[2]} 100%)`;
+  document.getElementById('mqFrom').textContent=a.prog?`Continue on ${a.name}`:`New on ${a.name}`;
+  document.getElementById('mqTitle').textContent=a.show;
+  document.getElementById('mqMeta').textContent=a.meta;
+  document.getElementById('mqProg').style.width=(a.prog||0)+'%';}
+
+/* B */
+document.getElementById('stRow').innerHTML=[...APPS,EXTRA[1]].map(a=>`<div class="item" data-tile>${tile(a).replace(' data-tile','')}<div class="name">${a.name}</div></div>`).join('');
+
+/* C */
+const art=a=>`linear-gradient(135deg, ${a.c[0]}, ${a.c[1]})`;
+document.getElementById('crCw').innerHTML=[APPS[0],APPS[2],APPS[1],APPS[3]].map(a=>`<div class="cr-card" data-tile><div class="art" style="background:${art(a)}"><em>${a.name}</em></div><div class="bar"><i style="width:${a.prog}%"></i></div><div class="txt"><b>${a.show}</b><span>${a.meta}</span></div></div>`).join('');
+document.getElementById('crApps').innerHTML=[...APPS,...EXTRA].map(a=>tile(a)).join('');
+
+/* D */
+const auStage=document.getElementById('auStage');
+auStage.innerHTML=APPS.map(a=>`<div class="au-card" data-tile>${tile(a).replace(' data-tile','')}<div class="body"><small>${a.prog?'Continue':'New episode'}</small><b>${a.show}</b><span>${a.meta}</span></div></div>`).join('');
+function auFocus(i){const cards=[...auStage.children];
+  cards.forEach((c,k)=>{const o=k-i, ab=Math.abs(o);
+    c.style.transform=`translateX(${o*24}cqw) translateZ(${-ab*9}cqw) rotateY(${-o*18}deg)`;
+    c.style.opacity=ab>2?0:1-ab*.28; c.style.zIndex=10-ab;});
+  const a=APPS[i];
+  document.getElementById('auB1').style.background=a.c[1];
+  document.getElementById('auB2').style.background=a.c[0];
+  document.getElementById('auB3').style.background='#5a3cff';}
+
+/* ===== E. Washi ===== */
+document.getElementById('waRow').innerHTML=APPS.map(a=>`<div class="wa-card" data-tile><div class="app" style="color:${a.brand}">${a.name}</div><div class="ttl">${a.show}</div><div><div class="ink"><i style="width:${a.prog}%"></i></div><div class="mt">${a.meta}</div></div><span class="hanko st">観</span></div>`).join('')
+ +`<div class="wa-card k" data-tile><div class="kj">音</div><div class="mt">Soundbar</div><span class="hanko st">観</span></div><div class="wa-card k" data-tile><div class="kj">設</div><div class="mt">Settings</div><span class="hanko st">観</span></div>`;
+
+/* ===== F. Sora ===== */
+const CLOUD=[[0,5,5],[4.5,2,6.5],[10.5,3.5,6],[16,6,4.5],[-3.5,7,3.5],[3,8,5],[9,8.5,5.5],[14,9,4]];
+const cloud=(x,y,s,d)=>`<div class="so-cloud" style="left:${x}cqw;top:${y}cqw;animation-duration:${d}s">`+CLOUD.map(([a,b,r])=>`<i style="left:${a*s}cqw;top:${b*s}cqw;width:${r*2*s}cqw;height:${r*2*s}cqw"></i>`).join('')+'</div>';
+document.getElementById('soClouds').innerHTML=cloud(30,13,1.15,80)+cloud(-6,28,.9,65)+cloud(58,31,.75,55)+cloud(72,0,.45,90);
+document.getElementById('soRow').innerHTML=APPS.map(a=>`<div class="so-card" data-tile>${tile(a).replace(' data-tile','')}<div class="tx"><b>${a.show}</b><span>${a.meta}</span><div class="pb"><i style="width:${Math.max(a.prog,4)}%"></i></div></div></div>`).join('');
+document.getElementById('soDots').innerHTML=['M','T','W','T','F','S','S'].map((d,k)=>`<span class="${k<6?'f':'t'}">${d}</span>`).join('');
+function soFocus(i){const a=APPS[i];document.getElementById('soBubble').innerHTML=`<small>Tonight's pick · ${a.name}</small>${a.show} · ${a.meta}`;}
+function nextEp(){const d=new Date();const t=new Date(d);t.setHours(21,0,0,0);t.setDate(d.getDate()+((2-d.getDay()+7)%7));if(t<=d)t.setDate(t.getDate()+7);return t;}
+const soTarget=nextEp();
+
+/* ===== G. Summit ===== */
+(function(){let h='';
+  const hill=(cx,cy,n,step,ph)=>{for(let k=1;k<=n;k++){const r=k*step;let d='';for(let j=0;j<=72;j++){const a=j/72*Math.PI*2;const rr=r*(1+.13*Math.sin(3*a+k*.35+ph)+.07*Math.sin(5*a+1.3+ph)+.04*Math.sin(8*a+k));d+=(j?'L':'M')+(cx+rr*Math.cos(a)*1.25).toFixed(2)+' '+(cy+rr*Math.sin(a)*.8).toFixed(2);}
+    const idx=k%5===0;h+=`<path d="${d}Z" fill="none" stroke="#7f9893" stroke-opacity="${idx?.6:.3}" stroke-width="${idx?.3:.14}"/>`;}};
+  hill(118,22,19,3.3,0);hill(26,74,9,3,2);
+  document.getElementById('suTopo').innerHTML=h;
+  const ridge=(seed,base,amp,fill)=>{let p='0,30 ';for(let x=0;x<=160;x+=4){const y=base-amp*(Math.abs(Math.sin(x*.045+seed))*.7+Math.abs(Math.sin(x*.13+seed*2))*.3);p+=`${x},${y.toFixed(1)} `;}return `<polygon points="${p}160,30" fill="${fill}"/>`};
+  document.getElementById('suRidge').innerHTML=ridge(1,17,14,'#c6d3d8')+ridge(2.4,24,12,'#a3b6bf')+ridge(4,29.5,8,'#7a919c');
+})();
+document.getElementById('suRow').innerHTML=APPS.map((a,n)=>{
+  const ys=[];for(let i=0;i<=20;i++){ys.push(27-(i/20)*19-4*Math.abs(Math.sin(i*.9+n*1.7)));}
+  const pt=i=>`${i*5},${ys[i].toFixed(1)}`;const line=ys.map((_,i)=>pt(i)).join(' ');
+  const pi=a.prog/5, fi=Math.floor(pi), py=fi>=20?ys[20]:ys[fi]+(ys[fi+1]-ys[fi])*(pi-fi);
+  let area='0,30 ';for(let i=0;i<=fi&&i<=20;i++)area+=pt(i)+' ';area+=`${a.prog},${py.toFixed(1)} ${a.prog},30`;
+  const done=Math.round(a.sum*a.prog/100);
+  return `<div class="su-card" data-tile><div class="top"><span style="color:${a.brand}">${a.name}</span><span>Route ${String.fromCharCode(65+n)}</span></div><div class="ttl">${a.show}</div>
+  <div class="pf"><svg viewBox="0 0 100 30" preserveAspectRatio="none"><polygon points="${area}" fill="#ff5a1f" fill-opacity=".18"/><polyline points="${line}" fill="none" stroke="#1f2a2e" stroke-width=".7" vector-effect="non-scaling-stroke"/></svg><span class="dot" style="left:${a.prog}%;top:${(py/30*100).toFixed(1)}%"></span></div>
+  <div class="ft"><span>${a.prog?a.prog+'% climbed':'At trailhead'}</span><span>${done.toLocaleString()} / ${a.sum.toLocaleString()} m</span></div></div>`;}).join('');
+(function moon(){const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14);const p=((((Date.now()-ref)/864e5)%syn)+syn)%syn/syn;
+  const rx=Math.abs(Math.cos(2*Math.PI*p))*10,wax=p<.5,outer=wax?1:0,term=wax?(p<.25?0:1):(p<.75?0:1);
+  document.getElementById('suMoon').setAttribute('d',`M0,-10A10,10 0 0 ${outer} 0,10A${rx.toFixed(2)},10 0 0 ${term} 0,-10Z`);
+  const names=['New moon','Waxing crescent','First quarter','Waxing gibbous','Full moon','Waning gibbous','Last quarter','Waning crescent'];
+  document.getElementById('suMoonName').textContent=names[Math.floor(p*8+.5)%8];
+  document.getElementById('suMoonPct').textContent=Math.round((1-Math.cos(2*Math.PI*p))/2*100);})();
+
+/* ===== H. Loadout ===== */
+const segs=(n,f)=>Array.from({length:n},(_,k)=>`<i class="${k<f?'f':''}"></i>`).join('');
+document.getElementById('huXp').innerHTML=segs(20,13);
+document.getElementById('huVol').innerHTML=segs(16,7);
+document.getElementById('huSlots').innerHTML=APPS.map((a,k)=>`<div class="hs" data-tile><div><span class="n">0${k+1}<i style="background:${a.brand||'#3c9a6a'}"></i></span><span><span class="eq">EQUIPPED</span><span class="nm">${a.name}</span></span></div></div>`).join('');
+function huFocus(i){const a=APPS[i];
+  if(!a){document.getElementById('huApp').textContent='SOUNDBAR';document.getElementById('huT').textContent='Audio link · Samsung soundbar';document.getElementById('huS').textContent='Power, volume and sound mode';document.getElementById('huProg').innerHTML=segs(10,10);return;}
+  document.getElementById('huApp').textContent=a.name.toUpperCase();
+  document.getElementById('huT').textContent=a.prog?`Finish ${a.show}`:`Start ${a.show}`;
+  document.getElementById('huS').textContent=a.meta;
+  document.getElementById('huProg').innerHTML=segs(10,Math.round(a.prog/10));}
+
+/* ===== I. Studio ===== */
+(function(){let c='<circle r="47" fill="#ecebe6"/><circle r="47" fill="none" stroke="#d9d7d1" stroke-width=".6"/>';
+  for(let k=0;k<60;k++){const h=k%5===0;c+=`<line y1="-44" y2="${h?-38:-41.5}" stroke="${h?'#2a2a28':'#a9a7a1'}" stroke-width="${h?1.6:.6}" transform="rotate(${k*6})"/>`;}
+  c+='<line id="sdH" y1="6" y2="-24" stroke="#2a2a28" stroke-width="3.4" stroke-linecap="round"/><line id="sdM" y1="8" y2="-36" stroke="#2a2a28" stroke-width="2.2" stroke-linecap="round"/><line id="sdS" y1="10" y2="-40" stroke="#f05a1a" stroke-width=".9"/><circle r="2.6" fill="#f05a1a"/>';
+  document.getElementById('sdClock').innerHTML=c;
+  let k='';const vol=18,max=40;for(let j=0;j<=27;j++){const ang=-135+j*10;k+=`<line y1="-46" y2="-40" stroke="${j/27<=vol/max?'#f05a1a':'#cfcdc7'}" stroke-width="1.8" stroke-linecap="round" transform="rotate(${ang})"/>`;}
+  k+=`<circle r="32" fill="#f9f8f5" stroke="#d9d7d1"/><circle r="26" fill="#f4f3ef"/><line y1="-24" y2="-15" stroke="#2a2a28" stroke-width="2.4" stroke-linecap="round" transform="rotate(${-135+270*vol/max})"/>`;
+  document.getElementById('sdKnob').innerHTML=k;
+  const d=new Date(),y=d.getFullYear(),m=d.getMonth();
+  document.getElementById('sdCalT').textContent=d.toLocaleDateString([], {month:'long',year:'numeric'});
+  let g=['S','M','T','W','T','F','S'].map(x=>`<span class="h">${x}</span>`).join('');
+  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+  for(let j=0;j<first;j++)g+='<span></span>';
+  for(let j=1;j<=days;j++)g+=`<span class="${j===d.getDate()?'td':''}">${j}</span>`;
+  document.getElementById('sdCal').innerHTML=g;})();
+document.getElementById('sdKeys').innerHTML=[...APPS,...EXTRA].map(a=>`<div class="md key" data-tile><span class="sq" style="background:${a.brand||(a.id==='sound'?'#3c9a6a':'#8b8983')}"></span><span class="led"></span><span class="nm">${a.name}</span></div>`).join('');
+function sdFocus(i){const a=APPS[i];if(!a)return;
+  document.getElementById('sdFrom').textContent=(a.prog?'Continue · ':'New · ')+a.name;
+  document.getElementById('sdTitle').textContent=a.show;document.getElementById('sdMeta').textContent=a.meta;
+  document.getElementById('sdBar').style.width=a.prog+'%';document.getElementById('sdDot').style.left=a.prog+'%';}
+
+/* ===== J. Phulkari ===== */
+const PUNJABI={id:'punjabi',name:'Punjabi Hits',cls:'w-punjabi',word:'ਪੰਜਾਬੀ ਗੀਤ',show:'Punjabi Hits',meta:'YouTube playlist · 48 songs'};
+document.getElementById('pkRow').innerHTML=[...APPS,PUNJABI].map(a=>`<div class="pk-card" data-tile>${tile(a).replace(' data-tile','')}<div class="edge"></div><div class="tx"><b>${a.show}</b><span>${a.meta}</span></div></div>`).join('');
+const GUR='੦੧੨੩੪੫੬੭੮੯',gur=n=>String(n).replace(/\d/g,d=>GUR[d]);
+(function(){const d=new Date();d.setHours(12,0,0,0);
+  const M=[[2,14,'ਚੇਤ','Chet'],[3,14,'ਵੈਸਾਖ','Vaisakh'],[4,15,'ਜੇਠ','Jeth'],[5,15,'ਹਾੜ','Harh'],[6,16,'ਸਾਵਣ','Sawan'],[7,16,'ਭਾਦੋਂ','Bhadon'],[8,15,'ਅੱਸੂ','Assu'],[9,15,'ਕੱਤਕ','Katak'],[10,14,'ਮੱਘਰ','Maghar'],[11,14,'ਪੋਹ','Poh'],[0,13,'ਮਾਘ','Magh'],[1,12,'ਫੱਗਣ','Phagan']];
+  const y=d.getFullYear(),y0=d>=new Date(y,2,14,12)?y:y-1,ns=y0-1468;
+  let cur=null;M.forEach((m,k)=>{const s=new Date(k<10?y0:y0+1,m[0],m[1],12);if(s<=d)cur={m,s};});
+  const day=Math.round((d-cur.s)/864e5)+1;
+  document.getElementById('pkNsG').textContent=`${gur(day)} ${cur.m[2]} ${gur(ns)}`;
+  document.getElementById('pkNs').textContent=`${day} ${cur.m[3]} ${ns} · Nanakshahi`;
+  let l=new Date(y,0,13,12);if(l<d)l=new Date(y+1,0,13,12);
+  document.getElementById('pkLohri').textContent=Math.round((l-d)/864e5);
+  const W=[['ਸਰ੍ਹੋਂ','sarhon · mustard'],['ਖੇਤ','khet · field'],['ਚਾਨਣ','chaanan · light'],['ਪਿੰਡ','pind · village'],['ਮਿੱਠਾ','mittha · sweet'],['ਦਰਿਆ','dariya · river'],['ਸਵੇਰ','saver · morning']];
+  const w=W[Math.floor(d/864e5)%W.length];document.getElementById('pkWord').textContent=w[0];document.getElementById('pkWordE').textContent=w[1];})();
+
+/* ===== K. Callus ===== */
+document.getElementById('clRow').innerHTML=[...APPS,...EXTRA].map(a=>`<div class="cl-tile" data-tile><span class="tape">${a.name}</span><i class="br" style="background:${a.brand||(a.id==='sound'?'#3c9a6a':'#8f8a7e')}"></i>${a.show?`<b>${a.show}</b><span>${a.meta}</span><div class="pr"><i style="width:${a.prog}%"></i></div>`:`<b>${a.id==='sound'?'On · 18':'System'}</b><span>${a.id==='sound'?'Adaptive':'Settings'}</span>`}</div>`).join('');
+
+/* ===== L. Forge ===== */
+document.getElementById('fgRow').innerHTML=[...APPS,...EXTRA].map((a,k)=>`<div class="fg-w" data-tile><div class="fg-plate"><small>MK-0${k+1}</small><b>${a.name}</b></div></div>`).join('');
+function fgFocus(i){const a=APPS[i];
+  if(!a){document.getElementById('fgApp').textContent=EXTRA[i-5].name.toUpperCase();document.getElementById('fgT').textContent=i===5?'Audio array':'System settings';document.getElementById('fgS').textContent=i===5?'Samsung soundbar · online · volume 18':'Network, display, apps';document.getElementById('fgP').style.width='100%';return;}
+  document.getElementById('fgApp').textContent=a.name.toUpperCase();document.getElementById('fgT').textContent=a.show;
+  document.getElementById('fgS').textContent=a.meta;document.getElementById('fgP').style.width=a.prog+'%';}
+
+/* ===== M. Pace ===== */
+(function(){const plan=[['MON','REST','Recovery'],['TUE','8K','Tempo'],['WED','6K','Easy'],['THU','10K','Intervals'],['FRI','REST','Mobility'],['SAT','5K','Shakeout'],['SUN','24K','Long run']];
+  const today=(new Date().getDay()+6)%7;
+  document.getElementById('paWeek').innerHTML=plan.map((p,k)=>`<div class="d ${k===today?'td':k<today?'done':''}"><small>${p[0]}</small><b>${p[1]}</b><span>${p[2]}</span></div>`).join('');
+  const race=new Date(2027,4,30);const n=Math.ceil((race-new Date())/864e5);
+  document.getElementById('paDays').textContent=n+' DAYS';
+  const sp=[5.4,5.3,5.25,5.2,5.18,5.15,5.12,5.1,5.05,4.98];
+  document.getElementById('paBars').innerHTML=sp.map((v,k)=>`<i class="${k===9?'best':''}" style="height:${(30+(5.4-v)*150).toFixed(0)}%" title="${v}"></i>`).join('');})();
+document.getElementById('paRow').innerHTML=APPS.map(a=>{const km=(42.2*a.prog/100).toFixed(1);
+  return `<div class="pa-card" data-tile><div class="top"><span style="color:${a.brand}">${a.name.toUpperCase()}</span><span>KM ${km}</span></div><b>${a.show}</b>
+  <div class="trk"><i style="width:${a.prog}%"></i><s style="left:${a.prog}%"></s></div><div class="ft"><span>${a.prog?a.prog+'% of the course':'At the start line'}</span><span>${a.meta.split('·').pop().trim()}</span></div></div>`;}).join('');
+
+/* ===== N. Engine ===== */
+(function(){const ring=(v,max,col,val,lb,x)=>{const C=2*Math.PI*40,f=Math.min(v/max,1);
+  return `<div class="en-ring"><svg viewBox="-50 -50 100 100"><circle r="40" fill="none" stroke="#eef0ea" stroke-width="9"/><circle r="40" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(C*f).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90)"/><text y="6" text-anchor="middle" font-size="19" font-weight="900" fill="#14201b" font-family="Red Hat Display">${val}</text></svg><div class="lb">${lb}</div><div class="x">${x}</div></div>`};
+  document.getElementById('enRings').innerHTML=ring(78,100,'#12a37f','78%','Recovery','HRV above baseline')+ring(12.4,21,'#ff6b4a','12.4','Strain','Target 14–16 today')+ring(7.7,9,'#4b5bd6','7:42','Sleep','94% of need');
+  const wk=[[310,280],[340,300],[290,305],[380,320],[410,345],[395,360]];let s='';
+  wk.forEach(([a,c],k)=>{const x=6+k*19,h=a/15;s+=`<rect x="${x}" y="${30-h}" width="11" height="${h}" rx="1.2" fill="${k===5?'#12a37f':'#cfe9df'}"/><text x="${x+5.5}" y="33.4" font-size="2.2" text-anchor="middle" fill="#6d7a73" font-family="Red Hat Display">W${k+1}</text>`;});
+  s+=`<polyline points="${wk.map(([a,c],k)=>`${11.5+k*19},${(30-c/15).toFixed(1)}`).join(' ')}" fill="none" stroke="#ff6b4a" stroke-width=".6" stroke-dasharray="1.6 1"/>`;
+  document.getElementById('enLoad').innerHTML=s;
+  const z=[['Z1',95,'#c9d3ce'],['Z2',212,'#7fc9ff'],['Z3',64,'#12a37f'],['Z4',38,'#ffb14a'],['Z5',12,'#ff6b4a']];
+  document.getElementById('enZones').innerHTML=z.map(([n,m,c])=>`<div class="z"><span>${n}</span><i style="width:${m/2.12}%;background:${c}"></i><span>${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m</span></div>`).join('');})();
+document.getElementById('enApps').innerHTML=[...APPS,...EXTRA].map(a=>`<div class="en-app" data-tile><i style="background:${a.brand||(a.id==='sound'?'#3c9a6a':'#9aa59f')}"></i><div><b>${a.name}</b><br><span>${a.show||(a.id==='sound'?'On · volume 18':'System')}</span></div></div>`).join('');
+
+/* ===== O. Date Night ===== */
+const PICKS=[
+ {t:'Paper Moons',g:'Romance',r:'1 h 52 m',app:'Netflix',min:112,c:['#3b1e54','#d46a8c'],sun:'#ffcf9e',why:'Two strangers keep missing each other across one summer in Lisbon. Light, warm, ends happy.'},
+ {t:'Last Ferry to Capri',g:'Romantic comedy',r:'1 h 48 m',app:'Prime Video',min:108,c:['#0f4c6b','#f2b880'],sun:'#fff0c9',why:'A travel writer and a ferry captain get stuck on an island for a weekend. Easy laughs, great scenery.'},
+ {t:'Slow Burn',g:'Thriller',r:'2 h 05 m',app:'Disney+',min:125,c:['#2b0f12','#b8452f'],sun:'#ff8a5c',why:'A couple renovating an old farmhouse find a locked room. Tense, not gory. Good one to hold hands through.'},
+];
+(function(){let b='';const cols=['rgba(255,200,140,.35)','rgba(255,150,170,.28)','rgba(255,230,190,.3)'];
+  for(let k=0;k<20;k++){const sz=2+((k*37)%60)/10,x=(k*53)%100,y=(k*29)%56;b+=`<i class="bk" style="left:${x}cqw;top:${y}cqw;width:${sz}cqw;height:${sz}cqw;background:${cols[k%3]};animation-duration:${10+k%7*2}s;animation-delay:-${k}s"></i>`;}
+  document.getElementById('dnBokeh').innerHTML=b;
+  const ann=new Date(new Date().getFullYear(),11,25);if(ann<new Date())ann.setFullYear(ann.getFullYear()+1);
+  document.getElementById('dnAnn').textContent=Math.ceil((ann-new Date())/864e5);})();
+document.getElementById('dnPicks').innerHTML=PICKS.map(p=>`<div class="pick" data-tile style="background:linear-gradient(170deg,${p.c[0]},${p.c[1]})"><span class="sun" style="background:radial-gradient(circle,${p.sun},transparent 70%)"></span><span class="ap">${p.app}</span><div class="pt">${p.t}</div><div class="pm">${p.g} · ${p.r}</div></div>`).join('')
+ +`<div class="pick sp" data-tile><em>✦</em><b>Surprise us</b><span>The TV picks from<br>your watchlists</span></div>`;
+document.getElementById('dnApps').insertAdjacentHTML('beforeend',APPS.map(a=>`<span class="dnp" data-tile><i style="background:${a.brand}"></i>${a.name}</span>`).join('')+`<span class="dnp" data-tile><i style="background:#ffc58a"></i>Dinner music · YouTube</span>`);
+function dnFocus(i){const p=PICKS[i];const fmt=d=>d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+  if(p){document.getElementById('dnWhy').textContent=p.why;document.getElementById('dnEnds').innerHTML=`<i></i>Start now, ends ${fmt(new Date(Date.now()+p.min*6e4))}`;}
+  else if(i===3){document.getElementById('dnWhy').textContent='Shuffles the romance and comedy on your watchlists across all five apps and picks one. No scrolling for 40 minutes.';}}
+
+/* fast ticker: seconds, countdown, world clocks */
+function fast(){const d=new Date();
+  document.querySelectorAll('.js-clock-s').forEach(e=>e.textContent=d.toLocaleTimeString('en-GB',{hour12:false}));
+  document.querySelectorAll('.js-clock24').forEach(e=>e.textContent=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}));
+  const s=d.getSeconds(),m=d.getMinutes()+s/60,h=(d.getHours()%12)+m/60;
+  const set=(id,deg)=>{const el=document.getElementById(id);el&&el.setAttribute('transform',`rotate(${deg})`)};
+  set('sdS',s*6);set('sdM',m*6);set('sdH',h*30);
+  let r=Math.max(0,soTarget-d)/1000;const dd=Math.floor(r/86400);r%=86400;
+  const p2=n=>String(Math.floor(n)).padStart(2,'0');
+  document.getElementById('soCd').textContent=`${dd}d ${p2(r/3600)}:${p2(r%3600/60)}:${p2(r%60)}`;
+  const tz=z=>d.toLocaleTimeString('en-US',{timeZone:z,hour:'numeric',minute:'2-digit'});
+  document.getElementById('pkOtt').textContent=tz('America/Toronto');
+  document.getElementById('pkAmr').textContent=tz('Asia/Kolkata');
+  const ah=+d.toLocaleString('en-US',{timeZone:'Asia/Kolkata',hour:'numeric',hour12:false})%24;
+  const ok=ah>=8&&ah<22;
+  document.getElementById('pkCall').innerHTML=`<i class="dot" style="background:${ok?'#3c9a4e':'#b98a3a'}"></i>`+(ok?'Good time to call home':'Punjab is asleep right now');
+  document.getElementById('pkCall').style.color=ok?'#2f6b3a':'#8a5a1a';}
+fast();setInterval(fast,1000);
+
+/* focus engine */
+const screens=[...document.querySelectorAll('.screen')];
+const state=[0,0,0,2,0,0,0,0,0,0,0,0,0,0,0];
+const hooks=[mqFocus,null,null,auFocus,null,soFocus,null,huFocus,sdFocus,null,null,fgFocus,null,null,dnFocus];
+function render(s){const tiles=[...screens[s].querySelectorAll('[data-tile]')];
+  tiles.forEach((t,k)=>t.classList.toggle('on',k===state[s]));
+  hooks[s]&&hooks[s](state[s]);}
+screens.forEach((sc,s)=>{[...sc.querySelectorAll('[data-tile]')].forEach((t,k)=>t.addEventListener('click',()=>{state[s]=k;render(s)}));render(s)});
+
+let cur=0;
+const SPECS=[
+ {tag:'Option A · Cinematic',name:'Marquee',
+  pitch:'The whole screen becomes the poster for whatever you were last watching. Move along the app row and the background, title and progress bar switch to that app. This is the look most people show off on r/AndroidTV with Projectivy.',
+  feats:['Full-screen artwork that changes with the focused app','Resume straight into your last episode','Clock and weather in the corner','Soundbar and Settings shortcuts at the end of the row'],
+  m:{Clean:4,Wow:5,Features:3,"Build effort":2},
+  build:'<b>How we build it:</b> Projectivy Launcher with its "wallpaper follows focused app" setting, custom tiles and a cleaned-up row. Mostly configuration, quick to set up.'},
+ {tag:'Option B · Minimal',name:'Still',
+  pitch:'A big quiet clock over a sky that changes colour through the day, and your five apps underneath. Labels appear only on the tile you are on. Nothing else on the screen, which is why it looks expensive.',
+  feats:['Time-of-day background (dawn, day, dusk, night)','Five apps and Settings, no rows of suggestions','Small status line: soundbar, Wi-Fi, no ads','Doubles as a nice idle screen'],
+  m:{Clean:5,Wow:4,Features:2,"Build effort":2},
+  build:'<b>How we build it:</b> Projectivy or FLauncher with a single row, plus a set of wallpapers I make for each time of day. The live sky colours would need the custom app from C or D.'},
+ {tag:'Option C · Advanced',name:'Control Room',
+  pitch:'A dashboard for the TV. One continue-watching row across every app, your apps, and side panels for the soundbar, weather, new episodes and system stats including how many ads were blocked.',
+  feats:['Continue watching from all five apps in one row','Soundbar panel: power, volume, sound modes','"New tonight" from shows you follow','Weather, Wi-Fi speed, storage, sleep timer'],
+  m:{Clean:3,Wow:4,Features:5,"Build effort":4},
+  build:'<b>How we build it:</b> a custom launcher app I write for you (Android TV, Kotlin). Most work of the four, and the soundbar panel goes live once phase 2 is done.'},
+ {tag:'Option D · Aesthetic',name:'Aurora',
+  pitch:'Frosted-glass cards floating in 3D over slow, moving northern-lights colour. The colours shift to match the app you are on. It feels closer to Apple Vision Pro than to a TV menu.',
+  feats:['3D card carousel with depth and tilt','Animated aurora background tinted by the focused app','Each card shows what to resume in that app','Glass dock for search, soundbar, settings, sleep'],
+  m:{Clean:4,Wow:5,Features:3,"Build effort":4},
+  build:'<b>How we build it:</b> custom launcher app. Animation needs to be tuned to your TV\'s chip so it stays smooth; if the TV is a budget model I would tone the blur down.'},
+ {tag:'Option E · Japanese desk mat',name:'Washi',
+  pitch:'Off-white rice paper, an ink pagoda, a red sun and an indigo wave pattern along the bottom, in the style of the Japanese desk mats from Drop and Keebmonkey. Your shows sit on paper cards, and the one you are on gets a red stamp. The top corner shows Japan\'s micro-season for the day. The year has 72 of them, about five days each; today\'s is "land starts to freeze".',
+  feats:['Red hanko stamp marks the focused show','Japanese micro-season of the day, changes every five days','Show cards with ink progress lines','Tonight, weather, soundbar and bedtime strip with kanji labels'],
+  m:{Clean:5,Wow:4,Features:3,'Build effort':3},
+  build:'<b>How we build it:</b> custom launcher app. A still version (wallpaper plus Projectivy) is possible but loses the stamp, cards and live strip.'},
+ {tag:'Option F · Anime',name:'Sora',
+  pitch:'A bright summer sky like an anime film background: huge clouds, sun flare, power lines and a utility pole. Rounded white cards, a speech bubble that suggests what to watch, and playful bounce when you move.',
+  feats:['Live countdown to the next episode of a show you follow','Watch streak with a dot for each day','Speech bubble suggests tonight\'s pick from the focused app','Clouds drift slowly; sky can follow the time of day'],
+  m:{Clean:3,Wow:5,Features:4,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app. The sky and clouds are drawn in code, so I can make dusk, night and snow versions too.'},
+ {tag:'Option G · Mountaineering',name:'Summit',
+  pitch:'A topographic map with every fifth contour line drawn heavier, the way real maps mark index contours. Each show is a route, its progress drawn as an elevation profile, and finishing the show means reaching the summit.',
+  feats:['Show progress as climb profiles with an orange position marker','Live moon phase and percentage lit','Wind compass, feels-like temperature, sunrise, sunset and golden hour','Weekly logbook of hours watched and shows finished'],
+  m:{Clean:4,Wow:4,Features:5,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app with a weather source for Ottawa. Sunrise, sunset and the moon are calculated on the TV, so they need no internet.'},
+ {tag:'Option H · Gaming',name:'Loadout',
+  pitch:'A light sci-fi game HUD: off-white panels with cut corners, black linework and one orange accent. Apps are loadout slots, the show you are closest to finishing is your current mission, and your watch hours level you up.',
+  feats:['Level and XP bar from hours watched this year','Achievements (Weekend Warrior, Night Owl, Explorer)','Current mission with segmented progress','Live seconds clock, network radar, soundbar audio link and quick actions'],
+  m:{Clean:3,Wow:5,Features:5,'Build effort':5},
+  build:'<b>How we build it:</b> custom launcher app. XP and achievements need the app to keep a small watch history on the TV. Nothing leaves the TV.'},
+ {tag:'Option I · Clean',name:'Studio',
+  pitch:'Warm greys and one orange accent, modelled on 1960s German hardware design. Everything is a module: an analog clock with a ticking second hand, a volume knob for the soundbar, app keys with a little LED that lights when selected.',
+  feats:['Analog clock with live second hand','Soundbar volume knob and status','App keys with indicator lights','Live month calendar, weather, up-next list, system status'],
+  m:{Clean:5,Wow:4,Features:5,'Build effort':3},
+  build:'<b>How we build it:</b> custom launcher app. Simple shapes and no heavy effects, so it runs smoothly even on a budget TV.'},
+ {tag:'Option J · Punjab',name:'Phulkari',
+  pitch:'Cream and white with a phulkari embroidery border along the top and a mustard field (sarson) at sunset along the bottom. A Gurmukhi greeting, today\'s date in the Nanakshahi calendar, and a second clock for Punjab so you know when to call home.',
+  feats:['Two clocks, Ottawa and Amritsar, with a "good time to call home" hint','Nanakshahi date in Gurmukhi and English (today is 1 Maghar)','Countdown to Lohri and a Punjabi word of the day','Punjabi Hits tile that opens your YouTube playlist'],
+  m:{Clean:4,Wow:5,Features:5,'Build effort':3},
+  build:'<b>How we build it:</b> custom launcher app. The Nanakshahi date uses the original fixed calendar. Some gurdwaras follow the revised one, which can be off by a day.'},
+ {tag:'Option K · Discipline',name:'Callus',
+  pitch:'Inspired by the David Goggins way of doing things. Dark concrete, stencil type and gaffer-tape labels. An accountability mirror with sticky-note goals, a cookie jar of past wins, and a screen-time bar you have to earn by training first.',
+  feats:['Earned screen time: minutes trained buy minutes of TV, with a bar that shows what\'s left','Accountability mirror with your own sticky-note goals you tick off from the remote','Cookie jar of past wins scrolling along the bottom','Day streak, tomorrow\'s alarm and a no-excuses weather line for the morning run','Optional discipline mode: streaming tiles stay locked until today\'s workout is logged'],
+  m:{Clean:3,Wow:5,Features:5,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app. Training minutes come from Strava (free API) or a quick "log workout" button. Goals and wins are typed in once from the phone settings page. His name and photo stay off the screen; it is the attitude, not branding.'},
+ {tag:'Option L · Armour HUD',name:'Forge',
+  pitch:'A superhero armour-workshop look: holographic cyan rings spinning around a glowing core, red and gold armour plates for your apps, targeting brackets on the one you are on, and a boot-up sequence every time you come home.',
+  feats:['Boot animation: core spins up, panels slide in, greeting types out','Apps as red-gold armour plates with targeting brackets on focus','Diagnostics panel: network, storage, soundbar, ads blocked, uptime','Active mission panel follows the focused app; weather as "atmospherics"','Voice hint for the remote\'s mic button'],
+  m:{Clean:3,Wow:5,Features:4,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app. Inspired by the Iron Man look but with its own names and no Marvel logos, so nothing here is copied artwork.'},
+ {tag:'Option M · Marathon',name:'Pace',
+  pitch:'Race-day energy on a bright background. Your race bib is the hero with a live countdown to race day, the week\'s training plan runs across the top, and every show is a marathon course: how far you are into it is how far you are into 42.2 km.',
+  feats:['Race bib with live countdown (set to Ottawa Race Weekend, change it to any race)','This week\'s training plan with today highlighted and done days ticked','Weekly km ring and the best window to run tomorrow from the forecast','Last run with per-km split bars from Strava','Shows drawn as course progress with km markers every 5 km'],
+  m:{Clean:4,Wow:4,Features:5,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app plus Strava for runs and Open-Meteo hourly forecast for the run window. Both are free.'},
+ {tag:'Option N · Athlete',name:'Engine',
+  pitch:'A clean, light performance dashboard like the ones on WHOOP or Garmin, on the big screen. Recovery, strain and sleep rings, a plain-English call for today, six weeks of training load and this week\'s heart-rate zones.',
+  feats:['Recovery, strain and sleep rings','"Today\'s call" turns the numbers into a plan, with TV as the reward','Six-week training load with acute-to-chronic ratio','Heart-rate zone minutes, resting HR, HRV, VO₂ max','Apps along the bottom'],
+  m:{Clean:5,Wow:4,Features:5,'Build effort':4},
+  build:'<b>How we build it:</b> custom launcher app. The data has to come from your watch\'s cloud: Strava, Garmin or WHOOP each have an API. Tell me which watch you use.'},
+ {tag:'Option O · Date night',name:'Date Night',
+  pitch:'For nights in with your partner. Plum-to-candlelight background with soft floating bokeh, an elegant serif, three picks for two with a short reason for each, and one button that sets the whole room.',
+  feats:['Three picks for two plus "Surprise us", filtered by mood','"Start now, ends at…" so you know when the movie finishes','One-button scene: lights dim, soundbar night mode, notifications off','Anniversary countdown and a dinner-music shortcut','Candle-flicker glow and drifting bokeh'],
+  m:{Clean:4,Wow:5,Features:4,'Build effort':3},
+  build:'<b>How we build it:</b> custom launcher app. Picks come from TMDB (free) filtered to the five services you pay for in Canada. Dimming lights works if your bulbs are in SmartThings, which the soundbar will be anyway.'},
+];
+function bars(n){return Array.from({length:5},(_,k)=>`<i class="${k<n?'f':''}"></i>`).join('')}
+function renderSpec(i){const s=SPECS[i];
+  document.getElementById('spec').innerHTML=`<div style="min-width:0"><div class="tag">${s.tag}</div><h2>${s.name}</h2><p>${s.pitch}</p><h3>What's on it</h3><ul>${s.feats.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+  <div style="min-width:0"><h3 style="margin-top:0">At a glance</h3><div class="meter">${Object.entries(s.m).map(([k,v])=>`<div><span>${k}</span><span class="bars">${bars(v)}</span></div>`).join('')}</div><div class="build">${s.build}</div></div>`;}
+function show(i){cur=i;screens.forEach((s,k)=>s.hidden=k!==i);
+  if(i===11){const f=document.getElementById('fg');f.classList.remove('boot');const say=f.querySelector('.fg-say');say.style.animation='none';void f.offsetWidth;say.style.animation='';f.classList.add('boot');}
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',String(+t.dataset.i===i)));
+  render(i);renderSpec(i);}
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)show(+b.dataset.i)});
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('.tab')&&(e.key==='Enter'||e.key===' '))return;
+  const n=screens[cur].querySelectorAll('[data-tile]').length;
+  if(e.key==='ArrowRight'){state[cur]=(state[cur]+1)%n;render(cur);e.preventDefault()}
+  if(e.key==='ArrowLeft'){state[cur]=(state[cur]-1+n)%n;render(cur);e.preventDefault()}
+});
+show(0);
+</script>

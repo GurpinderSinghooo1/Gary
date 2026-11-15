@@ -78,6 +78,26 @@ class Prefs(context: Context) {
         get() = sp.getBoolean("askedTvListings", false)
         set(v) = sp.edit().putBoolean("askedTvListings", v).apply()
 
+    // SmartThings OAuth (personal tokens now expire after 24 h, so long-term use needs OAuth).
+    // Refresh tokens are single-use: every refresh returns a new one, saved with commit().
+    var smartthingsClientId: String
+        get() = str("smartthingsClientId", "")
+        set(v) = putStr("smartthingsClientId", v)
+    var smartthingsClientSecret: String
+        get() = str("smartthingsClientSecret", "")
+        set(v) = putStr("smartthingsClientSecret", v)
+    var smartthingsRefreshToken: String
+        get() = str("smartthingsRefreshToken", "")
+        set(v) { sp.edit().putString("smartthingsRefreshToken", v).commit() }
+    var smartthingsAccessToken: String
+        get() = str("smartthingsAccessToken", "")
+        set(v) { sp.edit().putString("smartthingsAccessToken", v).commit() }
+    var smartthingsExpiresAt: Long
+        get() = sp.getLong("smartthingsExpiresAt", 0L)
+        set(v) { sp.edit().putLong("smartthingsExpiresAt", v).commit() }
+    val smartthingsOAuth: Boolean
+        get() = smartthingsClientId.isNotBlank() && smartthingsClientSecret.isNotBlank() && smartthingsRefreshToken.isNotBlank()
+
     // --- Optional integrations (all free) ---
     /** Strava API app credentials + a refresh token (see SETUP.md, "Strava"). */
     var stravaClientId: String
@@ -104,7 +124,9 @@ class Prefs(context: Context) {
         get() = tmdbKey.isNotBlank()
 
     val smartthingsConfigured: Boolean
-        get() = smartthingsToken.isNotBlank() && smartthingsDeviceId.isNotBlank()
+        get() = smartthingsDeviceId.isNotBlank() && (smartthingsOAuth || smartthingsToken.isNotBlank())
+    val smartthingsAuthSet: Boolean
+        get() = smartthingsOAuth || smartthingsToken.isNotBlank()
 
     private fun parseArray(s: String): JSONArray =
         try { JSONArray(s) } catch (_: Exception) { JSONArray() }
@@ -120,7 +142,8 @@ class Prefs(context: Context) {
         put("secondTz", secondTz)
         put("autoSoundbar", autoSoundbar)
         put("smartthingsConfigured", smartthingsConfigured)
-        put("smartthingsTokenSet", smartthingsToken.isNotBlank())
+        put("smartthingsTokenSet", smartthingsAuthSet)
+        put("smartthingsOAuth", smartthingsOAuth)
         put("stravaConfigured", stravaConfigured)
         put("tmdbConfigured", tmdbConfigured)
         put("region", region)
@@ -152,6 +175,13 @@ class Prefs(context: Context) {
         if (o.has("secondTz")) secondTz = o.optString("secondTz", secondTz)
         if (o.has("autoSoundbar")) autoSoundbar = o.optBoolean("autoSoundbar", autoSoundbar)
         if (o.has("smartthingsToken")) smartthingsToken = o.optString("smartthingsToken", "").trim()
+        if (o.has("smartthingsClientId")) smartthingsClientId = o.optString("smartthingsClientId", "").trim()
+        if (o.has("smartthingsClientSecret")) smartthingsClientSecret = o.optString("smartthingsClientSecret", "").trim()
+        if (o.has("smartthingsRefreshToken")) {
+            smartthingsRefreshToken = o.optString("smartthingsRefreshToken", "").trim()
+            smartthingsAccessToken = ""
+            smartthingsExpiresAt = 0L
+        }
         if (o.has("smartthingsDeviceId")) smartthingsDeviceId = o.optString("smartthingsDeviceId", "").trim()
         if (o.has("stravaClientId")) stravaClientId = o.optString("stravaClientId", "").trim()
         if (o.has("stravaClientSecret")) stravaClientSecret = o.optString("stravaClientSecret", "").trim()

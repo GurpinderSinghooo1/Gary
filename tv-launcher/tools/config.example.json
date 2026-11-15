@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "theme": "phulkari",
+    "homeName": "Ottawa", "homeLat": 45.4215, "homeLon": -75.6972,
+    "secondName": "Amritsar", "secondLat": 31.634, "secondLon": 74.8723, "secondTz": "Asia/Kolkata",
+    "region": "CA",
+    "autoSoundbar": true,
+    "smartthingsToken": "",
+    "smartthingsDeviceId": "",
+    "stravaClientId": "",
+    "stravaClientSecret": "",
+    "stravaRefreshToken": "",
+    "tmdbKey": ""
+  },
+  "store": {
+    "callus.goals": [
+      { "text": "Run 6 km before work", "done": true },
+      { "text": "No phone in bed" },
+      { "text": "Finish what you start" }
+    ],
+    "callus.wins": ["Half marathon in the rain, May 2025", "60 days, no sugar", "First 5 AM run at -20°C"],
+    "callus.ratio": 2,
+    "callus.discipline": false,
+    "pace.race": { "name": "Ottawa Race Weekend", "date": "2027-05-30", "bib": "1414", "distance": "42.2 KM", "goal": "3:45:00" },
+    "pace.weekTargetKm": 61,
+    "pace.plan": [["REST","Recovery"],["8K","Tempo"],["6K","Easy"],["10K","Intervals"],["REST","Mobility"],["5K","Shakeout"],["24K","Long run"]],
+    "datenight.anniversary": "2020-12-25",
+    "datenight.mood": "romantic",
+    "playlists": { "punjabi": "punjabi hits playlist", "dinner": "dinner jazz playlist" }
+  }
+}

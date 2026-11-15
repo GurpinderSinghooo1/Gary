@@ -3,3 +3,6 @@ build/
 local.properties
 *.iml
 .idea/
+tools/config.json
+tools/undo-debloat.sh
+tools/packages-*.txt
