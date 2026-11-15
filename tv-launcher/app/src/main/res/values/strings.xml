@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TV Home</string>
+    <string name="home_button_label">TV Home · HOME button</string>
+    <string name="home_button_desc">Makes the HOME button on the remote open TV Home instead of the Google TV home screen. Reads only the HOME key; no other keys or screen content.</string>
 </resources>

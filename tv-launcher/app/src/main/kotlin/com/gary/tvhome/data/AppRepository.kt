@@ -72,7 +72,7 @@ class AppRepository(context: Context) {
                 "prime", "Prime Video",
                 listOf("com.amazon.amazonvideo.livingroom", "com.amazon.avod.thirdpartyclient")
             ),
-            KnownApp("paramount", "Paramount+", listOf("com.cbs.ott", "com.cbs.app", "com.paramount.plus"))
+            KnownApp("paramount", "Paramount+", listOf("com.cbs.ott", "com.cbs.ca", "com.cbs.app", "com.paramount.plus"))
         )
 
         val KNOWN_PACKAGES: Set<String> = KNOWN.flatMap { it.packages }.toSet()
