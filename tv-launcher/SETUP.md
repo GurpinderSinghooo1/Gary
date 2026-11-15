@@ -95,7 +95,8 @@ Remote **Menu** → Theme → ◀ ▶ → **Apply**. Or set `"theme"` in config.
 
 ## If something goes wrong
 
-- **Black screen / stuck**: `adb shell am force-stop com.gary.tvhome`, then press HOME.
+- **Black screen / stuck**: `adb shell am force-stop com.gary.tvhome`, then `./home-button.sh on` (a force-stop
+  switches the HOME-button service off), then press HOME.
 - **Get the old home screen back**: Settings → Apps → Default apps → Home app. Or `./undo-debloat.sh`.
 - **Uninstall completely**: `adb uninstall com.gary.tvhome`.
 - **Continue watching is empty**: some apps don't publish to Android TV's "Watch Next" (Netflix does, YouTube
