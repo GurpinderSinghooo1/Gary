@@ -18,7 +18,7 @@
     ['phulkari', 'Phulkari'], ['callus', 'Callus'], ['forge', 'Forge'], ['pace', 'Pace'], ['engine', 'Engine'],
     ['datenight', 'Date Night']
   ];
-  var themeId = new URLSearchParams(location.search).get('theme') || 'phulkari';
+  var themeId = new URLSearchParams(location.search).get('theme') || 'washi';
   var themeIndex = Math.max(0, THEMES.findIndex(function (t) { return t[0] === themeId; }));
   themeId = THEMES[themeIndex][0];
 
@@ -539,6 +539,33 @@
         var a = T.APPS[i];
         if (a && a.poster) document.getElementById('mqBg').style.background = 'url("' + a.poster + '") right top/65% auto no-repeat, #000';
       };
+    },
+    washi: function () {
+      var s = D.settings || {};
+      window.__homeName = s.secondName || 'Amritsar';
+      window.__homeTz = s.secondTz || 'Asia/Kolkata';
+      var w = D.weather;
+      if (w && w.daily && w.daily.length) {
+        var dd = w.daily, html = '<span>Today ' + deg(dd[0].min) + ' / ' + deg(dd[0].max) + '</span>';
+        for (var i = 1; i < Math.min(4, dd.length); i++) {
+          var day = new Date(dd[i].date + 'T12:00:00').toLocaleDateString([], { weekday: 'short' });
+          html += '<span>' + day + ' <b>' + deg(dd[i].max) + '</b></span>';
+        }
+        document.getElementById('waFc').innerHTML = html;
+        var hrs = function (iso) { return iso && iso.length >= 16 ? +iso.slice(11, 13) + (+iso.slice(14, 16)) / 60 : null; };
+        window.__waSun = [hrs(dd[0].sunrise), hrs(dd[0].sunset)];
+        if (window.waLight) window.waLight(window.__waSun[0], window.__waSun[1]);
+      }
+      // 今夜: the newest "next episode" / "new" item Android TV knows about, else the latest show in progress.
+      var items = (D.cw && D.cw.items) || [];
+      var pick = items.find(function (x) { return x.watchNextType === 1 || x.watchNextType === 2; }) || items[0];
+      if (pick && D.native) {
+        var app = (D.apps || []).find(function (a) { return a.packageName === pick.packageName; });
+        document.getElementById('waTonight').innerHTML = esc(pick.title || '') + '<small>' +
+          (pick.watchNextType === 2 ? 'New episode' : pick.watchNextType === 1 ? 'Next episode' : 'Pick up where you left off') +
+          (app ? ' · ' + esc(app.label) : '') + '</small>';
+      }
+      if (s.bedtime) document.getElementById('waBed').innerHTML = 'Bedtime ' + esc(s.bedtime) + '<small>Menu → Bedtime for a timer</small>';
     },
     phulkari: function () {
       var s = D.settings || {};

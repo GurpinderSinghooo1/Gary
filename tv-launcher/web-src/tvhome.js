@@ -62,7 +62,7 @@
   /* ---------------- Mock for desktop preview ---------------- */
   var mockStore = {};
   try { mockStore = JSON.parse(localStorage.getItem('tvhome.mockStore') || '{}'); } catch (e) { mockStore = {}; }
-  var mockSettings = { theme: 'phulkari', homeName: 'Ottawa', secondName: 'Amritsar', secondTz: 'Asia/Kolkata',
+  var mockSettings = { theme: 'washi', homeName: 'Ottawa', secondName: 'Amritsar', secondTz: 'Asia/Kolkata',
     autoSoundbar: true, smartthingsConfigured: false, stravaConfigured: false, tmdbConfigured: false, region: 'CA', units: 'metric' };
 
   function day(off) { var d = new Date(); d.setDate(d.getDate() + off); return d.toISOString().slice(0, 10); }

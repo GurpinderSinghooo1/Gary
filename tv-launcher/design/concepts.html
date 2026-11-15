@@ -169,43 +169,51 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
   background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(1.5cqw);-webkit-backdrop-filter:blur(1.5cqw);padding:.9cqw 2cqw;border-radius:3cqw;font-size:1.1cqw;align-items:center}
 .au-dock span{opacity:.75;display:flex;gap:.5cqw;align-items:center}
 
-/* ---------- E. Washi (Japanese desk mat) ---------- */
-.wa{position:absolute;inset:0;background:#f2ece0;color:#1d1a16;font-family:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;overflow:hidden}
-.wa-fiber{position:absolute;inset:0;opacity:.6;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .43 0 0 0 0 .33 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.wa-sun{position:absolute;right:15cqw;top:5cqw;width:16cqw;height:16cqw;border-radius:50%;background:#c8402f}
-.wa-mist{position:absolute;right:0;bottom:6.5cqw;width:58cqw}
-.wa-pagoda{position:absolute;right:5cqw;bottom:6.8cqw;width:21cqw}
-.wa-birds{position:absolute;right:34cqw;top:7cqw;width:9cqw}
-.wa-wave{position:absolute;left:0;right:0;bottom:0;height:7cqw;background-color:#2b4566;background-size:4cqw 2cqw;
-  background-image:radial-gradient(circle at 100% 150%,#2b4566 24%,#f2ece0 24%,#f2ece0 28%,#2b4566 28%,#2b4566 36%,#f2ece0 36%,#f2ece0 40%,transparent 40%),
-  radial-gradient(circle at 0 150%,#2b4566 24%,#f2ece0 24%,#f2ece0 28%,#2b4566 28%,#2b4566 36%,#f2ece0 36%,#f2ece0 40%,transparent 40%),
-  radial-gradient(circle at 50% 100%,#f2ece0 10%,#2b4566 10%,#2b4566 23%,#f2ece0 23%,#f2ece0 30%,#2b4566 30%,#2b4566 43%,#f2ece0 43%,#f2ece0 50%,#2b4566 50%,#2b4566 63%,#f2ece0 63%,#f2ece0 71%,transparent 71%),
-  radial-gradient(circle at 100% 50%,#f2ece0 5%,#2b4566 5%,#2b4566 15%,#f2ece0 15%,#f2ece0 20%,#2b4566 20%,#2b4566 29%,#f2ece0 29%,#f2ece0 34%,#2b4566 34%,#2b4566 44%,#f2ece0 44%,#f2ece0 49%,transparent 49%),
-  radial-gradient(circle at 0 50%,#f2ece0 5%,#2b4566 5%,#2b4566 15%,#f2ece0 15%,#f2ece0 20%,#2b4566 20%,#2b4566 29%,#f2ece0 29%,#f2ece0 34%,#2b4566 34%,#2b4566 44%,#f2ece0 44%,#f2ece0 49%,transparent 49%)}
-.wa-time{position:absolute;left:4cqw;top:3.2cqw}
-.wa-time .t{font-size:7cqw;font-weight:500;line-height:1;letter-spacing:-.02em}
-.wa-time .d{font-size:1.3cqw;margin-top:.7cqw;color:#5d564c}
-.hanko{background:#c8402f;color:#f7efe2;display:inline-grid;place-items:center;border-radius:.3cqw;font-weight:700;font-family:"Shippori Mincho",serif}
-.wa-kou{position:absolute;right:3cqw;top:3.4cqw;display:flex;flex-direction:row-reverse;gap:.7cqw;align-items:flex-start}
-.wa-kou .v{writing-mode:vertical-rl;font-size:2.5cqw;font-weight:600;letter-spacing:.25em}
-.wa-kou .g{writing-mode:vertical-rl;font-size:.95cqw;color:#5d564c;letter-spacing:.05em;line-height:1.5}
-.wa-kou .hanko{width:2.4cqw;height:2.4cqw;font-size:1.4cqw}
-.wa-row{position:absolute;left:4cqw;top:17.5cqw;display:flex;gap:1.2cqw}
-.wa-card{width:9.6cqw;height:14cqw;background:#fbf8f1;border:1px solid rgba(29,26,22,.22);border-radius:.3cqw;padding:1cqw;display:flex;flex-direction:column;justify-content:space-between;position:relative;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s}
-.wa-card .app{font-family:"Plus Jakarta Sans",sans-serif;font-size:.8cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.wa-card .ttl{font-size:1.3cqw;font-weight:600;line-height:1.25}
-.wa-card .mt{font-size:.8cqw;color:#6b6358;margin-top:.4cqw}
-.wa-card .ink{height:.22cqw;background:rgba(29,26,22,.12)}
-.wa-card .ink i{display:block;height:100%;background:#1d1a16}
-.wa-card.k{width:5.6cqw;align-items:center;justify-content:center;gap:.6cqw}
-.wa-card .kj{font-size:2.6cqw;font-weight:600}
-.wa-card .st{position:absolute;right:-.9cqw;top:-.9cqw;width:2.7cqw;height:2.7cqw;font-size:1.5cqw;transform:rotate(-10deg) scale(1.7);opacity:0;transition:.25s}
-.wa-card.on{transform:translateY(-.6cqw);border-color:#1d1a16;box-shadow:0 1cqw 2cqw rgba(60,40,20,.16)}
+/* ---------- E. Washi (Japanese, final) ---------- */
+.wa{position:absolute;inset:0;background:#efe8dc url("washi-bg.jpg") center/cover no-repeat;color:#1f3555;font-family:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;overflow:hidden;
+  --wa-navy:#1f3555;--wa-ink:#4b5f7a;--wa-red:#b4615a;--wa-paper:rgba(250,247,240,.84)}
+.wa-tint{position:absolute;inset:0;pointer-events:none;transition:background 2s ease}
+.wa.dawn .wa-tint{background:linear-gradient(180deg,rgba(255,186,160,.16),rgba(255,214,190,.05))}
+.wa.dusk .wa-tint{background:linear-gradient(180deg,rgba(214,120,100,.18),rgba(120,90,140,.10))}
+.wa.night .wa-tint{background:linear-gradient(180deg,rgba(14,24,48,.62),rgba(20,34,60,.42))}
+.wa.night .wa-time,.wa.night .wa-kou{color:#f1ebdf}
+.wa.night .wa-time .d,.wa.night .wa-kou .g,.wa.night .wa-time .fc{color:#c9d3e2}
+.wa.night .wa-time .fc span:first-child{color:#f1ebdf}
+.wa.night .wa-kou .n{color:#f0b3a8}
+.petal{position:absolute;top:-3cqw;width:1cqw;height:.62cqw;border-radius:60% 0 60% 0;background:radial-gradient(circle at 30% 30%,#f6d9d2,#dc9f96);opacity:.8;animation:petalFall linear infinite;pointer-events:none}
+@keyframes petalFall{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-14cqw,30cqw) rotate(220deg)}100%{transform:translate(-30cqw,62cqw) rotate(420deg)}}
+.wa-time{position:absolute;left:4cqw;top:3cqw;color:var(--wa-navy);transition:color 2s}
+.wa-time .t{font-size:7.4cqw;font-weight:500;line-height:1;letter-spacing:-.02em}
+.wa-time .d{font-size:1.3cqw;margin-top:.8cqw;color:var(--wa-ink)}
+.wa-time .fc{display:flex;gap:1.4cqw;margin-top:.9cqw;font-size:1.05cqw;color:var(--wa-ink)}
+.wa-time .fc b{font-weight:600;color:inherit}
+.wa-time .fc span:first-child{color:var(--wa-navy);font-weight:600}
+.hanko{background:var(--wa-red,#b4615a);color:#f7efe2;display:inline-grid;place-items:center;border-radius:.3cqw;font-weight:700;font-family:"Shippori Mincho",serif}
+.wa-kou{position:absolute;left:25.5cqw;top:3.2cqw;display:flex;gap:.7cqw;align-items:flex-start;color:var(--wa-navy);transition:color 2s}
+.wa-kou .v{writing-mode:vertical-rl;font-size:2.4cqw;font-weight:600;letter-spacing:.25em}
+.wa-kou .g{writing-mode:vertical-rl;font-size:.9cqw;color:var(--wa-ink);letter-spacing:.05em;line-height:1.55}
+.wa-kou .hanko{width:2.3cqw;height:2.3cqw;font-size:1.3cqw}
+.wa-kou .n{writing-mode:vertical-rl;font-size:.8cqw;letter-spacing:.2em;color:var(--wa-red)}
+.wa-row{position:absolute;left:4cqw;top:33cqw;display:flex;gap:1cqw}
+.wa-card{width:9.4cqw;height:12.4cqw;background:var(--wa-paper);backdrop-filter:blur(.5cqw);-webkit-backdrop-filter:blur(.5cqw);border:1px solid rgba(31,53,85,.16);border-radius:.4cqw;padding:1cqw;display:flex;flex-direction:column;justify-content:space-between;position:relative;cursor:pointer;transition:transform .25s,box-shadow .25s,border-color .25s;color:var(--wa-navy)}
+.wa-card .app{font-family:"Plus Jakarta Sans",sans-serif;font-size:.78cqw;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--wa-navy);display:flex;align-items:center;gap:.45cqw}
+.wa-card .app i{width:.55cqw;height:.55cqw;border-radius:50%;display:block;flex:none}
+.wa-card .ttl{font-size:1.28cqw;font-weight:600;line-height:1.25;color:var(--wa-navy)}
+.wa-card .mt{font-size:.8cqw;color:var(--wa-ink);margin-top:.4cqw}
+.wa-card .ink{height:.22cqw;background:rgba(31,53,85,.14)}
+.wa-card .ink i{display:block;height:100%;background:var(--wa-navy)}
+.wa-card.k{width:5.4cqw;align-items:center;justify-content:center;gap:.6cqw}
+.wa-card .kj{font-size:2.5cqw;font-weight:600;color:var(--wa-navy)}
+.wa-card .st{position:absolute;right:-.9cqw;top:-.9cqw;width:2.6cqw;height:2.6cqw;font-size:1.45cqw;transform:rotate(-10deg) scale(1.7);opacity:0;transition:.25s}
+.wa-card.on{transform:translateY(-.6cqw);border-color:var(--wa-navy);background:rgba(252,250,245,.95);box-shadow:0 1cqw 2.2cqw rgba(31,53,85,.18)}
 .wa-card.on .st{opacity:1;transform:rotate(-10deg) scale(1)}
-.wa-strip{position:absolute;left:4cqw;top:36.5cqw;display:flex;gap:3cqw;font-size:1.15cqw}
-.wa-strip div{display:flex;gap:.7cqw;align-items:center}
-.wa-strip .k{font-size:1.8cqw;color:#c8402f;font-weight:700}
-.wa-strip small{display:block;color:#6b6358;font-size:.85cqw}
+.wa-strip{position:absolute;left:4cqw;right:4cqw;top:48.3cqw;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1.2cqw;padding:.9cqw 1.4cqw;background:var(--wa-paper);backdrop-filter:blur(.5cqw);-webkit-backdrop-filter:blur(.5cqw);border:1px solid rgba(31,53,85,.12);border-radius:.5cqw;font-size:1.05cqw;color:var(--wa-navy)}
+.wa-strip > div{display:flex;gap:.7cqw;align-items:center;min-width:0}
+.wa-strip .k{font-size:1.6cqw;color:var(--wa-navy);font-weight:700;flex:none}
+.wa-strip .k.r{color:var(--wa-red)}
+.wa-strip span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-strip small{display:block;color:var(--wa-ink);font-size:.82cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (prefers-reduced-motion:reduce){.petal{display:none}}
 
 /* ---------- F. Sora (anime sky) ---------- */
 .so{position:absolute;inset:0;overflow:hidden;font-family:"M PLUS Rounded 1c","Plus Jakarta Sans",sans-serif;color:#17325c;background:linear-gradient(180deg,#2a7fe0 0%,#57a6ef 36%,#a6d6fa 68%,#e9f6ff 100%)}
@@ -642,7 +650,7 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
       <button class="tab" role="tab" data-i="3" aria-selected="false">D · Aurora <small>aesthetic</small></button>
     </div>
     <div class="tabgroup"><span class="glabel">Light</span>
-      <button class="tab" role="tab" data-i="4" aria-selected="false"><i class="sw" style="background:#c8402f"></i>E · Washi <small>Japanese desk mat</small></button>
+      <button class="tab" role="tab" data-i="4" aria-selected="false"><i class="sw" style="background:#1f3555"></i>E · Washi <small>chosen ✓</small></button>
       <button class="tab" role="tab" data-i="5" aria-selected="false"><i class="sw" style="background:#57a6ef"></i>F · Sora <small>anime sky</small></button>
       <button class="tab" role="tab" data-i="6" aria-selected="false"><i class="sw" style="background:#ff5a1f"></i>G · Summit <small>mountaineering</small></button>
       <button class="tab" role="tab" data-i="7" aria-selected="false"><i class="sw" style="background:#e9e7e1"></i>H · Loadout <small>gaming</small></button>
@@ -737,29 +745,22 @@ header p{color:var(--muted);margin:6px 0 0;max-width:68ch}
         </div>
       </section>
 
-      <!-- E. Washi -->
+      <!-- E. Washi (final) -->
       <section class="screen" data-screen="4" hidden>
-        <div class="wa">
-          <div class="wa-fiber"></div>
-          <div class="wa-sun"></div>
-          <svg class="wa-birds" viewBox="0 0 90 30" aria-hidden="true"><g fill="none" stroke="#1d1a16" stroke-width="1.4" stroke-linecap="round"><path d="M5 18q5-6 10 0q5-6 10 0"/><path d="M38 8q4-5 8 0q4-5 8 0"/><path d="M64 22q3-4 6 0q3-4 6 0"/></g></svg>
-          <svg class="wa-mist" viewBox="0 0 400 120" aria-hidden="true"><path d="M0 120L0 78Q60 38 115 68T225 46Q285 14 335 58T400 50L400 120Z" fill="#1d1a16" opacity=".07"/><path d="M0 120L0 98Q70 70 140 92T270 80Q330 62 400 86L400 120Z" fill="#1d1a16" opacity=".1"/></svg>
-          <svg class="wa-pagoda" viewBox="0 0 200 210" aria-hidden="true"><g fill="#1d1a16">
-            <rect x="98" y="6" width="4" height="44"/><circle cx="100" cy="14" r="3"/><circle cx="100" cy="24" r="3"/><circle cx="100" cy="34" r="3"/>
-            <path d="M50 62Q80 56 100 46Q120 56 150 62L144 66Q100 58 56 66Z"/><rect x="72" y="66" width="56" height="26"/>
-            <path d="M34 104Q70 98 100 88Q130 98 166 104L158 109Q100 100 42 109Z"/><rect x="64" y="109" width="72" height="30"/>
-            <path d="M18 152Q60 146 100 135Q140 146 182 152L172 158Q100 148 28 158Z"/><rect x="56" y="158" width="88" height="36"/>
-            <rect x="40" y="194" width="120" height="8"/><rect x="30" y="202" width="140" height="6"/></g>
-            <g fill="#f2ece0"><rect x="84" y="72" width="6" height="14"/><rect x="110" y="72" width="6" height="14"/><rect x="78" y="116" width="7" height="16"/><rect x="96.5" y="116" width="7" height="16"/><rect x="115" y="116" width="7" height="16"/><rect x="92" y="168" width="16" height="26"/></g></svg>
-          <div class="wa-wave"></div>
-          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · 曇 <span data-b="wx.tc">2°C</span></div></div>
-          <div class="wa-kou"><span class="hanko">冬</span><span class="v">地始凍</span><span class="g">Chi hajimete kōru<br>Land starts to freeze</span></div>
+        <div class="wa" id="wa">
+          <div class="wa-tint"></div>
+          <div id="waPetals"></div>
+          <div class="wa-time"><div class="t js-clock">8:42</div><div class="d"><span class="js-date">Saturday, November 14</span> · 曇 <span data-b="wx.tc">2°C</span> <span data-b="wx.text">Cloudy</span></div>
+            <div class="fc" id="waFc"><span>Today −3° / 2°</span><span>Sun <b>4°</b></span><span>Mon <b>1°</b></span><span>Tue <b>−3°</b></span></div></div>
+          <div class="wa-kou"><span class="hanko" id="waSeal">冬</span><span class="v" id="waKouK">地始凍</span><span class="g" id="waKouG">Chi hajimete kōru<br>Earth begins to freeze</span><span class="n" id="waKouN">第五十六候</span></div>
           <div class="wa-row" id="waRow"></div>
           <div class="wa-strip">
-            <div><span class="k">今夜</span><span>Fifth Precinct<small>New episode tonight</small></span></div>
-            <div><span class="k">天気</span><span><span data-b="wx.text">Cloudy</span>, <span data-b="wx.tc">2°C</span><small><span data-b="wx.city">Ottawa</span> · low <span data-b="wx.min">−3°</span></small></span></div>
-            <div><span class="k">音</span><span>Soundbar <span data-b="sb.state">on</span><small>Volume <span data-b="sb.vol">18</span> · Adaptive</small></span></div>
-            <div><span class="k">眠</span><span>Bedtime 11:30<small>Night sound, screen dims</small></span></div>
+            <div><span class="k">今夜</span><span id="waTonight">Fifth Precinct<small>New episode · Paramount+</small></span></div>
+            <div><span class="k">天気</span><span><span data-b="wx.text">Cloudy</span>, <span data-b="wx.tc">2°C</span><small>Wind <span data-b="wx.wind">NW 18 km/h</span></small></span></div>
+            <div><span class="k">月</span><span id="waMoon">Waxing crescent<small>20% lit</small></span></div>
+            <div><span class="k r">故郷</span><span><span id="waHomeT">Amritsar 7:12 AM</span><small id="waHomeS">Good time to call</small></span></div>
+            <div><span class="k">音</span><span>Soundbar <span data-b="sb.state">on</span><small>Volume <span data-b="sb.vol">18</span> · Menu for controls</small></span></div>
+            <div><span class="k">眠</span><span id="waBed">Bedtime 11:30<small>Night sound, screen dims</small></span></div>
           </div>
         </div>
       </section>
@@ -1120,9 +1121,33 @@ function auFocus(i){const cards=[...auStage.children];
   document.getElementById('auB2').style.background=a.c[0];
   document.getElementById('auB3').style.background='#5a3cff';}
 
-/* ===== E. Washi ===== */
-document.getElementById('waRow').innerHTML=APPS.map(a=>`<div class="wa-card" data-tile><div class="app" style="color:${a.brand}">${a.name}</div><div class="ttl">${a.show}</div><div><div class="ink"><i style="width:${a.prog}%"></i></div><div class="mt">${a.meta}</div></div><span class="hanko st">観</span></div>`).join('')
+/* ===== E. Washi (final) ===== */
+const KOU=[["01-05","芹乃栄","Seri sunawachi sakau","Parsley flourishes"],["01-11","水泉動","Shimizu atataka o fukumu","Springs thaw"],["01-16","雉始雊","Kiji hajimete naku","Pheasants start to call"],["01-21","款冬華","Fuki no hana saku","Butterburs bud"],["01-26","水沢腹堅","Sawazawa kōri tsumeru","Streams are covered by thick ice"],["01-31","鶏始乳","Niwa tori hajimete toya ni tsuku","Hens start laying eggs"],["02-04","東風解凍","Harukaze kōri o toku","East wind melts the ice"],["02-09","黄鶯睍睆","Kōō kenkan su","Bush warblers start singing"],["02-14","魚上氷","Uo kōri o izuru","Fish rise up and ice begins to melt"],["02-19","土脉潤起","Tsuchi no shō uruoi okoru","Rain moistens the soil"],["02-24","霞始靆","Kasumi hajimete tanabiku","Spring mist lingers"],["03-01","草木萌動","Sōmoku mebae izuru","Plants show their first buds"],["03-06","蟄虫啓戸","Sugomori mushi to o hiraku","Hibernating insects surface"],["03-11","桃始笑","Momo hajimete saku","Peach blossoms begin to bloom"],["03-16","菜虫化蝶","Namushi chō to naru","Caterpillars become butterflies"],["03-21","雀始巣","Suzume hajimete sukuu","Sparrows begin to nest"],["03-26","桜始開","Sakura hajimete hiraku","Cherry blossoms start to bloom"],["03-31","雷乃発声","Kaminari sunawachi koe o hassu","Distant thunder echoes"],["04-05","玄鳥至","Tsubame kitaru","Swallows return"],["04-10","鴻雁北","Kōgan kaeru","Wild geese fly north"],["04-15","虹始見","Niji hajimete arawaru","First rainbows appear"],["04-20","葭始生","Ashi hajimete shōzu","Reeds sprout"],["04-25","霜止出苗","Shimo yamite nae izuru","Last frost, rice seedlings grow"],["04-30","牡丹華","Botan hana saku","Peonies bloom"],["05-05","蛙始鳴","Kawazu hajimete naku","Frogs start singing"],["05-10","蚯蚓出","Mimizu izuru","Earthworms surface"],["05-15","竹笋生","Takenoko shōzu","Bamboo shoots sprout"],["05-21","蚕起食桑","Kaiko okite kuwa o hamu","Silkworms eat mulberry leaves"],["05-26","紅花栄","Benibana sakau","Safflowers bloom"],["05-31","麦秋至","Mugi no toki itaru","Wheat ripens"],["06-05","蟷螂生","Kamakiri shōzu","Praying mantises hatch"],["06-11","腐草為蛍","Kusaretaru kusa hotaru to naru","Rotting grass turns into fireflies"],["06-16","梅子黄","Ume no mi kibamu","Plums ripen"],["06-21","乃東枯","Natsukarekusa karuru","Self-heal withers"],["06-26","菖蒲華","Ayame hana saku","Irises bloom"],["07-01","半夏生","Hange shōzu","Crow-dipper sprouts"],["07-07","温風至","Atsukaze itaru","Warm winds blow"],["07-12","蓮始開","Hasu hajimete hiraku","Lotuses bloom"],["07-17","鷹乃学習","Taka sunawachi gakushū su","Hawks learn to fly"],["07-22","桐始結花","Kiri hajimete hana o musubu","Paulownia flowers form seeds"],["07-28","土潤溽暑","Tsuchi uruōte juku sho","Damp earth swelters"],["08-02","大雨時行","Taiu tokidoki furu","Frequent large rains"],["08-07","涼風至","Suzukaze itaru","Cool winds blow"],["08-12","寒蝉鳴","Higurashi naku","Evening cicadas sing"],["08-18","蒙霧升降","Kiri matō","Thick fog descends"],["08-23","綿柎開","Wata no hana hiraku","Cotton flowers bloom"],["08-28","天地始粛","Tenchi hajimete samushi","Heaven and earth grow solemn"],["09-02","禾乃登","Kokumotsu sunawachi minoru","Grains ripen"],["09-07","草露白","Kusa no tsuyu shiroshi","White dew forms on grass"],["09-12","鶺鴒鳴","Sekirei naku","Wagtails sing"],["09-18","玄鳥去","Tsubame saru","Swallows leave"],["09-23","雷乃収声","Kaminari sunawachi koe o osamu","Thunder ceases"],["09-28","蟄虫坏戸","Mushi kakurete to o fusagu","Insects hole up underground"],["10-03","水始涸","Mizu hajimete karuru","Water begins to dry up"],["10-08","鴻雁来","Kōgan kitaru","Wild geese return"],["10-13","菊花開","Kiku no hana hiraku","Chrysanthemums bloom"],["10-18","蟋蟀在戸","Kirigirisu to ni ari","Crickets chirp at the door"],["10-23","霜始降","Shimo hajimete furu","First frost falls"],["10-28","小雨時々降","Kosame tokidoki furu","Light rains fall"],["11-02","楓蔦黄","Momiji tsuta kibamu","Maple and ivy turn yellow"],["11-07","山茶始開","Tsubaki hajimete hiraku","Camellias begin to bloom"],["11-12","地始凍","Chi hajimete kōru","Earth begins to freeze"],["11-17","金盞香","Kinsenka saku","Daffodils bloom"],["11-22","虹蔵不見","Niji kakurete miezu","Rainbows hide"],["11-27","朔風払葉","Kitakaze konoha o harau","Cold north winds scatter leaves"],["12-02","橘始黄","Tachibana hajimete kibamu","Mandarin oranges ripen"],["12-07","閉塞成冬","Heisoku shite fuyu to naru","Everything closes up for winter"],["12-12","熊蟄穴","Kuma ana ni komoru","Bears start hibernating"],["12-17","鱖魚群","Sakana muragaru","Salmon swim upstream"],["12-22","乃東生","Natsukarekusa shōzu","Self-heal sprouts"],["12-26","麋角解","O no tsuno o nukuu","Deer shed antlers"],["12-31","雪下出麦","Yuki watarete mugi nobiru","Wheat sprouts under snow"]];
+const KANJI_NUM=n=>{const d=['','一','二','三','四','五','六','七','八','九'];const t=Math.floor(n/10),o=n%10;return (t?(t>1?d[t]:'')+'十':'')+d[o];};
+document.getElementById('waRow').innerHTML=APPS.map(a=>`<div class="wa-card" data-tile><div class="app"><i style="background:${a.brand}"></i>${a.name}</div><div class="ttl">${a.show}</div><div><div class="ink"><i style="width:${a.prog}%"></i></div><div class="mt">${a.meta}</div></div><span class="hanko st">観</span></div>`).join('')
  +`<div class="wa-card k" data-tile><div class="kj">音</div><div class="mt">Soundbar</div><span class="hanko st">観</span></div><div class="wa-card k" data-tile><div class="kj">設</div><div class="mt">Settings</div><span class="hanko st">観</span></div>`;
+(function(){
+  const now=new Date(),md=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  let k=KOU.length-1;KOU.forEach((x,i)=>{if(x[0]<=md)k=i;});
+  if(KOU[0][0]>md)k=KOU.length-1;
+  const cur=KOU[k];
+  document.getElementById('waKouK').textContent=cur[1];
+  document.getElementById('waKouG').innerHTML=cur[2]+'<br>'+cur[3];
+  // Traditional numbering starts at Risshun (around Feb 4), not January.
+  const r0=KOU.findIndex(x=>x[0]==='02-04');
+  document.getElementById('waKouN').textContent='第'+KANJI_NUM(((k-r0+72)%72)+1)+'候';
+  // Season seal follows the solar terms: Risshun 02-04, Rikka 05-05, Risshū 08-07, Rittō 11-07.
+  document.getElementById('waSeal').textContent=(md>='11-07'||md<'02-04')?'冬':md<'05-05'?'春':md<'08-07'?'夏':'秋';
+  let p='';for(let i=0;i<11;i++){p+=`<i class="petal" style="left:${55+((i*37)%45)}cqw;animation-duration:${16+(i*7)%13}s;animation-delay:-${(i*5)%19}s;transform:scale(${.7+(i%4)*.15})"></i>`;}
+  document.getElementById('waPetals').innerHTML=p;
+  const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14),ph=((((Date.now()-ref)/864e5)%syn)+syn)%syn/syn;
+  const names=['New moon','Waxing crescent','First quarter','Waxing gibbous','Full moon','Waning gibbous','Last quarter','Waning crescent'];
+  document.getElementById('waMoon').innerHTML=names[Math.floor(ph*8+.5)%8]+'<small>'+Math.round((1-Math.cos(2*Math.PI*ph))/2*100)+'% lit</small>';
+})();
+function waLight(sunrise,sunset){const el=document.getElementById('wa');if(!el)return;const n=new Date(),h=n.getHours()+n.getMinutes()/60;
+  const sr=sunrise??7,ss=sunset??16.5;el.classList.remove('dawn','dusk','night');
+  if(h<sr-0.75||h>=ss+0.75)el.classList.add('night');else if(h<sr+1)el.classList.add('dawn');else if(h>=ss-1)el.classList.add('dusk');}
+window.waLight=waLight;waLight();setInterval(()=>waLight(window.__waSun&&window.__waSun[0],window.__waSun&&window.__waSun[1]),60000);
 
 /* ===== F. Sora ===== */
 const CLOUD=[[0,5,5],[4.5,2,6.5],[10.5,3.5,6],[16,6,4.5],[-3.5,7,3.5],[3,8,5],[9,8.5,5.5],[14,9,4]];
@@ -1276,7 +1301,8 @@ function fast(){const d=new Date();
   const ah=+d.toLocaleString('en-US',{timeZone:'Asia/Kolkata',hour:'numeric',hour12:false})%24;
   const ok=ah>=8&&ah<22;
   document.getElementById('pkCall').innerHTML=`<i class="dot" style="background:${ok?'#3c9a4e':'#b98a3a'}"></i>`+(ok?'Good time to call home':'Punjab is asleep right now');
-  document.getElementById('pkCall').style.color=ok?'#2f6b3a':'#8a5a1a';}
+  document.getElementById('pkCall').style.color=ok?'#2f6b3a':'#8a5a1a';
+  const wh=document.getElementById('waHomeT');if(wh){wh.textContent=(window.__homeName||'Amritsar')+' '+d.toLocaleTimeString('en-US',{timeZone:window.__homeTz||'Asia/Kolkata',hour:'numeric',minute:'2-digit'});document.getElementById('waHomeS').textContent=ok?'Good time to call home':'Asleep there now';}}
 fast();setInterval(fast,1000);
 
 /* focus engine */
@@ -1310,11 +1336,11 @@ const SPECS=[
   feats:['3D card carousel with depth and tilt','Animated aurora background tinted by the focused app','Each card shows what to resume in that app','Glass dock for search, soundbar, settings, sleep'],
   m:{Clean:4,Wow:5,Features:3,"Build effort":4},
   build:'<b>How we build it:</b> custom launcher app. Animation needs to be tuned to your TV\'s chip so it stays smooth; if the TV is a budget model I would tone the blur down.'},
- {tag:'Option E · Japanese desk mat',name:'Washi',
-  pitch:'Off-white rice paper, an ink pagoda, a red sun and an indigo wave pattern along the bottom, in the style of the Japanese desk mats from Drop and Keebmonkey. Your shows sit on paper cards, and the one you are on gets a red stamp. The top corner shows Japan\'s micro-season for the day. The year has 72 of them, about five days each; today\'s is "land starts to freeze".',
-  feats:['Red hanko stamp marks the focused show','Japanese micro-season of the day, changes every five days','Show cards with ink progress lines','Tonight, weather, soundbar and bedtime strip with kanji labels'],
-  m:{Clean:5,Wow:4,Features:3,'Build effort':3},
-  build:'<b>How we build it:</b> custom launcher app. A still version (wallpaper plus Projectivy) is possible but loses the stamp, cards and live strip.'},
+ {tag:'Option E · Japanese · chosen',name:'Washi',
+  pitch:'The final pick. A minimalist Japanese lake scene painted for this TV: snow mountain in soft teal, mist, an arched bridge, a pagoda and torii standing in still water with reflections, cherry blossoms on the right. Reds are muted and the text is navy. The light changes with the real sunrise and sunset, and a few petals drift across.',
+  feats:['Light follows the day: dawn glow, daytime, dusk, and a navy night tint after sunset','Continue-watching paper cards; OK resumes the exact episode, red stamp marks the focused one','Japanese micro-season of the day, all 72, changes every five days on its own','Today plus 3-day forecast, wind, and live moon phase','故郷 Amritsar clock with a "good time to call home" hint','Tonight\'s new episode, soundbar status and Menu controls, bedtime timer','Drifting sakura petals (switch off with reduced motion)'],
+  m:{Clean:5,Wow:5,Features:5,'Build effort':3},
+  build:'<b>Status:</b> this is the default theme in the TV app. The wallpaper is original artwork generated by tools/make_washi_bg.py, so it can be repainted for each season (autumn maples, winter snow) later.'},
  {tag:'Option F · Anime',name:'Sora',
   pitch:'A bright summer sky like an anime film background: huge clouds, sun flare, power lines and a utility pole. Rounded white cards, a speech bubble that suggests what to watch, and playful bounce when you move.',
   feats:['Live countdown to the next episode of a show you follow','Watch streak with a dot for each day','Speech bubble suggests tonight\'s pick from the focused app','Clouds drift slowly; sky can follow the time of day'],

@@ -21,7 +21,7 @@ const fake=`(function(){
 await p.addInitScript(fake);
 const errs=[];p.on('pageerror',e=>errs.push(e.message));
 const base='file://'+require('path').resolve(__dirname,'..')+'/app/src/main/assets/web/home.html?theme=';
-for(const id of ['marquee','control','phulkari','callus','pace','engine','loadout','datenight','summit']){
+for(const id of ['washi','marquee','control','phulkari','callus','pace','engine','loadout','datenight','summit']){
  await p.goto(base+id);await p.waitForTimeout(700);
  const info=await p.evaluate(()=>{const s=document.querySelector('.screen:not([hidden])');return {binds:[...s.querySelectorAll('[data-b]')].map(e=>e.getAttribute('data-b')+'='+e.textContent).slice(0,6).join(' | '),first:s.querySelector('[data-tile]')?.textContent.replace(/\s+/g,' ').trim().slice(0,60)}});
  await p.keyboard.press('Enter');await p.waitForTimeout(50);

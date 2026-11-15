@@ -23,7 +23,7 @@ class Prefs(context: Context) {
         sp.edit().putLong(key, java.lang.Double.doubleToRawLongBits(v)).apply()
 
     var theme: String
-        get() = str("theme", "phulkari")
+        get() = str("theme", "washi")
         set(v) = putStr("theme", v)
     var homeName: String
         get() = str("homeName", "Ottawa")

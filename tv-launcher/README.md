@@ -38,7 +38,7 @@ usage stats) is native Kotlin behind a small JSON bridge.
 | still | Still | Huge clock, quiet sky | weather, soundbar, Wi-Fi |
 | control | Control Room | Dashboard | continue watching, weather, soundbar, Wi-Fi |
 | aurora | Aurora | 3D glass carousel | continue watching, weather |
-| washi | Washi | Japanese desk mat | weather, soundbar, Japanese micro-season |
+| **washi** (default) | **Washi** | **Chosen.** Japanese lake scene, muted reds, navy text | continue watching, weather + 3-day, sunrise/sunset light, all 72 micro-seasons, moon, Amritsar clock, tonight's episode, soundbar, bedtime |
 | sora | Sora | Anime summer sky | watch streak (usage stats) |
 | summit | Summit | Topo map, routes | weather, sunrise/sunset, moon phase, soundbar |
 | loadout | Loadout | Light game HUD | level/XP from watch hours, soundbar, Wi-Fi |
@@ -49,6 +49,12 @@ usage stats) is native Kotlin behind a small JSON bridge.
 | pace | Pace | Marathon race bib | Strava week km, last run splits, your race date and plan |
 | engine | Engine | Athlete dashboard | Strava 6-week load + acute:chronic ratio |
 | datenight | Date Night | Candlelight, picks for two | TMDB picks on your services in Canada, anniversary countdown |
+
+## Washi wallpaper
+
+Original artwork drawn by code: `python3 tools/make_washi_bg.py` writes `design/washi-bg.svg`, and
+`node tools/render_washi_bg.js` renders it to `app/src/main/assets/web/washi-bg.jpg`. Change colours or move
+things in the script and re-run both, then `python3 tools/build_web.py`.
 
 ## Remote
 
