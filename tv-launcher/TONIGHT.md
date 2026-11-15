@@ -47,8 +47,7 @@ If you want one remote for everything, Bluetooth is the way. If you want the bes
 ## On the remote afterwards
 
 - **Arrows / OK**: move and open. OK on a show card resumes that exact episode.
-- **Menu** (or Settings button): change theme, bedtime timer, refresh, Android settings.
-- **Back**: closes the menu.
+- **Back**: opens and closes the menu: change theme, bedtime timer, refresh, Android settings.
 
 ## If anything looks wrong
 

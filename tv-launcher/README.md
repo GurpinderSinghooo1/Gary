@@ -65,9 +65,8 @@ things in the script and re-run both, then `python3 tools/build_web.py`.
 |---|---|
 | Arrows | Move focus (spatial: up/down jump between rows) |
 | OK | Open the app; on a show tile, resume that show directly |
-| Menu / Settings / Guide | Quick menu: theme, soundbar, bedtime timer, refresh, Android settings |
+| Back (or Menu / Guide) | Quick menu: theme, soundbar, bedtime timer, refresh, Android settings |
 | Red / Green / Yellow | Jump to Theme / Soundbar / Bedtime in the menu |
-| Back | Closes the menu (the home screen never exits) |
 | HOME | Opens TV Home. On Google TV builds that ignore the default-home setting (Hisense), the `HomeButtonService` accessibility service catches HOME; `tools/home-button.sh on/off` |
 
 ## Layout

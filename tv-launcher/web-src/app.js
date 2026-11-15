@@ -5,7 +5,7 @@
  *  2. Loads live data through TvHome (apps, continue watching, weather, soundbar, stats, Strava...).
  *  3. Builds the themes (window.__buildThemes, generated from the design file) with that data.
  *  4. Shows only the chosen theme and drives it with the remote:
- *       arrows = move focus (spatial), OK = open, Menu = quick menu, Back = close menu.
+ *       arrows = move focus (spatial), OK = open, Back or Menu = open/close the quick menu.
  *  5. Keeps clocks, weather and soundbar fresh, and reloads when you come back from an app
  *     and "continue watching" changed.
  */
@@ -390,7 +390,8 @@
     if (k === 'ok') activate(); else move(k);
   });
   TvHome.on('menu', function () { if (menuOpen()) closeMenu(); else openMenu(); });
-  TvHome.on('back', function () { if (menuOpen()) closeMenu(); });
+  // Back toggles the menu: many remotes (Hisense) have no Menu key, and Google TV takes the Settings key.
+  TvHome.on('back', function () { if (menuOpen()) closeMenu(); else openMenu(); });
   TvHome.on('home', function () { closeMenu(); setFocus(0); });
   TvHome.on('soundbar', function (s) { D.soundbar = s; binds(); });
   TvHome.on('themeChanged', function () { /* native reloads the page */ });
@@ -627,7 +628,9 @@
       lastCw = JSON.stringify(((D.cw && D.cw.items) || []).map(function (i) { return [i.title, i.progress]; }));
       document.body.classList.add('ready');
       if (DREAM) return;
-      if (D.native && D.cw && D.cw.permission === false) toast('Allow "TV listings" for continue watching (see SETUP.md)');
+      var seen = null; try { seen = localStorage.getItem('tvhome.hintTheme'); } catch (e) {}
+      if (seen !== themeId) { toast('Press BACK for the menu and themes'); try { localStorage.setItem('tvhome.hintTheme', themeId); } catch (e) {} }
+      else if (D.native && D.cw && D.cw.permission === false) toast('Allow "TV listings" for continue watching (see SETUP.md)');
     });
     // Weather every 20 min, soundbar + system every 2 min.
     if (DREAM) { setInterval(function () { loadDream().then(binds); }, 20 * 60000); return; }

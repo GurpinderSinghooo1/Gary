@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Turns off ad, recommendation and preinstalled-junk packages. DRY RUN unless you pass --apply.
 #  - Uses "pm disable-user", which only switches apps off. Nothing is deleted.
-#  - Writes undo-debloat.sh next to this script so you can switch everything back on.
+#  - Adds to undo-debloat.sh next to this script (never overwrites it) so you can switch everything back on.
 #  - Never touches the packages in KEEP (the TV breaks without them).
 # Usage:
 #   TV_IP=192.168.1.50 ./debloat.sh                 # show what would be disabled
@@ -54,7 +54,9 @@ echo "Will disable (${#targets[@]}):"; printf '   %s\n' "${targets[@]}"
 if [[ $APPLY == 0 ]]; then echo; echo "Dry run. Re-run with --apply to do it."; exit 0; fi
 
 UNDO=undo-debloat.sh
-{ echo '#!/usr/bin/env bash'; echo 'cd "$(dirname "$0")"; source ./tv.sh'; } > $UNDO
+# Never overwrite an existing undo file (it may hold reinstall lines for removed apps): add to it.
+if [[ ! -f $UNDO ]]; then { echo '#!/usr/bin/env bash'; echo 'cd "$(dirname "$0")"; source ./tv.sh'; } > $UNDO
+else echo "# --- debloat.sh --apply $(date '+%Y-%m-%d %H:%M')" >> $UNDO; fi
 for p in "${targets[@]}"; do
   if tvsh pm disable-user --user 0 "$p" | tr -d '\r' | grep -q "disabled"; then
     echo "   off  $p"; echo "tvsh pm enable $p" >> $UNDO
