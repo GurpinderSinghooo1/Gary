@@ -52,6 +52,8 @@ If you want one remote for everything, Bluetooth is the way. If you want the bes
 
 ## If anything looks wrong
 
+- HOME stuck on TV Home and you want Google TV back: Settings → Accessibility → turn off **TV Home · HOME button**
+  (or `tools/home-button.sh off` on a Mac).
 - Run **Setup TV.bat → 8** to go back to the original Google home screen. Nothing is deleted.
 - Run **Setup TV.bat → 7** to switch the removed apps back on.
 

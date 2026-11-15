@@ -21,8 +21,11 @@ else
   echo "   Could not set it automatically. Press HOME on the remote and choose TV Home, Always."
 fi
 
+echo "== HOME button → TV Home (Google TV ignores the default-home setting on some TVs)"
+./home-button.sh on | sed 's/^/   /'
+
 echo "== Checking which streaming apps are installed"
-for p in com.netflix.ninja com.google.android.youtube.tv com.disney.disneyplus com.amazon.amazonvideo.livingroom com.amazon.avod.thirdpartyclient com.cbs.ott com.cbs.app com.paramount.plus; do
+for p in com.netflix.ninja com.google.android.youtube.tv com.disney.disneyplus com.amazon.amazonvideo.livingroom com.amazon.avod.thirdpartyclient com.cbs.ott com.cbs.ca com.cbs.app com.paramount.plus; do
   if tvsh pm list packages "$p" | tr -d '\r' | grep -qx "package:$p"; then echo "   found  $p"; fi
 done
 

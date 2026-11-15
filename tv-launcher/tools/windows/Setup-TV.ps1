@@ -64,7 +64,7 @@ $Safe = @('com.google.android.tvrecommendations','com.google.android.leanbacklau
   'com.mitv.tvhome.atv','com.xiaomi.mitv.upgrade','com.netflix.partner.activation')
 $Stock = @('com.google.android.apps.tv.launcherx','com.google.android.leanbacklauncher','com.google.android.tvlauncher')
 $Streaming = @('com.netflix.ninja','com.google.android.youtube.tv','com.disney.disneyplus','com.amazon.amazonvideo.livingroom',
-  'com.amazon.avod.thirdpartyclient','com.cbs.ott','com.cbs.app','com.paramount.plus')
+  'com.amazon.avod.thirdpartyclient','com.cbs.ott','com.cbs.ca','com.cbs.app','com.paramount.plus')
 
 function Installed { (TvSh pm list packages) -split "`n" | ForEach-Object { $_.Trim() -replace '^package:', '' } }
 
@@ -109,6 +109,12 @@ function Install-App {
   TvSh settings put secure screensaver_components "$Pkg/.dream.TvHomeDream" | Out-Null
   TvSh settings put secure screensaver_enabled 1 | Out-Null
   Say 'Screensaver set to the Washi scene' 'Green'
+  $svc = "$Pkg/$Pkg.access.HomeButtonService"
+  $cur = ((TvSh settings get secure enabled_accessibility_services) -join '').Trim()
+  $list = @($cur -split ':' | Where-Object { $_ -and $_ -ne 'null' -and $_ -notmatch 'HomeButtonService' }) + $svc
+  TvSh settings put secure enabled_accessibility_services ($list -join ':') | Out-Null
+  TvSh settings put secure accessibility_enabled 1 | Out-Null
+  Say 'HOME button now opens TV Home' 'Green'
   TvSh am start -n "$Pkg/.HomeActivity" | Out-Null
   Say 'Done. Press HOME on the remote.' 'Green'
 }
