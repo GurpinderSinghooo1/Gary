@@ -11,6 +11,26 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    name: Remote-control tests (all themes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tv-launcher
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Scripts parse
+        run: for f in tools/*.sh; do bash -n "$f"; done
+      - name: The TV page is built from its sources
+        run: python3 tools/build_web.py && git diff --exit-code -- app/src/main/assets/web/home.html
+      - name: Install Playwright
+        run: npm install --no-save playwright@1 && npx playwright install --with-deps chromium
+      - name: Remote-control tests
+        run: node tests/remote.test.js
+
   build:
     name: Build debug APK
     runs-on: ubuntu-latest

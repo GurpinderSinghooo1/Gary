@@ -1,62 +1,75 @@
-# Tonight: getting the Japanese home screen on the TV
+# Updating the TV (Mac)
 
-About 15 minutes. You need the TV, the TV remote and a Windows laptop on the same Wi-Fi.
+Ten minutes. You need the Mac and the TV on the same Wi-Fi. Each grey box is one line to paste into
+**Terminal** (press Enter after each).
 
-## Before you start (on the laptop)
+## 1. Get the new app file
 
-1. Download the app file: open the latest build at
-   https://github.com/GurpinderSinghooo1/Gary/actions/workflows/tv-launcher.yml
-   → click the top run → **Artifacts** → **tv-home-debug-apk**. It downloads a zip; open it, and the
-   `tv-home-debug.apk` file inside can stay in your Downloads folder.
-2. Get the setup folder: from the same GitHub repo, branch `claude/quirky-mayer-iv5ej1`, folder
-   `tv-launcher/tools/windows` (or from the zip Claude sent). You need `Setup TV.bat` and `Setup-TV.ps1`.
+Open https://github.com/GurpinderSinghooo1/Gary/actions/workflows/tv-launcher.yml → click the top run with a
+green tick → **Artifacts** → **tv-home-debug-apk**. Safari unzips it into Downloads as `tv-home-debug.apk`.
 
-## On the TV (2 minutes, with the remote)
+## 2. Get the latest scripts
 
-1. **Settings → System → About** → scroll to **Build** → press OK **7 times** ("You are now a developer").
-2. **Settings → System → Developer options** → turn on **USB debugging**.
-3. Your TV's IP address is **192.168.2.19** (already filled in by the setup tool). If the TV ever gets a new one:
-   Settings → System → About → Status.
+If the project folder is already on the Mac, open Terminal in it and run:
 
-## On the laptop
+```bash
+git pull
+```
 
-1. Double-click **Setup TV.bat**. Press Enter to use 192.168.2.19.
-2. The TV asks **"Allow USB debugging?"** → tick **Always allow** → **OK**.
-3. Choose **5 (Show TV info)** first and send Claude the text or the saved `tv-info-….txt` file. It shows the
-   TV model and, usually, the soundbar's name.
-4. Choose **1 (Install TV Home)**. Press **HOME** on the remote. If asked, pick **TV Home → Always**.
-5. Choose **2 (Remove ads and junk)** → it lists what it will switch off → **y**.
-6. Choose **4 (Soundbar)** and follow the steps for your cable (see below).
+If not, download the branch as a zip from GitHub (green **Code** button → **Download ZIP**) and unzip it.
+Then go to the tools folder (adjust the first part to where the folder is):
 
-That's it. The Japanese screen shows up, and the screensaver becomes the lake scene.
+```bash
+cd ~/Downloads/Gary-claude-quirky-mayer-iv5ej1/tv-launcher/tools
+```
 
-## Your soundbar (Samsung HW-J355)
+## 3. Install the update
 
-It has no HDMI and no Wi-Fi, so it can't be controlled by the TV directly. It can wake itself:
+```bash
+TV_IP=192.168.2.19 ./install.sh ~/Downloads/tv-home-debug.apk
+```
 
-- **Optical cable** (thin cable, glowing red tip): on the **soundbar remote**, press **SOURCE** until it shows
-  **D.IN**, then press **AUTO POWER** (or hold **◀** on the round pad for 5 seconds) until it shows
-  **ON-POWER LINK**. Now the soundbar turns on when the TV sends sound, and off a few minutes after the TV goes off.
-  Volume stays on the soundbar remote (optical can't carry volume).
-- **Bluetooth**: press **BT POWER** on the soundbar remote until it shows **ON-BLUETOOTH POWER**, and pair the
-  soundbar in the TV's Bluetooth settings. The TV reconnects on wake, which turns the soundbar on, and the
-  **TV remote controls the volume**. Small chance of slight lip-sync delay.
+Your theme and settings stay as they are. If the TV shows **Allow USB debugging?**, tick **Always allow** → OK
+and run the line again.
 
-If you want one remote for everything, Bluetooth is the way. If you want the best sound with no delay, optical.
+## 4. Make TV Home the real home screen (once)
 
-## On the remote afterwards
+```bash
+TV_IP=192.168.2.19 ./make-default.sh
+```
 
-- **Arrows / OK**: move and open. OK on a show card resumes that exact episode.
-- **Back**: opens and closes the menu: change theme, bedtime timer, refresh, Android settings.
+This is the fix for Google's screen flashing up when you press HOME. The TV flicks to Settings and back twice
+while the script tests the HOME button. It ends with either:
+
+- **"Done. TV Home is now the real home screen"**: finished. Press HOME from inside Netflix to see it.
+- **"The check failed, so everything has been switched back on"**: nothing is broken and the TV is as it was.
+  Copy what Terminal printed and send it to Claude.
+
+## What changed on the remote
+
+- **Back** opens the menu on every theme: Theme (◀ ▶ to flip through, OK to apply), **All apps**, Inputs,
+  Bedtime, Android settings.
+- **All apps** shows everything installed on the TV, not only the five streaming apps.
+- **Bedtime** now puts the whole TV to sleep when the timer ends, whatever you are watching.
+- Up and Down no longer make the highlight jump sideways.
 
 ## If anything looks wrong
 
-- HOME stuck on TV Home and you want Google TV back: Settings → Accessibility → turn off **TV Home · HOME button**
-  (or `tools/home-button.sh off` on a Mac).
-- Run **Setup TV.bat → 8** to go back to the original Google home screen. Nothing is deleted.
-- Run **Setup TV.bat → 7** to switch the removed apps back on.
+| Problem | Fix |
+|---|---|
+| Want Google's home screen back | `TV_IP=192.168.2.19 ./make-default.sh --undo` then `TV_IP=192.168.2.19 ./home-button.sh off` |
+| TV stuck on a black or "starting" screen after step 4 | Unplug the TV for 10 seconds, plug it back in, then run the `--undo` line above |
+| Everything that was ever switched off, back on | `TV_IP=192.168.2.19 ./undo-debloat.sh` |
+| See how HOME is set up right now | `TV_IP=192.168.2.19 ./make-default.sh --status` |
+| Remove TV Home completely | run the `--undo` line first, then `adb uninstall com.gary.tvhome` |
 
-## Later, with Claude (optional)
+Windows instead of a Mac: double-click `tools/windows/Setup TV.bat`; option 1 installs, option 3 is step 4.
 
-- **Your season**: winter scenery shows from Nov 7. To keep cherry blossoms all year, set
-  `"washi.season": "spring"` in config.json and use option 6.
+## Your soundbar (Samsung HW-J355)
+
+It has no HDMI and no Wi-Fi, so the TV cannot control it directly. It can wake itself:
+
+- **Optical cable**: on the soundbar remote press **SOURCE** until it shows **D.IN**, then **AUTO POWER** until
+  it shows **ON-POWER LINK**. The soundbar turns on when the TV sends sound. Volume stays on the soundbar remote.
+- **Bluetooth**: press **BT POWER** until it shows **ON-BLUETOOTH POWER** and pair it in the TV's Bluetooth
+  settings. The TV remote then controls the volume. Small chance of slight lip-sync delay.

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Makes HOME on the remote open TV Home (needed on Google TV builds, e.g. Hisense, that ignore
-# the default-home setting). Turns on TV Home's HOME-button accessibility service.
+# Backup route for the HOME button: TV Home's accessibility service catches HOME and opens TV Home.
+# The clean route is ./make-default.sh (no flash of Google's screen); this stays on behind it as a
+# safety net, and it is what lets the bedtime timer put the TV to sleep.
 # Usage: TV_IP=192.168.2.19 ./home-button.sh [on|off|status]
 set -euo pipefail
 cd "$(dirname "$0")"; source ./tv.sh

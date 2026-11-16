@@ -49,7 +49,7 @@ class AppRepository(context: Context) {
             }
             for (ri in infos) {
                 val pkg = ri.activityInfo?.packageName ?: continue
-                if (pkg == ctx.packageName || !seen.add(pkg)) continue
+                if (pkg == ctx.packageName || pkg in STOCK_HOMES || !seen.add(pkg)) continue
                 val label = try {
                     ri.loadLabel(pm).toString()
                 } catch (_: Exception) {
@@ -73,6 +73,13 @@ class AppRepository(context: Context) {
                 listOf("com.amazon.amazonvideo.livingroom", "com.amazon.avod.thirdpartyclient")
             ),
             KnownApp("paramount", "Paramount+", listOf("com.cbs.ott", "com.cbs.ca", "com.cbs.app", "com.paramount.plus"))
+        )
+
+        /** Google's own home screens: never listed as apps, and what the HOME-button service watches for. */
+        val STOCK_HOMES: Set<String> = setOf(
+            "com.google.android.apps.tv.launcherx",
+            "com.google.android.tvlauncher",
+            "com.google.android.leanbacklauncher"
         )
 
         val KNOWN_PACKAGES: Set<String> = KNOWN.flatMap { it.packages }.toSet()

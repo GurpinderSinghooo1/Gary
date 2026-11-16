@@ -33,20 +33,27 @@ TV_IP=192.168.1.50 ./install.sh path/to/tv-home-debug.apk
 ```
 
 This installs the app, grants "TV listings" (continue watching) and usage access (watch-time stats),
-sets TV Home as the home screen, and lists which of your streaming apps it found. Press **HOME**. If the TV
-asks which home app to use, choose **TV Home → Always**.
+points HOME at TV Home, and lists which of your streaming apps it found. Press **HOME**. Re-run it for
+every new build; settings on the TV are kept.
 
-## 4. Remove the ads and junk (reversible)
+## 4. Make it the real home screen, and remove the ads
+
+Google TV does not send HOME to "the default home app". It sends it to Google's Setup Wizard, which passes
+it on to Google's home screen; that is why Google's screen flashes up first, and why switching off only
+Google's home screen makes the wizard loop. `make-default.sh` switches both off together, presses HOME
+twice to test, and switches everything back on by itself if the test fails:
+
+```bash
+TV_IP=192.168.1.50 ./make-default.sh            # once, after TV Home works
+TV_IP=192.168.1.50 ./make-default.sh --status   # how HOME is set up now
+TV_IP=192.168.1.50 ./make-default.sh --undo     # Google's screen and wizard back on
+```
+
+Ads and junk (reversible, nothing is deleted):
 
 ```bash
 TV_IP=192.168.1.50 ./debloat.sh            # shows what it would switch off
-TV_IP=192.168.1.50 ./debloat.sh --apply    # does it, writes undo-debloat.sh
-```
-
-Only after TV Home has worked for a day or two, and only if Google's home screen still pops up:
-
-```bash
-TV_IP=192.168.1.50 ./debloat.sh --apply --stock-launcher
+TV_IP=192.168.1.50 ./debloat.sh --apply    # does it, adds to undo-debloat.sh
 ```
 
 For vendor junk specific to your TV brand: `./debloat.sh --list`, send me the file, and I'll add the right packages.
@@ -91,13 +98,15 @@ OAuth. The refresh token renews itself as long as the TV is used at least every 
 
 ## 7. Switching themes
 
-Remote **Menu** → Theme → ◀ ▶ → **Apply**. Or set `"theme"` in config.json and push it.
+Remote **Back** → Theme → ◀ ▶ → **OK**. Or set `"theme"` in config.json and push it.
 
 ## If something goes wrong
 
 - **Black screen / stuck**: `adb shell am force-stop com.gary.tvhome`, then `./home-button.sh on` (a force-stop
   switches the HOME-button service off), then press HOME.
-- **Get the old home screen back**: Settings → Apps → Default apps → Home app. Or `./undo-debloat.sh`.
+- **Get the old home screen back**: `./make-default.sh --undo`, then `./home-button.sh off`. `./undo-debloat.sh`
+  switches on everything that was ever switched off.
+- **Google's screen flashes again after a TV software update**: run `./make-default.sh` again.
 - **Uninstall completely**: `adb uninstall com.gary.tvhome`.
 - **Continue watching is empty**: some apps don't publish to Android TV's "Watch Next" (Netflix does, YouTube
   partly). Check with `adb shell pm grant com.gary.tvhome android.permission.READ_TV_LISTINGS`.

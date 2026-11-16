@@ -22,7 +22,11 @@ tvsh pm enable com.vt.storemode
 tvsh pm enable com.vt.tv.mobiledeviceconnectiontips
 tvsh pm enable android.autoinstalls.config.google.gtvpai
 
-# 3. Ad-blocking DNS back to the TV's normal setting.
+# 3. Google's home screen and Setup Wizard (switched off by make-default.sh).
+tvsh pm enable com.google.android.tungsten.setupwraith
+tvsh pm enable com.google.android.apps.tv.launcherx
+
+# 4. Ad-blocking DNS back to the TV's normal setting.
 tvsh settings put global private_dns_mode opportunistic
 tvsh settings delete global private_dns_specifier
 

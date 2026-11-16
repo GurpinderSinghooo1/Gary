@@ -79,3 +79,25 @@ Screen-on respects the `autoSoundbar` pref.
 
 **Verified locally**: all Kotlin compiles (kotlinc 2.1.21) against the real Android 15 framework (Robolectric android-all)
 with hand-written stubs for the three androidx libraries. Not verified: the real androidx signatures (stubs) and the Gradle/AGP build.
+
+---
+
+## Third pass (review and hardening)
+
+**HOME / default launcher.** Google TV resolves HOME to `com.google.android.tungsten.setupwraith`, which forwards
+to `launcherx`; that is why the default-home setting looked ignored and why disabling only `launcherx` looped the
+wizard. `tools/make-default.sh` disables both, tests HOME with `input keyevent`, and rolls back on failure.
+`HomeButtonService` remains as a backup. Not yet confirmed on the Hisense itself (no adb from the build sandbox).
+
+**New request() methods**
+- `inputs` → `[{id,label,connected}]` (TvInputManager passthrough inputs); `launchInput` {id} → bool.
+- `settings.get` adds `canSleepTv` (true while `HomeButtonService` is connected).
+- `bedtime` end now also calls `performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)` through the service: the TV sleeps.
+- `apps` no longer lists Google's home-screen packages.
+
+**Keys.** `back` / `menu` / `colorKey` are emitted on key-up only when the key-down was also seen by HomeActivity,
+so the BACK that closes another app no longer opens the menu.
+
+**Page.** Loads in two steps (`loadLocal`, then `loadNet`): first paint waits at most 1.2 s for the network, weather
+falls back to the last forecast (localStorage, 3 h) or dashes, never the design's sample numbers. Google Fonts load
+non-blocking. Polling stops while another app is in front (`document.hidden`).

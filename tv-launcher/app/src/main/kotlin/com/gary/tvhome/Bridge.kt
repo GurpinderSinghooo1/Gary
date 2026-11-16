@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.webkit.JavascriptInterface
+import com.gary.tvhome.access.HomeButtonService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -64,6 +65,8 @@ class TvBridge(private val activity: HomeActivity) {
         "apps" -> app.appRepository.list()
         "launch" -> launchApp(a.optString("packageName"))
         "launchUri" -> launchUri(a.optString("uri"), a.optString("packageName"))
+        "inputs" -> app.inputRepository.list()
+        "launchInput" -> a.optString("id").let { it.isNotBlank() && startSafely(app.inputRepository.intent(it)) }
         "continueWatching" -> app.watchNextRepository.query()
         "weather" -> {
             val p = app.prefs
@@ -87,7 +90,7 @@ class TvBridge(private val activity: HomeActivity) {
         "smartthings.scenes" -> app.soundbarManager.scenes()
         "smartthings.runScene" -> app.soundbarManager.runScene(a.getString("sceneId"))
         "system" -> app.systemInfo.get()
-        "settings.get" -> app.prefs.toJson()
+        "settings.get" -> settingsJson()
         "settings.set" -> settingsSet(a)
         "openSystemSettings" -> startSafely(Intent(Settings.ACTION_SETTINGS))
         "openAppInfo" -> openAppInfo(a.optString("packageName"))
@@ -145,8 +148,11 @@ class TvBridge(private val activity: HomeActivity) {
             activity.emit("themeChanged", JSONObject().put("theme", app.prefs.theme).toString())
             activity.reloadTheme()
         }
-        return app.prefs.toJson()
+        return settingsJson()
     }
+
+    private fun settingsJson(): JSONObject =
+        app.prefs.toJson().put("canSleepTv", HomeButtonService.isRunning)
 
     private fun bedtime(minutes: Int): JSONObject {
         if (minutes <= 0) throw IllegalArgumentException("minutes must be > 0")
@@ -159,6 +165,8 @@ class TvBridge(private val activity: HomeActivity) {
             } catch (_: Exception) {
             }
             HomeActivity.current()?.emit("bedtime", JSONObject().put("phase", "end").toString())
+            // Whatever app is showing, the TV goes to sleep (needs the HOME-button service to be on).
+            HomeButtonService.sleepTv()
         }
         HomeActivity.current()?.emit(
             "bedtime", JSONObject().put("phase", "start").put("endsAt", endsAt).toString()

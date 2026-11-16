@@ -23,8 +23,28 @@ body.bed-dim .tv { filter: brightness(.25); transition: filter 3s ease; }
 #tvMenu .ml { font-size: .95vw; letter-spacing: .12em; text-transform: uppercase; color: #9aa3b5; }
 #tvMenu .mi { display: flex; gap: .6vw; flex-wrap: wrap; }
 #tvMenu .mb { padding: .5vw 1.1vw; border-radius: 2vw; background: rgba(255,255,255,.07); white-space: nowrap; }
-#tvMenu .mb.name { background: transparent; font-weight: 600; min-width: 9vw; text-align: center; }
+#tvMenu .mb.name { font-weight: 600; min-width: 22vw; text-align: center; white-space: pre; }
 #tvMenu .mb.on { background: #9db4ff; color: #0c1230; font-weight: 600; }
+
+/* ---- All apps / Inputs: full-screen grid ---- */
+#tvApps { position: fixed; inset: 0; z-index: 45; background: rgba(10, 12, 17, .96); color: #eef1f6; padding: 4vw 5vw 0;
+  font: 400 1.25vw/1.3 "Inter", system-ui, sans-serif; display: flex; flex-direction: column; }
+#tvApps[hidden], #tvMenu[hidden] { display: none; }
+#tvApps .ah { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.6vw; flex: none; }
+#tvApps .ah b { font: 600 2.2vw "Sora", system-ui, sans-serif; }
+#tvApps .ah span { font-size: 1vw; color: #9aa3b5; }
+#tvApps .ag { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.4vw; overflow: hidden auto; padding: .8vw .8vw 4vw; margin: 0 -.8vw;
+  scrollbar-width: none; align-content: start; flex: 1; }
+#tvApps .ag::-webkit-scrollbar { display: none; }
+#tvApps .ac { position: relative; aspect-ratio: 16 / 9; border-radius: .9vw; background: #1b202b; overflow: hidden; display: flex;
+  align-items: center; justify-content: center; text-align: center; padding: .6vw; outline: .25vw solid transparent; transition: transform .12s, outline-color .12s; scroll-margin: 2vw; }
+#tvApps .ac img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#tvApps .ac span { position: relative; font-weight: 600; text-shadow: 0 .1vw .4vw #000; }
+#tvApps .ac img + span { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.4vw .6vw .4vw; font-size: .95vw; font-weight: 500;
+  background: linear-gradient(transparent, rgba(0,0,0,.8)); opacity: 0; }
+#tvApps .ac.on { transform: scale(1.07); outline-color: #9db4ff; z-index: 1; }
+#tvApps .ac.on img + span { opacity: 1; }
+#tvApps .ac.off { opacity: .55; }
 
 /* ---- Screensaver (TvHomeDream): scene + clock only, slow drift, burn-in protection ---- */
 body.dream .wa-row, body.dream .wa-strip, body.dream #tvToast { display: none !important; }

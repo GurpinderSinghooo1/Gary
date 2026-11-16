@@ -12,3 +12,4 @@ tools/windows/tv-ip.txt
 tools/windows/undo-list.txt
 tools/windows/tv-info-*.txt
 tools/windows/config.json
+node_modules/

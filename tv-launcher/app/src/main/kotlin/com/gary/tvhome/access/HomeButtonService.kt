@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import com.gary.tvhome.HomeActivity
+import com.gary.tvhome.data.AppRepository
 
 /**
  * Makes HOME on the remote open TV Home on Google TV builds that ignore the default-home setting
@@ -16,8 +17,10 @@ import com.gary.tvhome.HomeActivity
  *  2. Fallback: if Google's home screen still comes to the front (boot, an app closing to it),
  *     TV Home is brought straight back over it.
  *
- * Google's home screen stays installed and enabled underneath; disabling it makes Setup Wizard
- * take over HOME and loop. Turn this off with tools/home-button.sh off (or Settings → Accessibility).
+ * This is the backup route. The clean one is tools/make-default.sh, which makes TV Home the real
+ * default home (no flash of Google's screen); this service then only matters if a TV update undoes that.
+ * It also gives the bedtime timer a way to put the TV to sleep.
+ * Turn it off with tools/home-button.sh off (or Settings → Accessibility).
  */
 class HomeButtonService : AccessibilityService() {
     private var lastLaunch = 0L
@@ -55,14 +58,30 @@ class HomeButtonService : AccessibilityService() {
         }
     }
 
-    override fun onServiceConnected() { Log.i(TAG, "connected") }
+    override fun onServiceConnected() {
+        instance = this
+        Log.i(TAG, "connected")
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        if (instance === this) instance = null
+        return super.onUnbind(intent)
+    }
 
     companion object {
         private const val TAG = "HomeButtonService"
-        val STOCK_HOMES = setOf(
-            "com.google.android.apps.tv.launcherx",
-            "com.google.android.tvlauncher",
-            "com.google.android.leanbacklauncher"
-        )
+        private val STOCK_HOMES = AppRepository.STOCK_HOMES
+
+        @Volatile private var instance: HomeButtonService? = null
+
+        /** True while the service is switched on in Settings → Accessibility. */
+        val isRunning: Boolean get() = instance != null
+
+        /** Puts the TV to sleep (bedtime timer). Only an accessibility service may do this. */
+        fun sleepTv(): Boolean = try {
+            instance?.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN) == true
+        } catch (_: Exception) {
+            false
+        }
     }
 }

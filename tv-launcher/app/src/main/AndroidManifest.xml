@@ -44,6 +44,7 @@
             android:exported="true"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
+            android:resumeWhilePausing="true"
             android:screenOrientation="landscape"
             android:stateNotNeeded="true">
             <intent-filter>

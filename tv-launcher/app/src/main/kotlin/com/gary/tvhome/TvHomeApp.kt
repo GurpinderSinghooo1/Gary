@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 import com.gary.tvhome.data.AppRepository
+import com.gary.tvhome.data.InputRepository
 import com.gary.tvhome.data.Prefs
 import com.gary.tvhome.data.StatsRepository
 import com.gary.tvhome.data.Store
@@ -31,6 +32,8 @@ class TvHomeApp : Application() {
     lateinit var prefs: Prefs
         private set
     lateinit var appRepository: AppRepository
+        private set
+    lateinit var inputRepository: InputRepository
         private set
     lateinit var watchNextRepository: WatchNextRepository
         private set
@@ -63,6 +66,7 @@ class TvHomeApp : Application() {
         super.onCreate()
         prefs = Prefs(this)
         appRepository = AppRepository(this)
+        inputRepository = InputRepository(this)
         watchNextRepository = WatchNextRepository(this)
         weatherRepository = WeatherRepository(prefs)
         soundbarManager = SoundbarManager(prefs, appScope)

@@ -63,6 +63,7 @@ $Safe = @('com.google.android.tvrecommendations','com.google.android.leanbacklau
   'com.hisense.tv.vidaa.ads','com.jamdeo.tv.vod','com.sony.dtv.promos','com.sony.dtv.sonyselect','com.sony.dtv.recommendation',
   'com.mitv.tvhome.atv','com.xiaomi.mitv.upgrade','com.netflix.partner.activation')
 $Stock = @('com.google.android.apps.tv.launcherx','com.google.android.leanbacklauncher','com.google.android.tvlauncher')
+$Wizard = @('com.google.android.tungsten.setupwraith')
 $Streaming = @('com.netflix.ninja','com.google.android.youtube.tv','com.disney.disneyplus','com.amazon.amazonvideo.livingroom',
   'com.amazon.avod.thirdpartyclient','com.cbs.ott','com.cbs.ca','com.cbs.app','com.paramount.plus')
 
@@ -119,16 +120,10 @@ function Install-App {
   Say 'Done. Press HOME on the remote.' 'Green'
 }
 
-function Debloat([bool]$withStock) {
+function Debloat {
   Title 'Remove ads and junk (switches apps off, nothing is deleted)'
   $pk = Installed
-  $targets = @($Safe | Where-Object { $pk -contains $_ })
-  if ($withStock) {
-    $homeApp = TvSh cmd package resolve-activity --brief -c android.intent.category.HOME -a android.intent.action.MAIN
-    if ($homeApp -notmatch $Pkg) { Say 'Install TV Home and press HOME once before switching off the stock home screen.' 'Red'; return }
-    $targets += @($Stock | Where-Object { $pk -contains $_ })
-  }
-  $targets = @($targets | Where-Object { $Keep -notcontains $_ })
+  $targets = @($Safe | Where-Object { $pk -contains $_ } | Where-Object { $Keep -notcontains $_ })
   if ($targets.Count -eq 0) { Say 'Nothing on the list is installed on this TV. Use option 5 and send Claude the file.' 'Yellow'; return }
   $targets | ForEach-Object { "   $_" } | Out-Host
   if ((Read-Host "Switch these $($targets.Count) off? (y/n)") -ne 'y') { return }
@@ -138,6 +133,38 @@ function Debloat([bool]$withStock) {
     if ($r -match 'disabled') { Say "   off  $p" 'Green'; Add-Content $undo $p } else { Say "   skip $p ($r)" 'Yellow' }
   }
   Say 'Done. Option 7 switches them all back on.' 'Green'
+}
+
+# Same steps as tools/make-default.sh: Google TV sends HOME to its Setup Wizard, which passes it to
+# Google's home screen. Both are switched off together, HOME is tested, and a failed test undoes it.
+function Set-A11y([bool]$on) {
+  $svc = "$Pkg/$Pkg.access.HomeButtonService"
+  $cur = ((TvSh settings get secure enabled_accessibility_services) -join '').Trim()
+  $list = @($cur -split ':' | Where-Object { $_ -and $_ -ne 'null' -and $_ -notmatch 'HomeButtonService' })
+  if ($on) { $list += $svc }
+  if ($list.Count -gt 0) { TvSh settings put secure enabled_accessibility_services ($list -join ':') | Out-Null; TvSh settings put secure accessibility_enabled 1 | Out-Null }
+  else { TvSh settings delete secure enabled_accessibility_services | Out-Null }
+}
+function Make-Default {
+  Title 'Make TV Home the real home screen'
+  $pk = Installed
+  if ($pk -notcontains $Pkg) { Say 'Install TV Home first (option 1).' 'Red'; return }
+  $off = @($Wizard + $Stock | Where-Object { $pk -contains $_ })
+  TvSh cmd package set-home-activity "$Pkg/.HomeActivity" | Out-Null
+  Set-A11y $false
+  foreach ($p in $off) { TvSh pm disable-user --user 0 $p | Out-Null; Say "   off  $p" }
+  Say 'Testing the HOME button (the TV flicks to Settings and back, twice)...'
+  $pass = $true
+  foreach ($n in 1, 2) {
+    TvSh am start -a android.settings.SETTINGS | Out-Null; Start-Sleep 3
+    TvSh input keyevent KEYCODE_HOME | Out-Null; Start-Sleep 3
+    $focus = (TvSh dumpsys window) -split "`n" | Where-Object { $_ -match 'mCurrentFocus|mFocusedApp' } | Select-Object -First 2
+    if (($focus -join ' ') -match [regex]::Escape("$Pkg/")) { Say "   press ${n}: TV Home came up" 'Green' } else { Say "   press ${n}: TV Home did NOT come up: $($focus -join ' ')" 'Yellow'; $pass = $false }
+  }
+  if (-not $pass) { foreach ($p in $off) { TvSh pm enable $p | Out-Null } }
+  Set-A11y $true
+  if ($pass) { Say 'Done. HOME now goes straight to TV Home, with no Google screen first. Option 8 undoes this.' 'Green' }
+  else { TvSh am start -n "$Pkg/.HomeActivity" | Out-Null; Say 'The check failed, so everything was switched back on. Send Claude the lines above.' 'Red' }
 }
 
 function Undo-Debloat {
@@ -181,16 +208,17 @@ function Push-Config {
 
 function Restore-Google {
   Title 'Go back to the original home screen'
-  foreach ($p in $Stock) { TvSh pm enable $p | Out-Null }
+  foreach ($p in $Wizard + $Stock) { TvSh pm enable $p | Out-Null }
+  Set-A11y $false
   if ((Read-Host 'Also uninstall TV Home? (y/n)') -eq 'y') { Tv uninstall $Pkg | Out-Host }
-  Say 'Press HOME and pick the Google home screen.' 'Green'
+  Say 'Press HOME. If asked, pick the Google home screen.' 'Green'
 }
 
 while ($true) {
   Title 'TV Home setup'
   Say '  1  Install TV Home (app, permissions, home screen, screensaver)'
   Say '  2  Remove ads and junk apps'
-  Say '  3  Also switch off the old Google home screen (only after TV Home works)'
+  Say '  3  Make TV Home the real home screen (no flash of the Google screen; tests itself)'
   Say '  4  Soundbar: steps so it turns on with the TV'
   Say '  5  Show TV info (model, apps, soundbar name) and save it to a file'
   Say '  6  Send my settings (config.json)'
@@ -198,7 +226,7 @@ while ($true) {
   Say '  8  Go back to the original home screen'
   Say '  Q  Quit'
   switch ((Read-Host 'Choose').ToUpper()) {
-    '1' { Install-App } '2' { Debloat $false } '3' { Debloat $true } '4' { Soundbar } '5' { Show-Info }
+    '1' { Install-App } '2' { Debloat } '3' { Make-Default } '4' { Soundbar } '5' { Show-Info }
     '6' { Push-Config } '7' { Undo-Debloat } '8' { Restore-Google } 'Q' { exit 0 } default { Say 'Pick 1-8 or Q' }
   }
 }

@@ -122,33 +122,34 @@ class HomeActivity : Activity() {
         emit("home")
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val up = event.action == KeyEvent.ACTION_UP
-        when (event.keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                if (up) emit("back")
-                return true
-            }
-            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_GUIDE -> {
-                if (up) emit("menu")
-                return true
-            }
-            KeyEvent.KEYCODE_PROG_RED -> return colorKey(up, "red")
-            KeyEvent.KEYCODE_PROG_GREEN -> return colorKey(up, "green")
-            KeyEvent.KEYCODE_PROG_YELLOW -> return colorKey(up, "yellow")
-            KeyEvent.KEYCODE_PROG_BLUE -> return colorKey(up, "blue")
-        }
-        return super.dispatchKeyEvent(event)
-    }
+    /**
+     * Keys the page handles itself. An event name is sent on key-up, and only when the key went
+     * down here too: BACK pressed to leave another app releases over TV Home, and that stray
+     * key-up must not open the menu.
+     */
+    private var keyDownHere = KeyEvent.KEYCODE_UNKNOWN
 
-    private fun colorKey(up: Boolean, color: String): Boolean {
-        if (up) emit("colorKey", JSONObject().put("color", color).toString())
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val (name, payload) = when (event.keyCode) {
+            KeyEvent.KEYCODE_BACK -> "back" to "{}"
+            KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_SETTINGS, KeyEvent.KEYCODE_GUIDE -> "menu" to "{}"
+            KeyEvent.KEYCODE_PROG_RED -> "colorKey" to """{"color":"red"}"""
+            KeyEvent.KEYCODE_PROG_GREEN -> "colorKey" to """{"color":"green"}"""
+            KeyEvent.KEYCODE_PROG_YELLOW -> "colorKey" to """{"color":"yellow"}"""
+            KeyEvent.KEYCODE_PROG_BLUE -> "colorKey" to """{"color":"blue"}"""
+            else -> return super.dispatchKeyEvent(event)
+        }
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            if (event.repeatCount == 0) keyDownHere = event.keyCode
+        } else if (event.action == KeyEvent.ACTION_UP) {
+            if (keyDownHere == event.keyCode && !event.isCanceled) emit(name, payload)
+            keyDownHere = KeyEvent.KEYCODE_UNKNOWN
+        }
         return true
     }
 
-    @Deprecated("Handled via KEYCODE_BACK in dispatchKeyEvent; never finish the launcher.")
+    @Deprecated("BACK is handled in dispatchKeyEvent; a launcher never finishes.")
     override fun onBackPressed() {
-        emit("back")
     }
 
     override fun onStart() {
@@ -169,6 +170,7 @@ class HomeActivity : Activity() {
     }
 
     override fun onPause() {
+        keyDownHere = KeyEvent.KEYCODE_UNKNOWN
         webView?.onPause()
         super.onPause()
     }
