@@ -79,7 +79,7 @@ class HomeButtonService : AccessibilityService() {
 
         /** Puts the TV to sleep (bedtime timer). Only an accessibility service may do this. */
         fun sleepTv(): Boolean = try {
-            instance?.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN) == true
+            instance?.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN) == true
         } catch (_: Exception) {
             false
         }

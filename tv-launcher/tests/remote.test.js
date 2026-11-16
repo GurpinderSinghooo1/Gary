@@ -167,6 +167,7 @@ function fakeBridge(opts) {
   const took = Date.now() - t0;
   ok(took < 3500, 'no internet: home screen appears in ' + took + ' ms (limit 3500)');
   ok(await p.evaluate(() => document.querySelector('[data-b="wx.tc"]').textContent) === '–', 'no internet: weather shows a dash, not sample numbers');
+  ok(await p.evaluate(() => document.getElementById('waFc').textContent) === '', 'no internet: no made-up forecast days');
   await p.keyboard.press('Enter');
   ok((await calls(p, 'launchUri')).length === 1, 'no internet: apps still open');
   await p.close();

@@ -692,17 +692,22 @@
         var hrs = function (iso) { return iso && iso.length >= 16 ? +iso.slice(11, 13) + (+iso.slice(14, 16)) / 60 : null; };
         window.__waSun = [hrs(dd[0].sunrise), hrs(dd[0].sunset)];
         if (window.waLight) window.waLight(window.__waSun[0], window.__waSun[1]);
+      } else if (D.native || DREAM) {
+        document.getElementById('waFc').innerHTML = ''; // no forecast: blank, not the design's sample days
       }
       // 今夜: the newest "next episode" / "new" item Android TV knows about, else the latest show in progress.
       var items = (D.cw && D.cw.items) || [];
       var pick = items.find(function (x) { return x.watchNextType === 1 || x.watchNextType === 2; }) || items[0];
+      if (!pick && D.native) {
+        document.getElementById('waTonight').innerHTML = 'Nothing in progress<small>Shows you start appear here</small>';
+      }
       if (pick && D.native) {
         var app = (D.apps || []).find(function (a) { return a.packageName === pick.packageName; });
         document.getElementById('waTonight').innerHTML = esc(pick.title || '') + '<small>' +
           (pick.watchNextType === 2 ? 'New episode' : pick.watchNextType === 1 ? 'Next episode' : 'Pick up where you left off') +
           (app ? ' · ' + esc(app.label) : '') + '</small>';
       }
-      if (s.bedtime) document.getElementById('waBed').innerHTML = 'Bedtime ' + esc(s.bedtime) + '<small>Menu → Bedtime for a timer</small>';
+      if (s.bedtime) document.getElementById('waBed').innerHTML = 'Bedtime ' + esc(s.bedtime) + '<small>Back → Bedtime for a sleep timer</small>';
     },
     phulkari: function () {
       var s = D.settings || {};
