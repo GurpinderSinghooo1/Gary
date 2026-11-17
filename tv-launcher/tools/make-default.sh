@@ -25,6 +25,7 @@ WIZARD="com.google.android.tungsten.setupwraith"
 STOCK="com.google.android.apps.tv.launcherx com.google.android.tvlauncher com.google.android.leanbacklauncher"
 
 installed() { tvsh pm list packages "$1" | tr -d '\r' | grep -qx "package:$1"; }
+known()     { tvsh pm list packages -u "$1" | tr -d '\r' | grep -qx "package:$1"; }   # on the TV at all, even if removed for this user
 enabled()   { tvsh pm list packages -e "$1" | tr -d '\r' | grep -qx "package:$1"; }
 focus()     { tvsh dumpsys window | tr -d '\r' | grep -E 'mCurrentFocus|mFocusedApp' | head -2 || true; }
 tvhome_in_front() { focus | grep -q "$PKG/"; }
@@ -33,13 +34,16 @@ default_home() { tvsh cmd package resolve-activity --brief -c android.intent.cat
 status() {
   echo "Default home app : $(default_home)"
   for p in $WIZARD $STOCK; do
-    installed "$p" || continue
-    if enabled "$p"; then echo "  on   $p"; else echo "  off  $p"; fi
+    known "$p" || continue
+    if ! installed "$p"; then echo "  off  $p (removed for this user; --undo brings it back)"
+    elif enabled "$p"; then echo "  on   $p"; else echo "  off  $p"; fi
   done
   echo "HOME-button backup service: $(./home-button.sh status)"
 }
 
 switch_back_on() {
+  # The wizard may have been removed for this user rather than switched off: put it back first.
+  installed "$WIZARD" || tvsh cmd package install-existing "$WIZARD" >/dev/null 2>&1 || true
   for p in $WIZARD $STOCK; do
     installed "$p" && tvsh pm enable "$p" >/dev/null 2>&1 || true
   done
@@ -80,6 +84,12 @@ trap 'echo; echo "Interrupted: switching everything back on."; switch_back_on' E
 # The wizard goes first. If the TV refuses, stop here: Google's screen must not go off while the wizard is on.
 if installed "$WIZARD"; then
   tvsh pm disable-user --user 0 "$WIZARD" >/dev/null 2>&1 || true
+  if enabled "$WIZARD"; then
+    # Some TVs refuse to switch it off. Removing it for this user is the same thing by another road:
+    # the app stays on the TV's system partition and --undo (or a factory reset) brings it back.
+    echo "   The TV would not switch the wizard off; removing it for this user instead (still reversible)"
+    tvsh pm uninstall -k --user 0 "$WIZARD" >/dev/null 2>&1 || true
+  fi
   if enabled "$WIZARD"; then
     trap - ERR INT TERM
     echo "   The TV refused to switch off the Setup Wizard, so Google's home screen was left alone."
