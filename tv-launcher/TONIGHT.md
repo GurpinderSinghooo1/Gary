@@ -38,10 +38,13 @@ and run the line again.
 TV_IP=192.168.2.19 ./make-default.sh
 ```
 
-This is the fix for Google's screen flashing up when you press HOME. The TV flicks to Settings and back twice
-while the script tests the HOME button. It ends with either:
+Optional. HOME already opens TV Home through its button catcher; this removes the occasional flash of Google's
+screen for good. It switches off Google's Setup Wizard along with Google's home screen (tested on this TV:
+with the wizard left on, HOME loops), so it asks you to type **y** first. The TV flicks to Settings and back
+while the script tests the HOME button. It ends with one of:
 
 - **"Done. TV Home is now the real home screen"**: finished. Press HOME from inside Netflix to see it.
+- **"The TV refused to switch off the Setup Wizard"**: nothing was changed; the catcher keeps doing the job.
 - **"The check failed, so everything has been switched back on"**: nothing is broken and the TV is as it was.
   Copy what Terminal printed and send it to Claude.
 

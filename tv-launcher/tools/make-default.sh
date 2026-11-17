@@ -14,7 +14,7 @@
 #   5. If the check fails, it switches everything back on by itself and says so.
 #
 # Usage:
-#   TV_IP=192.168.2.19 ./make-default.sh            do it (safe: undoes itself if the check fails)
+#   TV_IP=192.168.2.19 ./make-default.sh            do it (asks first; undoes itself if the check fails)
 #   TV_IP=192.168.2.19 ./make-default.sh --status   show how HOME is set up right now, change nothing
 #   TV_IP=192.168.2.19 ./make-default.sh --undo     switch Google's home screen and wizard back on
 set -euo pipefail
@@ -53,7 +53,7 @@ case "${1:-apply}" in
     echo "Google's home screen and Setup Wizard are back on. HOME still opens TV Home through the backup service."
     echo "To go fully back to Google TV: ./home-button.sh off, then Settings > Apps > Default apps > Home app."
     exit 0 ;;
-  apply) ;;
+  apply|--yes) ;;
   *) echo "usage: $0 [--status|--undo]"; exit 1 ;;
 esac
 
@@ -68,13 +68,31 @@ echo "== 2. Setting TV Home as the default home app"
 tvsh cmd package set-home-activity "$HOME_ACT" 2>&1 | tr -d '\r' | sed 's/^/   /' || true
 
 echo "== 3. Switching off the Setup Wizard and Google's home screen (nothing is deleted)"
+if [[ "${2:-}" != "--yes" && "${1:-}" != "--yes" ]]; then
+  echo "   This switches off Google's Setup Wizard as well as Google's home screen. With the wizard left on,"
+  echo "   its recovery screen grabs HOME and loops (seen on this Hisense). Both come back with --undo,"
+  echo "   and a factory reset restores them too."
+  read -r -p "   Go ahead? (y/n) " answer
+  [[ "$answer" == "y" ]] || { echo "Nothing was changed."; exit 0; }
+fi
 # From here on, any failure or Ctrl-C puts everything back.
 trap 'echo; echo "Interrupted: switching everything back on."; switch_back_on' ERR INT TERM
+# The wizard goes first. If the TV refuses, stop here: Google's screen must not go off while the wizard is on.
+if installed "$WIZARD"; then
+  tvsh pm disable-user --user 0 "$WIZARD" >/dev/null 2>&1 || true
+  if enabled "$WIZARD"; then
+    trap - ERR INT TERM
+    echo "   The TV refused to switch off the Setup Wizard, so Google's home screen was left alone."
+    echo "   Nothing was changed. HOME keeps working through the backup service."
+    exit 1
+  fi
+  echo "   off  $WIZARD"
+fi
 ./home-button.sh off >/dev/null     # so the test below measures the real thing, not the backup
-for p in $WIZARD $STOCK; do
+for p in $STOCK; do
   installed "$p" || continue
-  if tvsh pm disable-user --user 0 "$p" | tr -d '\r' | grep -q "disabled"; then echo "   off  $p"
-  else echo "   could not switch off $p"; fi
+  tvsh pm disable-user --user 0 "$p" >/dev/null 2>&1 || true
+  if enabled "$p"; then echo "   could not switch off $p"; else echo "   off  $p"; fi
 done
 tvsh cmd package set-home-activity "$HOME_ACT" >/dev/null 2>&1 || true
 
@@ -82,11 +100,11 @@ echo "== 4. Testing the HOME button (the TV will flick to Settings and back, twi
 pass=1
 for n in 1 2; do
   tvsh am start -a android.settings.SETTINGS >/dev/null 2>&1 || true
-  sleep ${TV_WAIT:-3}
+  sleep ${TV_WAIT:-2}
   tvsh input keyevent KEYCODE_HOME
-  sleep ${TV_WAIT:-3}
+  sleep ${TV_WAIT:-2}
   if tvhome_in_front; then echo "   press $n: TV Home came up"
-  else echo "   press $n: TV Home did NOT come up"; focus | sed 's/^/      /'; pass=0; fi
+  else echo "   press $n: TV Home did NOT come up"; focus | sed 's/^/      /'; pass=0; break; fi   # stop at once: undo comes next
 done
 trap - ERR INT TERM
 
@@ -99,8 +117,8 @@ if [[ $pass == 1 ]]; then
   echo "To undo: ./make-default.sh --undo"
 else
   echo
-  echo "The check failed, so everything has been switched back on. The TV is as it was before."
   switch_back_on
+  echo "The check failed, so everything has been switched back on. The TV is as it was before."
   tvsh am start -n "$HOME_ACT" >/dev/null 2>&1 || true
   echo "Send Claude the lines above (they show what the TV opened instead)."
   exit 1
