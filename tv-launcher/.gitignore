@@ -1,0 +1,15 @@
+build/
+.gradle/
+local.properties
+*.iml
+.idea/
+tools/config.json
+tools/undo-debloat.sh
+tools/packages-*.txt
+
+tools/windows/platform-tools/
+tools/windows/tv-ip.txt
+tools/windows/undo-list.txt
+tools/windows/tv-info-*.txt
+tools/windows/config.json
+node_modules/

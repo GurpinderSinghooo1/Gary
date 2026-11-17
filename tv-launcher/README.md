@@ -1,0 +1,121 @@
+# TV Home
+
+A custom, ad-free home screen for an Android TV / Google TV, with 15 switchable themes, live data, and a
+soundbar that turns on with the TV.
+
+```
+┌──────────────────────── Android TV ────────────────────────┐
+│  TV Home (com.gary.tvhome)                                 │
+│                                                            │
+│  WebView ── assets/web/home.html  (all 15 themes)          │
+│     ▲  TvHome.call("apps")         │ TvHome.emit("menu")   │
+│     │                              ▼                       │
+│  TvBridge (Kotlin) ── AppRepository      launch apps       │
+│                    ── WatchNextRepository continue watching│
+│                    ── WeatherRepository  Open-Meteo        │
+│                    ── SoundbarManager    SmartThings OAuth │
+│                    ── StatsRepository    watch time        │
+│                    ── StravaClient       runs / training   │
+│                    ── TmdbClient         date-night picks  │
+│                    ── Store              your goals, wins  │
+│  SetupReceiver ◄── adb (tools/push-config.sh)              │
+│  Screen-on receiver ──► wake soundbar                      │
+└────────────────────────────────────────────────────────────┘
+```
+
+## Why HTML themes inside a native app
+
+The designs were built as HTML, so the TV runs the same files. Switching themes is one button (Menu → Theme),
+and changing a design never needs Android Studio: edit `design/concepts.html`, run `python3 tools/build_web.py`,
+reinstall. Everything that needs the system (launching apps, reading "continue watching", the soundbar,
+usage stats) is native Kotlin behind a small JSON bridge.
+
+## Themes
+
+| id | Name | Look | Live data it uses |
+|---|---|---|---|
+| marquee | Marquee | Cinematic poster hero | continue watching + poster art, weather |
+| still | Still | Huge clock, quiet sky | weather, soundbar, Wi-Fi |
+| control | Control Room | Dashboard | continue watching, weather, soundbar, Wi-Fi |
+| aurora | Aurora | 3D glass carousel | continue watching, weather |
+| **washi** (default) | **Washi** | **Chosen.** Japanese lake scene, muted reds, navy text | continue watching, weather + 3-day, sunrise/sunset light, all 72 micro-seasons, moon, Amritsar clock, tonight's episode, soundbar, bedtime |
+| sora | Sora | Anime summer sky | watch streak (usage stats) |
+| summit | Summit | Topo map, routes | weather, sunrise/sunset, moon phase, soundbar |
+| loadout | Loadout | Light game HUD | level/XP from watch hours, soundbar, Wi-Fi |
+| studio | Studio | Clean modules | weather, soundbar knob, calendar |
+| phulkari | Phulkari | Punjab, sarson field | Ottawa + Amritsar weather and time, Nanakshahi date, Lohri countdown |
+| callus | Callus | Discipline (Goggins-inspired) | earned screen time = Strava minutes × 2 vs. watch time, your goals and wins |
+| forge | Forge | Armour-workshop HUD | system diagnostics, soundbar, weather |
+| pace | Pace | Marathon race bib | Strava week km, last run splits, your race date and plan |
+| engine | Engine | Athlete dashboard | Strava 6-week load + acute:chronic ratio |
+| datenight | Date Night | Candlelight, picks for two | TMDB picks on your services in Canada, anniversary countdown |
+
+## Washi wallpaper and screensaver
+
+Original artwork drawn by code, one per Japanese season (spring sakura, summer green, autumn maple, winter snow),
+switching on the solar terms (Feb 4, May 5, Aug 7, Nov 7). `python3 tools/make_washi_bg.py <season>` writes
+`design/washi-bg-<season>.svg`; `node tools/render_washi_bg.js` renders all four to `app/src/main/assets/web/`.
+Force one with the store key `washi.season`. The screensaver (`dream/TvHomeDream.kt`) shows the same scene with a big
+clock, slow drift and burn-in protection. Change colours or move
+things in the script and re-run both, then `python3 tools/build_web.py`.
+
+## Remote
+
+| Key | Does |
+|---|---|
+| Arrows | Move focus (spatial: only ever in the direction pressed) |
+| OK | Open the app; on a show tile, resume that show directly |
+| Back (or Menu / Guide) | Quick menu: theme, all apps, inputs, soundbar, bedtime, refresh, Android settings |
+| Red / Green / Yellow / Blue | Jump to Theme / Soundbar / Bedtime / All apps |
+| HOME | Opens TV Home. `tools/make-default.sh` makes TV Home the real default home on Google TV (no flash of Google's screen); the `HomeButtonService` accessibility service stays on as a backup |
+
+**Bedtime** puts the TV to sleep when the timer ends (through the accessibility service), so it works over any app.
+
+## Layout
+
+```
+tv-launcher/
+  app/                         Android app (Kotlin, AGP 9, no Compose)
+    src/main/kotlin/com/gary/tvhome/
+      HomeActivity.kt          fullscreen WebView host, key handling
+      Bridge.kt                JS ⇄ native contract (see NATIVE_NOTES.md)
+      TvHomeApp.kt             singletons, screen-on → soundbar
+      data/                    apps, TV inputs, continue watching, weather, stats, system, prefs, store
+      access/HomeButtonService HOME-button backup + sleep for the bedtime timer
+      soundbar/                SmartThings client + OAuth + wake logic
+      integrations/            Strava, TMDB, HTTP helper
+      setup/SetupReceiver.kt   adb-only config push
+      web/LocalPathHandlers.kt app icons, banners, poster art for the page
+    src/main/assets/web/home.html   GENERATED by tools/build_web.py
+  design/concepts.html         the 15 designs (same file as the preview gallery)
+  web-src/                     tvhome.js (bridge SDK + browser mock), app.js (runtime), tv.css
+  tools/                       install, make-default, debloat, CEC, sign-in and config scripts
+  tests/                       headless remote-control tests for all 15 themes (run in CI)
+```
+
+## Preview on a laptop
+
+Open `app/src/main/assets/web/home.html?theme=pace` in Chrome. With no TV bridge, `tvhome.js` answers with
+sample data, so every theme, the remote keys (arrow keys + Enter) and the menu (run `TvHome.emit('menu')` in
+the console) work on a desktop.
+
+## Build
+
+The Android SDK is needed (Android Studio, or GitHub Actions: `.github/workflows/tv-launcher.yml` builds
+`tv-home-debug.apk` on every push that touches `tv-launcher/`).
+
+```bash
+cd tv-launcher && python3 tools/build_web.py && ./gradlew assembleDebug
+```
+
+Then follow [TONIGHT.md](TONIGHT.md) (Mac, plain English) or [SETUP.md](SETUP.md) (full detail).
+
+## Tests
+
+```bash
+cd tv-launcher && python3 tools/build_web.py && node tests/remote.test.js
+```
+
+Checks every theme: all tiles reachable with the arrows, arrows only move the way they point, BACK opens
+and closes the menu, All apps / Inputs / bedtime send the right commands, and the screen still appears
+within seconds with no internet. GitHub runs this on every push, next to the APK build.
