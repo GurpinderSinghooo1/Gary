@@ -87,7 +87,15 @@ with hand-written stubs for the three androidx libraries. Not verified: the real
 **HOME / default launcher.** Google TV resolves HOME to `com.google.android.tungsten.setupwraith`, which forwards
 to `launcherx`; that is why the default-home setting looked ignored and why disabling only `launcherx` looped the
 wizard. `tools/make-default.sh` disables both, tests HOME with `input keyevent`, and rolls back on failure.
-`HomeButtonService` remains as a backup. Not yet confirmed on the Hisense itself (no adb from the build sandbox).
+`HomeButtonService` remains as a backup.
+
+Confirmed on the Hisense (Android TV 12), 2026-11-17, build 0.1.14: with `launcherx` off and the wizard still on,
+the wizard's `RecoveryActivity` grabs HOME and relaunches in a loop (about 40 times in 4 s), and adb cannot disable
+that one component (`Shell cannot change component state`). Disabling the whole wizard package first
+(`pm disable-user`, accepted, `enabled=3`) and then `launcherx` leaves TV Home and Android's FallbackHome as the only
+HOME activities. HOME, a reboot and the real remote all land on TV Home with no Google screen. Side effect of the
+earlier loop tests: `RecoveryActivity` is now marked enabled inside the (disabled) wizard; harmless, and `--undo`
+re-enables the wizard and `launcherx` together.
 
 **New request() methods**
 - `inputs` → `[{id,label,connected}]` (TvInputManager passthrough inputs); `launchInput` {id} → bool.
